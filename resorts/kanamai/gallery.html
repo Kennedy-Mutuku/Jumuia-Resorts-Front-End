@@ -1,0 +1,1497 @@
+<!-- resorts/kanamai/gallery.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gallery - Jumuia Conference & Beach Resort Kanamai</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #22440f;
+            --primary-orange: #f3a435;
+            --primary-white: #ffffff;
+            --secondary-green: #024423;
+            --dark-green: #153800;
+            --light-green: #e9f5e5;
+            --ocean-blue: #006994;
+            --beach-sand: #f5e8d0;
+            --gray-bg: #f8f9fa;
+            --gray-border: #e0e0e0;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--gray-bg);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Resort Header */
+        .resort-header {
+            background-color: var(--primary-white);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            padding: 10px 0;
+        }
+
+        .header-top-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .home-link {
+            color: var(--primary-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .home-link:hover {
+            color: var(--primary-orange);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .resort-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .resort-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .resort-logo h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--primary-green);
+        }
+
+        .resort-location {
+            font-size: 0.9rem;
+            color: var(--primary-orange);
+            font-weight: 500;
+        }
+
+        .resort-nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .resort-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .resort-nav a:hover {
+            color: var(--primary-orange);
+        }
+
+        .resort-nav a.active {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .resort-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+        }
+
+        .btn-primary:hover {
+            background-color: #e5941f;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+        }
+
+        .btn-ocean {
+            background-color: var(--ocean-blue);
+            color: var(--primary-white);
+        }
+
+        .btn-ocean:hover {
+            background-color: #005a82;
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-green);
+        }
+
+        /* Page Hero */
+        .page-hero {
+            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(0, 105, 148, 0.85)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--primary-white);
+            padding: 180px 0 100px;
+            margin-top: 120px;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary-white);
+        }
+
+        .page-hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 0 20px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Gallery Navigation */
+        .gallery-nav-section {
+            padding: 60px 0;
+            background-color: var(--beach-sand);
+        }
+
+        .gallery-categories {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .gallery-category {
+            padding: 15px 30px;
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-light);
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: var(--shadow);
+        }
+
+        .gallery-category:hover {
+            color: var(--primary-green);
+            transform: translateY(-3px);
+            border-color: var(--primary-green);
+        }
+
+        .gallery-category.active {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            border-color: var(--primary-orange);
+        }
+
+        .gallery-category.active i {
+            color: var(--primary-orange);
+        }
+
+        /* Gallery Grid */
+        .gallery-section {
+            padding: 80px 0;
+            background-color: var(--primary-white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 50px;
+        }
+
+        .gallery-item {
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+            box-shadow: var(--shadow);
+            transition: all 0.3s;
+            height: 250px;
+        }
+
+        .gallery-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.05);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to top, rgba(34, 68, 15, 0.9), transparent);
+            display: flex;
+            align-items: flex-end;
+            padding: 20px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-info {
+            color: var(--primary-white);
+            transform: translateY(20px);
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover .gallery-info {
+            transform: translateY(0);
+        }
+
+        .gallery-info h3 {
+            color: var(--primary-white);
+            font-size: 1.2rem;
+            margin-bottom: 5px;
+        }
+
+        .gallery-info p {
+            font-size: 0.9rem;
+            opacity: 0.9;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.95);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+            position: relative;
+        }
+
+        .modal-image {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+            display: block;
+        }
+
+        .modal-info {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(34, 68, 15, 0.9), transparent);
+            color: var(--primary-white);
+            padding: 30px 20px 20px;
+            border-bottom-left-radius: var(--radius);
+            border-bottom-right-radius: var(--radius);
+        }
+
+        .modal-info h3 {
+            color: var(--primary-white);
+            margin-bottom: 5px;
+            font-size: 1.4rem;
+        }
+
+        .modal-info p {
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+
+        .close-modal {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            color: var(--primary-white);
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+            background: rgba(0, 0, 0, 0.5);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-orange);
+        }
+
+        .modal-nav {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--primary-white);
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: color 0.3s;
+            background: rgba(0, 0, 0, 0.5);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-nav:hover {
+            color: var(--primary-orange);
+        }
+
+        .modal-prev {
+            left: 20px;
+        }
+
+        .modal-next {
+            right: 20px;
+        }
+
+        /* Video Section */
+        .video-section {
+            padding: 80px 0;
+            background-color: var(--beach-sand);
+        }
+
+        .video-container {
+            max-width: 900px;
+            margin: 0 auto;
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+        }
+
+        .video-thumbnail {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .video-thumbnail img {
+            width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .video-play-btn {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80px;
+            height: 80px;
+            background-color: rgba(243, 164, 53, 0.9);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-white);
+            font-size: 2.5rem;
+            transition: all 0.3s;
+        }
+
+        .video-play-btn:hover {
+            background-color: var(--primary-orange);
+            transform: translate(-50%, -50%) scale(1.1);
+        }
+
+        /* Featured Section */
+        .featured-section {
+            padding: 80px 0;
+            background-color: var(--primary-white);
+        }
+
+        .featured-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        .featured-card {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            position: relative;
+            height: 300px;
+        }
+
+        .featured-card img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .featured-content {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(to top, rgba(34, 68, 15, 0.95), transparent);
+            color: var(--primary-white);
+            padding: 30px;
+        }
+
+        .featured-content h3 {
+            color: var(--primary-white);
+            font-size: 1.6rem;
+            margin-bottom: 10px;
+        }
+
+        .featured-content p {
+            font-size: 1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        /* Testimonials */
+        .testimonials-section {
+            padding: 80px 0;
+            background-color: var(--light-green);
+        }
+
+        .testimonial-slider {
+            max-width: 800px;
+            margin: 0 auto;
+            position: relative;
+        }
+
+        .testimonial {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            margin: 0 20px;
+        }
+
+        .testimonial-content {
+            font-size: 1.1rem;
+            font-style: italic;
+            color: var(--text-dark);
+            margin-bottom: 20px;
+            line-height: 1.8;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid var(--primary-orange);
+        }
+
+        .author-info h4 {
+            color: var(--primary-green);
+            margin-bottom: 5px;
+        }
+
+        .author-info p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--primary-white);
+        }
+
+        .cta-section h2 {
+            color: var(--primary-white);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .resort-footer {
+            background-color: var(--dark-green);
+            color: var(--primary-white);
+            padding: 70px 0 30px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--primary-white);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--primary-white);
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-orange);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .resort-nav {
+                position: fixed;
+                top: 120px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 120px);
+                background-color: var(--primary-white);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 40px;
+                transition: left 0.3s;
+                gap: 30px;
+            }
+            
+            .resort-nav.active {
+                left: 0;
+            }
+            
+            .page-hero {
+                padding: 150px 0 80px;
+                margin-top: 100px;
+            }
+            
+            .gallery-categories {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .gallery-category {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .modal-nav {
+                width: 40px;
+                height: 40px;
+                font-size: 2rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .gallery-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .featured-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .testimonial {
+                padding: 30px 20px;
+                margin: 0 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Resort Header -->
+    <header class="resort-header">
+        <div class="header-top">
+            <div class="container header-top-content">
+                <a href="../../index.html" class="home-link">
+                    <i class="fas fa-home"></i>
+                    <span>Back to Jumuia Resorts Home</span>
+                </a>
+                <div class="header-actions">
+                    <a href="tel:+254710288043" class="home-link">
+                        <i class="fas fa-phone"></i>
+                        <span>0710 288 043</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container resort-header-content">
+            <div class="resort-logo">
+                <svg class="logo-img" viewBox="0 0 133 78">
+                    <path d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
+                    <path d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
+                    <path d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
+                    <path d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                </svg>
+                <div>
+                    <h1>Jumuia Conference & Beach Resort</h1>
+                    <p class="resort-location">Kanamai Coast, Kenya</p>
+                </div>
+            </div>
+            
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <nav class="resort-nav" id="resortNav">
+                <a href="index.html" class="active">Home</a>
+                <a href="rooms.html">Rooms & Rates</a>
+                <a href="conference.html">Conference</a>
+                <a href="offers.html">Offers</a>
+                <a href="excursions.html">Excursions</a>
+                <a href="feedback.html">Rate us</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="booking.html" class="btn btn-primary">Book Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Kanamai Beach Gallery</h1>
+            <p>Explore the beauty of our coastal paradise through stunning photos and videos. Experience the crystal-clear waters, white sandy beaches, and exceptional facilities.</p>
+        </div>
+    </section>
+
+    <!-- Gallery Navigation -->
+    <section class="gallery-nav-section">
+        <div class="container">
+            <div class="gallery-categories">
+                <div class="gallery-category active" data-category="all">
+                    <i class="fas fa-images"></i>
+                    <span>All Photos</span>
+                </div>
+                <div class="gallery-category" data-category="rooms">
+                    <i class="fas fa-bed"></i>
+                    <span>Rooms & Suites</span>
+                </div>
+                <div class="gallery-category" data-category="beach">
+                    <i class="fas fa-umbrella-beach"></i>
+                    <span>Beach & Ocean</span>
+                </div>
+                <div class="gallery-category" data-category="facilities">
+                    <i class="fas fa-swimming-pool"></i>
+                    <span>Facilities</span>
+                </div>
+                <div class="gallery-category" data-category="activities">
+                    <i class="fas fa-hiking"></i>
+                    <span>Activities</span>
+                </div>
+                <div class="gallery-category" data-category="events">
+                    <i class="fas fa-calendar-alt"></i>
+                    <span>Events & Conferences</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Grid -->
+    <section class="gallery-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Photo Gallery</h2>
+                <p>Browse through our collection of stunning images showcasing the beauty of Kanamai Beach Resort</p>
+            </div>
+            
+            <div class="gallery-grid">
+                <!-- Beach Views -->
+                <div class="gallery-item" data-category="beach" data-index="0">
+                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Kanamai Beach Sunset">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Golden Sunset</h3>
+                            <p>Breathtaking sunset over Kanamai Beach</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Ocean Front Room -->
+                <div class="gallery-item" data-category="rooms" data-index="1">
+                    <img src="https://images.unsplash.com/photo-1574643156929-51fa098b0394?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Ocean Front Room">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Ocean Front Suite</h3>
+                            <p>Luxurious room with panoramic ocean views</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Swimming Pool -->
+                <div class="gallery-item" data-category="facilities" data-index="2">
+                    <img src="https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Resort Swimming Pool">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Infinity Pool</h3>
+                            <p>Stunning pool overlooking the Indian Ocean</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Beach Walk -->
+                <div class="gallery-item" data-category="activities" data-index="3">
+                    <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Beach Walk">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Morning Beach Walk</h3>
+                            <p>Peaceful walks along our pristine private beach</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Conference Room -->
+                <div class="gallery-item" data-category="events" data-index="4">
+                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Conference Facility">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Conference Hall</h3>
+                            <p>Modern conference facilities for business events</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Double Room -->
+                <div class="gallery-item" data-category="rooms" data-index="5">
+                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Double Room">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Double Room</h3>
+                            <p>Comfortable accommodation for couples</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Snorkeling -->
+                <div class="gallery-item" data-category="activities" data-index="6">
+                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Snorkeling Activity">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Marine Life</h3>
+                            <p>Snorkeling in crystal clear coastal waters</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Restaurant -->
+                <div class="gallery-item" data-category="facilities" data-index="7">
+                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Restaurant">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Beachfront Restaurant</h3>
+                            <p>Fresh seafood and local cuisine with ocean views</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Water Sports -->
+                <div class="gallery-item" data-category="activities" data-index="8">
+                    <img src="https://images.unsplash.com/photo-1536152470836-b943b246224c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Water Sports">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Water Activities</h3>
+                            <p>Boat riding and ocean excursions</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Standard Room -->
+                <div class="gallery-item" data-category="rooms" data-index="9">
+                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Standard Room">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Standard Twin Room</h3>
+                            <p>Comfortable accommodation for friends or colleagues</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Beach Volleyball -->
+                <div class="gallery-item" data-category="activities" data-index="10">
+                    <img src="https://images.unsplash.com/photo-1595435934247-5d33b7f92c70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Beach Volleyball">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Beach Sports</h3>
+                            <p>Volleyball and other beach activities</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Coastal Garden -->
+                <div class="gallery-item" data-category="facilities" data-index="11">
+                    <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Resort Gardens">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Tropical Gardens</h3>
+                            <p>Beautifully landscaped gardens throughout the resort</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 40px;">
+                <button class="btn btn-primary" id="loadMoreBtn">
+                    <i class="fas fa-plus"></i> Load More Photos
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="video-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Experience Kanamai</h2>
+                <p>Watch our resort video to see the beauty of Kanamai Beach in motion</p>
+            </div>
+            
+            <div class="video-container">
+                <div class="video-thumbnail" id="videoThumbnail">
+                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Kanamai Beach Video Thumbnail">
+                    <div class="video-play-btn">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+                <div id="videoPlayer" style="display: none;">
+                    <iframe width="100%" height="500" src="https://www.youtube.com/embed/DPFHXK9xqZk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: var(--radius);"></iframe>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Section -->
+    <section class="featured-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Featured Experiences</h2>
+                <p>Discover what makes Kanamai Beach Resort truly special</p>
+            </div>
+            
+            <div class="featured-grid">
+                <div class="featured-card">
+                    <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Beach Wedding">
+                    <div class="featured-content">
+                        <h3>Beach Weddings</h3>
+                        <p>Create unforgettable memories with your dream beach wedding ceremony overlooking the Indian Ocean.</p>
+                        <a href="booking.html" class="btn btn-ocean">Plan Your Wedding</a>
+                    </div>
+                </div>
+                
+                <div class="featured-card">
+                    <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Corporate Retreat">
+                    <div class="featured-content">
+                        <h3>Corporate Retreats</h3>
+                        <p>Perfect environment for team building, conferences, and corporate events with modern facilities.</p>
+                        <a href="conference.html" class="btn btn-primary">View Conference Packages</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonials-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Guest Experiences</h2>
+                <p>See what our guests have to say about their stay at Kanamai</p>
+            </div>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial" id="testimonial1">
+                    <div class="testimonial-content">
+                        "Our family vacation at Kanamai Beach Resort was absolutely magical! The staff went above and beyond to make our stay comfortable. The beach is pristine and the food was exceptional."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sarah M." class="author-avatar">
+                        <div class="author-info">
+                            <h4>Sarah M.</h4>
+                            <p>Family Vacation, December 2023</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial" id="testimonial2" style="display: none;">
+                    <div class="testimonial-content">
+                        "As a conference organizer, I was impressed by the facilities and service at Kanamai. The conference rooms were well-equipped, the food was excellent, and the beach setting provided the perfect backdrop for our meetings."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="David K." class="author-avatar">
+                        <div class="author-info">
+                            <h4>David K.</h4>
+                            <p>Corporate Conference, February 2024</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="testimonial" id="testimonial3" style="display: none;">
+                    <div class="testimonial-content">
+                        "The excursions organized by the resort were amazing! We enjoyed the dhow sailing at Wasini Island and the Mombasa city tour. Everything was perfectly arranged and our guide was very knowledgeable."
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Lisa W." class="author-avatar">
+                        <div class="author-info">
+                            <h4>Lisa W.</h4>
+                            <p>Adventure Traveler, March 2024</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <button class="btn btn-secondary" id="prevTestimonial" style="margin-right: 10px;">
+                        <i class="fas fa-chevron-left"></i> Previous
+                    </button>
+                    <button class="btn btn-primary" id="nextTestimonial">
+                        Next <i class="fas fa-chevron-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Experience Kanamai?</h2>
+            <p>Book your stay today and create unforgettable memories at our beautiful beach resort.</p>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 40px; flex-wrap: wrap;">
+                <a href="booking.html" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">Book Your Stay Now</a>
+                <a href="rooms.html" class="btn btn-secondary" style="padding: 15px 40px; font-size: 1.1rem;">View Rooms & Rates</a>
+                <a href="excursions.html" class="btn btn-ocean" style="padding: 15px 40px; font-size: 1.1rem;">Explore Excursions</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="resort-footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Kanamai Beach Resort</h3>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Beautiful beachfront resort perfect for conferences, church events, and family vacations on the Kenyan coast.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms & Rates</a></li>
+                        <li><a href="conference.html">Conference</a></li>
+                        <li><a href="excursions.html">Excursions</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="booking.html">Booking</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Other Resorts</h3>
+                    <ul class="footer-links">
+                        <li><a href="../limuru/index.html">Limuru Country Home</a></li>
+                        <li><a href="../kisumu/index.html">Kisumu Hotel</a></li>
+                        <li><a href="../../index.html">Jumuia Resorts Main</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <div style="color: rgba(255,255,255,0.8);">
+                        <p><i class="fas fa-phone"></i> 0710 288 043</p>
+                        <p><i class="fas fa-envelope"></i> reservations.kanamai@resortjumuia.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Kanamai Coast, Kenya</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Jumuia Conference & Beach Resort Kanamai. All rights reserved.</p>
+                <p style="margin-top: 10px;">Part of Jumuia Resorts Limited</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Gallery Modal -->
+    <div class="modal" id="galleryModal">
+        <div class="modal-content">
+            <img class="modal-image" id="modalImage" src="" alt="">
+            <div class="modal-info" id="modalInfo">
+                <h3 id="modalTitle"></h3>
+                <p id="modalDescription"></p>
+            </div>
+            <span class="close-modal">&times;</span>
+            <div class="modal-nav modal-prev" id="modalPrev">
+                <i class="fas fa-chevron-left"></i>
+            </div>
+            <div class="modal-nav modal-next" id="modalNext">
+                <i class="fas fa-chevron-right"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('resortNav').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.resort-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('resortNav').classList.remove('active');
+            });
+        });
+
+        // Gallery category filtering
+        const galleryCategories = document.querySelectorAll('.gallery-category');
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        
+        galleryCategories.forEach(category => {
+            category.addEventListener('click', function() {
+                // Remove active class from all categories
+                galleryCategories.forEach(c => c.classList.remove('active'));
+                // Add active class to clicked category
+                this.classList.add('active');
+                
+                const selectedCategory = this.getAttribute('data-category');
+                
+                // Show/hide gallery items based on category
+                galleryItems.forEach(item => {
+                    const itemCategory = item.getAttribute('data-category');
+                    if (selectedCategory === 'all' || itemCategory === selectedCategory) {
+                        item.style.display = 'block';
+                    } else {
+                        item.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // Gallery modal functionality
+        const modal = document.getElementById('galleryModal');
+        const modalImage = document.getElementById('modalImage');
+        const modalTitle = document.getElementById('modalTitle');
+        const modalDescription = document.getElementById('modalDescription');
+        const closeModal = document.querySelector('.close-modal');
+        const modalPrev = document.getElementById('modalPrev');
+        const modalNext = document.getElementById('modalNext');
+        
+        let currentIndex = 0;
+        let filteredItems = Array.from(galleryItems);
+        
+        galleryItems.forEach((item, index) => {
+            item.addEventListener('click', function() {
+                currentIndex = parseInt(this.getAttribute('data-index'));
+                const imgSrc = this.querySelector('img').src;
+                const title = this.querySelector('.gallery-info h3').textContent;
+                const description = this.querySelector('.gallery-info p').textContent;
+                
+                // Get current filtered items
+                const activeCategory = document.querySelector('.gallery-category.active').getAttribute('data-category');
+                if (activeCategory === 'all') {
+                    filteredItems = Array.from(galleryItems);
+                } else {
+                    filteredItems = Array.from(galleryItems).filter(item => 
+                        item.getAttribute('data-category') === activeCategory
+                    );
+                }
+                
+                updateModal(index, imgSrc, title, description);
+                modal.style.display = 'flex';
+            });
+        });
+        
+        function updateModal(index, imgSrc, title, description) {
+            modalImage.src = imgSrc;
+            modalTitle.textContent = title;
+            modalDescription.textContent = description;
+            currentIndex = filteredItems.findIndex(item => 
+                parseInt(item.getAttribute('data-index')) === index
+            );
+        }
+        
+        function showNextImage() {
+            currentIndex = (currentIndex + 1) % filteredItems.length;
+            const item = filteredItems[currentIndex];
+            const imgSrc = item.querySelector('img').src;
+            const title = item.querySelector('.gallery-info h3').textContent;
+            const description = item.querySelector('.gallery-info p').textContent;
+            updateModal(parseInt(item.getAttribute('data-index')), imgSrc, title, description);
+        }
+        
+        function showPrevImage() {
+            currentIndex = (currentIndex - 1 + filteredItems.length) % filteredItems.length;
+            const item = filteredItems[currentIndex];
+            const imgSrc = item.querySelector('img').src;
+            const title = item.querySelector('.gallery-info h3').textContent;
+            const description = item.querySelector('.gallery-info p').textContent;
+            updateModal(parseInt(item.getAttribute('data-index')), imgSrc, title, description);
+        }
+        
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        modalPrev.addEventListener('click', showPrevImage);
+        modalNext.addEventListener('click', showNextImage);
+        
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+        
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+            if (e.key === 'ArrowRight' && modal.style.display === 'flex') {
+                showNextImage();
+            }
+            if (e.key === 'ArrowLeft' && modal.style.display === 'flex') {
+                showPrevImage();
+            }
+        });
+
+        // Video play functionality
+        const videoThumbnail = document.getElementById('videoThumbnail');
+        const videoPlayer = document.getElementById('videoPlayer');
+        
+        videoThumbnail.addEventListener('click', function() {
+            videoThumbnail.style.display = 'none';
+            videoPlayer.style.display = 'block';
+        });
+
+        // Testimonial slider
+        let currentTestimonial = 1;
+        const totalTestimonials = 3;
+        
+        function showTestimonial(n) {
+            // Hide all testimonials
+            for (let i = 1; i <= totalTestimonials; i++) {
+                document.getElementById(`testimonial${i}`).style.display = 'none';
+            }
+            
+            // Show selected testimonial
+            document.getElementById(`testimonial${n}`).style.display = 'block';
+            currentTestimonial = n;
+        }
+        
+        document.getElementById('nextTestimonial').addEventListener('click', function() {
+            let next = currentTestimonial + 1;
+            if (next > totalTestimonials) next = 1;
+            showTestimonial(next);
+        });
+        
+        document.getElementById('prevTestimonial').addEventListener('click', function() {
+            let prev = currentTestimonial - 1;
+            if (prev < 1) prev = totalTestimonials;
+            showTestimonial(prev);
+        });
+        
+        // Initialize
+        showTestimonial(1);
+
+        // Load more photos functionality
+        const loadMoreBtn = document.getElementById('loadMoreBtn');
+        let loadedCount = 12;
+        const allImages = [
+            {
+                src: 'https://images.unsplash.com/photo-1573843989-c9d4a65d6c8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                category: 'activities',
+                title: 'Wildlife Tour',
+                description: 'Visiting Haller Park wildlife sanctuary'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1522543558187-768b6df7c25c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                category: 'activities',
+                title: 'Historical Sites',
+                description: 'Exploring Fort Jesus and local history'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                category: 'rooms',
+                title: 'Suite Interior',
+                description: 'Luxurious suite accommodation details'
+            },
+            {
+                src: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                category: 'facilities',
+                title: 'Dining Area',
+                description: 'Elegant restaurant setting'
+            }
+        ];
+        
+        loadMoreBtn.addEventListener('click', function() {
+            const galleryGrid = document.querySelector('.gallery-grid');
+            
+            // Add 4 more images
+            for (let i = loadedCount; i < loadedCount + 4 && i < allImages.length + 12; i++) {
+                const imageIndex = i - 12;
+                if (imageIndex >= allImages.length) break;
+                
+                const img = allImages[imageIndex];
+                const item = document.createElement('div');
+                item.className = 'gallery-item';
+                item.setAttribute('data-category', img.category);
+                item.setAttribute('data-index', i);
+                
+                item.innerHTML = `
+                    <img src="${img.src}" alt="${img.title}">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>${img.title}</h3>
+                            <p>${img.description}</p>
+                        </div>
+                    </div>
+                `;
+                
+                // Add click event for modal
+                item.addEventListener('click', function() {
+                    currentIndex = i;
+                    updateModal(i, img.src, img.title, img.description);
+                    modal.style.display = 'flex';
+                });
+                
+                galleryGrid.appendChild(item);
+            }
+            
+            loadedCount += 4;
+            
+            // Hide button if all images loaded
+            if (loadedCount >= allImages.length + 12) {
+                loadMoreBtn.style.display = 'none';
+            }
+            
+            // Re-filter after adding new items
+            const activeCategory = document.querySelector('.gallery-category.active').getAttribute('data-category');
+            galleryItems.forEach(item => {
+                const itemCategory = item.getAttribute('data-category');
+                if (activeCategory === 'all' || itemCategory === activeCategory) {
+                    item.style.display = 'block';
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+        });
+    </script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

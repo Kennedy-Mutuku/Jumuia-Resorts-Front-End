@@ -1,0 +1,1987 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumuia Resorts - Admin Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <style>
+        :root {
+            --primary-green: #22440f;
+            --primary-orange: #f3a435;
+            --primary-white: #ffffff;
+            --secondary-green: #1a5c1a;
+            --light-green: #e9f5e5;
+            --dark-green: #153800;
+            --gray-bg: #f8f9fa;
+            --gray-border: #e0e0e0;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body { 
+            font-family: 'Montserrat', sans-serif; 
+            color: var(--text-dark); 
+            line-height: 1.6; 
+            background-color: var(--gray-bg);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 { 
+            font-family: 'Playfair Display', serif; 
+            font-weight: 600; 
+            color: var(--primary-green); 
+        }
+
+        .container { 
+            width: 100%; 
+            max-width: 1400px; 
+            margin: 0 auto; 
+            padding: 0 20px; 
+        }
+        
+        /* Admin Header */
+        .admin-header { 
+            background-color: var(--primary-white); 
+            box-shadow: var(--shadow); 
+            position: fixed; 
+            width: 100%; 
+            top: 0; 
+            z-index: 1000; 
+            padding: 15px 0; 
+        }
+
+        .header-container { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        .admin-logo { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+        }
+
+        .logo-img { 
+            width: 40px; 
+            height: 40px; 
+        }
+
+        .admin-logo h1 { 
+            font-size: 1.5rem; 
+            margin-bottom: 5px; 
+            color: var(--primary-green); 
+        }
+
+        .admin-logo p { 
+            font-size: 0.85rem; 
+            color: var(--text-light); 
+        }
+
+        .header-controls { 
+            display: flex; 
+            align-items: center; 
+            gap: 20px; 
+        }
+
+        .property-switcher { 
+            position: relative; 
+        }
+
+        .current-property { 
+            background-color: var(--primary-green); 
+            color: var(--primary-white); 
+            padding: 10px 20px; 
+            border-radius: var(--radius); 
+            cursor: pointer; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            min-width: 200px; 
+        }
+
+        .property-dropdown { 
+            position: absolute; 
+            top: 100%; 
+            left: 0; 
+            width: 100%; 
+            background-color: var(--primary-white); 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
+            display: none; 
+            z-index: 1000; 
+        }
+
+        .property-dropdown.show { 
+            display: block; 
+        }
+
+        .property-option { 
+            padding: 12px 20px; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+        }
+
+        .property-option:hover { 
+            background-color: var(--light-green); 
+        }
+
+        .property-option.active { 
+            background-color: var(--primary-orange); 
+            color: var(--primary-white); 
+        }
+
+        .user-profile { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            cursor: pointer; 
+            position: relative; 
+        }
+
+        .avatar { 
+            width: 40px; 
+            height: 40px; 
+            background-color: var(--primary-green); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: var(--primary-white); 
+            font-weight: 600; 
+        }
+
+        .user-menu { 
+            position: absolute; 
+            top: 100%; 
+            right: 0; 
+            background-color: var(--primary-white); 
+            border-radius: var(--radius); 
+            box-shadow: var(--shadow); 
+            display: none; 
+            min-width: 200px; 
+            z-index: 1000; 
+        }
+
+        .user-menu.show { 
+            display: block; 
+        }
+
+        .menu-item { 
+            padding: 12px 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            cursor: pointer; 
+            transition: background-color 0.3s; 
+        }
+
+        .menu-item:hover { 
+            background-color: var(--light-green); 
+        }
+
+        .menu-item.logout { 
+            color: #dc3545; 
+        }
+
+        .menu-item.logout:hover { 
+            background-color: rgba(220, 53, 69, 0.1); 
+        }
+        
+        /* Admin Layout */
+        .admin-layout { 
+            display: flex; 
+            margin-top: 80px; 
+        }
+        
+        /* Sidebar Navigation */
+        .admin-sidebar { 
+            width: 250px; 
+            background-color: var(--primary-white); 
+            height: calc(100vh - 80px); 
+            position: fixed; 
+            left: 0; 
+            top: 80px; 
+            box-shadow: var(--shadow); 
+            overflow-y: auto; 
+            transition: width 0.3s; 
+        }
+
+        .admin-sidebar.collapsed { 
+            width: 70px; 
+        }
+
+        .sidebar-header { 
+            padding: 20px; 
+            border-bottom: 1px solid var(--gray-border); 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+        }
+
+        .collapse-btn { 
+            background: none; 
+            border: none; 
+            color: var(--primary-green); 
+            cursor: pointer; 
+            font-size: 1.2rem; 
+        }
+
+        .nav-menu { 
+            padding: 20px 0; 
+        }
+
+        .nav-item { 
+            margin-bottom: 5px; 
+        }
+
+        .nav-link { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 15px 20px; 
+            color: var(--text-dark); 
+            text-decoration: none; 
+            transition: all 0.3s; 
+            position: relative; 
+        }
+
+        .nav-link:hover { 
+            background-color: var(--light-green); 
+            color: var(--primary-green); 
+        }
+
+        .nav-link.active { 
+            background-color: var(--primary-orange); 
+            color: var(--primary-white); 
+        }
+
+        .nav-link.active .nav-icon { 
+            color: var(--primary-white); 
+        }
+
+        .nav-icon { 
+            width: 24px; 
+            text-align: center; 
+            color: var(--primary-green); 
+        }
+
+        .nav-text { 
+            white-space: nowrap; 
+            overflow: hidden; 
+        }
+
+        .admin-sidebar.collapsed .nav-text { 
+            display: none; 
+        }
+
+        .badge { 
+            background-color: var(--primary-orange); 
+            color: var(--primary-white); 
+            padding: 2px 8px; 
+            border-radius: 10px; 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            margin-left: auto; 
+        }
+
+        .nav-divider { 
+            padding: 15px 20px; 
+            color: var(--text-light); 
+            font-size: 0.8rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+        }
+
+        .admin-sidebar.collapsed .nav-divider { 
+            display: none; 
+        }
+        
+        /* Main Content */
+        .admin-content { 
+            flex: 1; 
+            margin-left: 250px; 
+            padding: 30px; 
+            transition: margin-left 0.3s; 
+        }
+
+        .admin-sidebar.collapsed + .admin-content { 
+            margin-left: 70px; 
+        }
+
+        .content-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 30px; 
+        }
+
+        .breadcrumb { 
+            display: flex; 
+            align-items: center; 
+            gap: 10px; 
+            color: var(--text-light); 
+        }
+
+        .breadcrumb a { 
+            color: var(--primary-green); 
+            text-decoration: none; 
+        }
+
+        .breadcrumb a:hover { 
+            text-decoration: underline; 
+        }
+
+        .action-buttons { 
+            display: flex; 
+            gap: 15px; 
+        }
+
+        .btn { 
+            padding: 10px 25px; 
+            border-radius: var(--radius); 
+            font-weight: 600; 
+            cursor: pointer; 
+            transition: all 0.3s; 
+            border: none; 
+            font-family: 'Montserrat', sans-serif; 
+            font-size: 1rem; 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 10px; 
+        }
+
+        .btn-primary { 
+            background-color: var(--primary-orange); 
+            color: var(--primary-white); 
+        }
+
+        .btn-primary:hover { 
+            background-color: #e5941f; 
+            transform: translateY(-2px); 
+        }
+
+        .btn-secondary { 
+            background-color: var(--primary-white); 
+            color: var(--primary-green); 
+            border: 2px solid var(--primary-green); 
+        }
+
+        .btn-secondary:hover { 
+            background-color: var(--primary-green); 
+            color: var(--primary-white); 
+        }
+        
+        /* Dashboard Widgets */
+        .dashboard-widgets { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 25px; 
+            margin-bottom: 40px; 
+        }
+
+        .widget { 
+            background-color: var(--primary-white); 
+            border-radius: var(--radius); 
+            padding: 25px; 
+            box-shadow: var(--shadow); 
+            border-left: 4px solid var(--primary-orange); 
+        }
+
+        .widget-header { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            margin-bottom: 20px; 
+        }
+
+        .widget-title { 
+            font-size: 1.2rem; 
+            color: var(--primary-green); 
+        }
+
+        .widget-stat { 
+            font-size: 2.5rem; 
+            font-weight: 700; 
+            color: var(--primary-green); 
+            margin-bottom: 10px; 
+        }
+
+        .widget-change { 
+            font-size: 0.9rem; 
+            color: var(--text-light); 
+        }
+
+        .widget-change.positive { 
+            color: var(--secondary-green); 
+        }
+
+        .widget-change.negative { 
+            color: #dc3545; 
+        }
+
+        .widget-icon { 
+            width: 50px; 
+            height: 50px; 
+            background-color: var(--light-green); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            font-size: 1.5rem; 
+            color: var(--primary-green); 
+        }
+        
+        /* Recent Activity */
+        .activity-section { 
+            background-color: var(--primary-white); 
+            border-radius: var(--radius); 
+            padding: 25px; 
+            box-shadow: var(--shadow); 
+            margin-bottom: 40px; 
+        }
+
+        .activity-list { 
+            list-style: none; 
+        }
+
+        .activity-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding: 15px 0; 
+            border-bottom: 1px solid var(--gray-border); 
+        }
+
+        .activity-item:last-child { 
+            border-bottom: none; 
+        }
+
+        .activity-icon { 
+            width: 40px; 
+            height: 40px; 
+            background-color: var(--light-green); 
+            border-radius: 50%; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            color: var(--primary-green); 
+        }
+
+        .activity-details { 
+            flex: 1; 
+        }
+
+        .activity-title { 
+            font-weight: 600; 
+            color: var(--text-dark); 
+        }
+
+        .activity-time { 
+            font-size: 0.85rem; 
+            color: var(--text-light); 
+        }
+        
+        /* Property Comparison */
+        .property-comparison { 
+            background-color: var(--primary-white); 
+            border-radius: var(--radius); 
+            padding: 25px; 
+            box-shadow: var(--shadow); 
+        }
+
+        .comparison-table { 
+            width: 100%; 
+            border-collapse: collapse; 
+        }
+
+        .comparison-table th { 
+            background-color: var(--primary-green); 
+            color: var(--primary-white); 
+            padding: 15px; 
+            text-align: left; 
+            font-weight: 600; 
+        }
+
+        .comparison-table td { 
+            padding: 15px; 
+            border-bottom: 1px solid var(--gray-border); 
+        }
+
+        .comparison-table tr:nth-child(even) { 
+            background-color: var(--light-green); 
+        }
+
+        .progress-bar { 
+            height: 10px; 
+            background-color: var(--gray-border); 
+            border-radius: 5px; 
+            overflow: hidden; 
+        }
+
+        .progress-fill { 
+            height: 100%; 
+            background-color: var(--primary-orange); 
+            border-radius: 5px; 
+        }
+        
+        /* Loading State */
+        .loading { 
+            display: inline-block; 
+            width: 20px; 
+            height: 20px; 
+            border: 3px solid rgba(255,255,255,.3); 
+            border-radius: 50%; 
+            border-top-color: var(--primary-white); 
+            animation: spin 1s ease-in-out infinite; 
+        }
+
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
+        
+        /* Role-based styling */
+        .role-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .role-system-admin {
+            background-color: var(--primary-green);
+            color: white;
+        }
+
+        .role-general-manager {
+            background-color: var(--primary-orange);
+            color: white;
+        }
+
+        .role-staff {
+            background-color: var(--secondary-green);
+            color: white;
+        }
+        
+        /* Module Loading Styles */
+        .module-container {
+            padding: 0;
+        }
+
+        .module-loading {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 400px;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .module-loading .loading {
+            width: 40px;
+            height: 40px;
+            border-width: 4px;
+            border-top-color: var(--primary-orange);
+        }
+
+        .module-error {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            margin: 20px;
+        }
+
+        .module-error i {
+            font-size: 3rem;
+            color: #dc3545;
+            margin-bottom: 20px;
+        }
+
+        /* Status colors */
+        .status-pending {
+            background-color: #fff3cd;
+            color: #856404;
+        }
+
+        .status-confirmed {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .status-checked-in {
+            background-color: #cce5ff;
+            color: #004085;
+        }
+
+        .status-checked-out {
+            background-color: #e2e3e5;
+            color: #383d41;
+        }
+
+        .status-cancelled {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .dashboard-widgets { 
+                grid-template-columns: repeat(2, 1fr); 
+            }
+        }
+
+        @media (max-width: 992px) {
+            .admin-sidebar { 
+                width: 70px; 
+            }
+            .admin-sidebar .nav-text, 
+            .admin-sidebar .nav-divider { 
+                display: none; 
+            }
+            .admin-content { 
+                margin-left: 70px; 
+            }
+            .admin-sidebar.collapsed { 
+                width: 0; 
+            }
+            .admin-sidebar.collapsed + .admin-content { 
+                margin-left: 0; 
+            }
+        }
+
+        @media (max-width: 768px) {
+            .dashboard-widgets { 
+                grid-template-columns: 1fr; 
+            }
+            .header-controls { 
+                flex-direction: column; 
+                align-items: flex-end; 
+                gap: 10px; 
+            }
+            .current-property { 
+                min-width: 150px; 
+            }
+            .action-buttons { 
+                flex-wrap: wrap; 
+            }
+            .admin-content {
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="container header-container">
+            <div class="admin-logo">
+                <svg class="logo-img" viewBox="0 0 133 78">
+                    <path d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#22440f" stroke-width="0.75"/>
+                    <path d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#22440f" stroke-width="0.75"/>
+                    <path d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#22440f"/>
+                    <path d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#22440f"/>
+                    <path d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#22440f"/>
+                    <path d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                </svg>
+                <div>
+                    <h1>Jumuia Resorts</h1>
+                    <p>Admin Dashboard</p>
+                </div>
+            </div>
+            
+            <div class="header-controls">
+                <div class="property-switcher">
+                    <div class="current-property" id="propertyToggle">
+                        <i class="fas fa-hotel"></i>
+                        <span>Loading...</span>
+                    </div>
+                    <div class="property-dropdown" id="propertyDropdown">
+                        <!-- Dynamically populated -->
+                    </div>
+                </div>
+                
+                <div class="user-profile" id="userProfile">
+                    <div class="avatar" id="userAvatar">U</div>
+                    <div>
+                        <div class="user-name" id="userName">User</div>
+                        <div class="user-role" id="userRole">
+                            <span class="role-badge" id="roleBadge">Loading...</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="user-menu" id="userMenu">
+                        <div class="menu-item" id="profileBtn">
+                            <i class="fas fa-user"></i>
+                            <span>My Profile</span>
+                        </div>
+                        <div class="menu-item logout" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Layout -->
+    <div class="admin-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="admin-sidebar" id="adminSidebar">
+            <div class="sidebar-header">
+                <span class="nav-text">Navigation</span>
+                <button class="collapse-btn" id="collapseBtn">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+            </div>
+            
+            <nav class="nav-menu">
+                <div class="nav-divider">Dashboard</div>
+                <div class="nav-item">
+                    <a href="#dashboard" class="nav-link active" data-module="dashboard">
+                        <i class="fas fa-tachometer-alt nav-icon"></i>
+                        <span class="nav-text">Dashboard Home</span>
+                    </a>
+                </div>
+                
+                <div class="nav-divider">Booking Management</div>
+                <div class="nav-item">
+                    <a href="#bookings" class="nav-link" data-module="bookings">
+                        <i class="fas fa-calendar-check nav-icon"></i>
+                        <span class="nav-text">Bookings</span>
+                        <span class="badge" id="pendingBookingsCount">0</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#calendar" class="nav-link" data-module="calendar">
+                        <i class="fas fa-calendar-alt nav-icon"></i>
+                        <span class="nav-text">Calendar View</span>
+                    </a>
+                </div>
+                
+                <div class="nav-divider">Marketing & Offers</div>
+                <div class="nav-item" id="offersNavItem">
+                    <a href="#offers" class="nav-link" data-module="offers">
+                        <i class="fas fa-bullhorn nav-icon"></i>
+                        <span class="nav-text">Offers</span>
+                    </a>
+                </div>
+                
+                <div class="nav-divider">Content Management</div>
+                <div class="nav-item" id="contentNavItem">
+                    <a href="#content" class="nav-link" data-module="content">
+                        <i class="fas fa-edit nav-icon"></i>
+                        <span class="nav-text">Content Editor</span>
+                    </a>
+                </div>
+                
+                <div class="nav-divider">Communication</div>
+                <div class="nav-item">
+                    <a href="#messages" class="nav-link" data-module="messages">
+                        <i class="fas fa-comments nav-icon"></i>
+                        <span class="nav-text">Messages Center</span>
+                        <span class="badge" id="unreadMessagesCount">0</span>
+                    </a>
+                </div>
+                <div class="nav-item">
+                    <a href="#feedback" class="nav-link" data-module="feedback">
+                        <i class="fas fa-star nav-icon"></i>
+                        <span class="nav-text">Feedback & Reviews</span>
+                    </a>
+                </div>
+                
+                <div class="nav-divider">Management</div>
+                <div class="nav-item" id="usersNavItem">
+                    <a href="#users" class="nav-link" data-module="users">
+                        <i class="fas fa-users-cog nav-icon"></i>
+                        <span class="nav-text">User Management</span>
+                    </a>
+                </div>
+                <div class="nav-item" id="reportsNavItem">
+                    <a href="#reports" class="nav-link" data-module="reports">
+                        <i class="fas fa-chart-bar nav-icon"></i>
+                        <span class="nav-text">Reports & Analytics</span>
+                    </a>
+                </div>
+                <div class="nav-item" id="settingsNavItem">
+                    <a href="#settings" class="nav-link" data-module="settings">
+                        <i class="fas fa-cog nav-icon"></i>
+                        <span class="nav-text">System Settings</span>
+                    </a>
+                </div>
+            </nav>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="admin-content" id="mainContentArea">
+            <!-- Dashboard Content -->
+            <div id="dashboardModule" class="module-content active">
+                <!-- Welcome Message -->
+                <div id="welcomeMessage" style="background: linear-gradient(to right, var(--primary-green), var(--secondary-green)); color: white; padding: 25px; border-radius: var(--radius); margin-bottom: 25px;">
+                    <h2 style="color: white; margin-bottom: 10px;">Welcome back, <span id="welcomeName">Admin</span>!</h2>
+                    <p>You are logged in as <strong><span id="welcomeRole">System Administrator</span></strong> 
+                    <span id="welcomeProperty" style="display: none;">for <strong><span id="propertyName"></span></strong></span></p>
+                </div>
+
+                <!-- Alert Banner -->
+                <div id="alertBanner" style="background-color: #fff3cd; color: #856404; padding: 15px; border-radius: var(--radius); margin-bottom: 25px; border-left: 4px solid #ffc107; display: none;">
+                    <i class="fas fa-exclamation-triangle"></i>
+                    <strong>Alert:</strong> <span id="alertMessage"></span>
+                </div>
+
+                <!-- Dashboard Widgets -->
+                <div class="dashboard-widgets">
+                    <div class="widget">
+                        <div class="widget-header">
+                            <div>
+                                <div class="widget-title">Today's Occupancy</div>
+                                <div class="widget-stat" id="occupancyRate">0%</div>
+                                <div class="widget-change" id="occupancyChange">
+                                    <span>Loading...</span>
+                                </div>
+                            </div>
+                            <div class="widget-icon">
+                                <i class="fas fa-bed"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <div>
+                                <div class="widget-title">Today's Check-ins</div>
+                                <div class="widget-stat" id="checkinsCount">0</div>
+                                <div class="widget-change" id="checkinsChange">
+                                    <span>No data</span>
+                                </div>
+                            </div>
+                            <div class="widget-icon">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <div>
+                                <div class="widget-title">Today's Revenue</div>
+                                <div class="widget-stat" id="todayRevenue">KES 0</div>
+                                <div class="widget-change" id="revenueChange">
+                                    <span>No data</span>
+                                </div>
+                            </div>
+                            <div class="widget-icon">
+                                <i class="fas fa-money-bill-wave"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="widget">
+                        <div class="widget-header">
+                            <div>
+                                <div class="widget-title">Pending Bookings</div>
+                                <div class="widget-stat" id="pendingBookings">0</div>
+                                <div class="widget-change" id="pendingChange">
+                                    <span>No data</span>
+                                </div>
+                            </div>
+                            <div class="widget-icon">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Comparison -->
+                <div class="property-comparison" id="propertyComparisonSection">
+                    <h3 style="margin-bottom: 20px;">Property Performance This Month</h3>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Property</th>
+                                <th>Occupancy Rate</th>
+                                <th>Revenue</th>
+                                <th>Bookings</th>
+                                <th>Status</th>
+                            </tr>
+                        </thead>
+                        <tbody id="propertyPerformance">
+                            <tr>
+                                <td colspan="5" style="text-align: center; padding: 30px;">
+                                    <i class="fas fa-spinner fa-spin"></i> Loading property data...
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Recent Activity -->
+                <div class="activity-section">
+                    <h3 style="margin-bottom: 20px;">Recent Activity</h3>
+                    <ul class="activity-list" id="recentActivity">
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-spinner fa-spin"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">Loading activities...</div>
+                                <div class="activity-time">Please wait</div>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            getDocs, 
+            query, 
+            where, 
+            orderBy, 
+            limit, 
+            doc, 
+            getDoc,
+            onSnapshot
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
+            authDomain: "jumuia-resort-limited.firebaseapp.com",
+            projectId: "jumuia-resort-limited",
+            storageBucket: "jumuia-resort-limited.firebasestorage.app",
+            messagingSenderId: "152170552230",
+            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
+            measurementId: "G-Q7BWHJ9C3M"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global variables
+        let currentUser = null;
+        let currentProperty = 'all';
+        let currentModule = 'dashboard';
+        let authInitialized = false;
+
+        // Initialize dashboard when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initEventListeners();
+            // Start authentication check with delay to avoid race conditions
+            setTimeout(() => {
+                checkAuthentication();
+            }, 100);
+        });
+
+        // Check user authentication - FIXED VERSION
+        async function checkAuthentication() {
+            try {
+                // First check localStorage
+                const userData = JSON.parse(localStorage.getItem('jumuiaAdminUser'));
+                
+                if (!userData) {
+                    console.log('No session data in localStorage');
+                    window.location.href = "index.html";
+                    return;
+                }
+
+                // Wait for Firebase auth to be ready
+                return new Promise((resolve, reject) => {
+                    const unsubscribe = onAuthStateChanged(auth, async (user) => {
+                        unsubscribe(); // Stop listening after first check
+                        
+                        if (!user) {
+                            console.log('No authenticated user in Firebase');
+                            localStorage.removeItem('jumuiaAdminUser');
+                            window.location.href = "index.html";
+                            return;
+                        }
+
+                        try {
+                            // Verify user exists in admins collection
+                            const userDoc = await getDoc(doc(db, "admins", user.uid));
+                            
+                            if (!userDoc.exists()) {
+                                console.log('User not found in admins collection');
+                                await signOut(auth);
+                                localStorage.removeItem('jumuiaAdminUser');
+                                window.location.href = "index.html";
+                                return;
+                            }
+
+                            const dbUserData = userDoc.data();
+                            
+                            // Update user session with latest data
+                            const updatedSession = {
+                                ...userData,
+                                uid: user.uid,
+                                email: user.email,
+                                name: dbUserData.name || userData.name,
+                                role: dbUserData.role,
+                                property: dbUserData.property || 'all',
+                                permissions: getPermissions(dbUserData.role, dbUserData.property)
+                            };
+                            
+                            localStorage.setItem('jumuiaAdminUser', JSON.stringify(updatedSession));
+                            currentUser = updatedSession;
+                            currentProperty = updatedSession.property === 'all' ? 'all' : updatedSession.property;
+
+                            // Setup UI with user data
+                            setupUserInterface();
+                            loadDashboardData();
+                            
+                            authInitialized = true;
+                            resolve();
+                            
+                        } catch (error) {
+                            console.error("Error in authentication:", error);
+                            localStorage.removeItem('jumuiaAdminUser');
+                            window.location.href = "index.html";
+                            reject(error);
+                        }
+                    });
+                });
+                
+            } catch (error) {
+                console.error("Authentication error:", error);
+                localStorage.removeItem('jumuiaAdminUser');
+                window.location.href = "index.html";
+            }
+        }
+
+        // Get permissions based on role
+        function getPermissions(role, property) {
+            const permissions = {
+                'system-admin': {
+                    canViewAll: true,
+                    canEditAll: true,
+                    canDelete: true,
+                    canManageUsers: true,
+                    canManageSettings: true,
+                    properties: ['limuru', 'kanamai', 'kisumu', 'all'],
+                    accessibleModules: ['dashboard', 'bookings', 'calendar', 'offers', 'content', 'messages', 'feedback', 'users', 'reports', 'settings']
+                },
+                'general-manager': {
+                    canViewAll: true,
+                    canEditAll: true,
+                    canDelete: true,
+                    canManageUsers: false,
+                    canManageSettings: false,
+                    properties: ['limuru', 'kanamai', 'kisumu', 'all'],
+                    accessibleModules: ['dashboard', 'bookings', 'calendar', 'offers', 'content', 'messages', 'feedback', 'reports']
+                },
+                'staff': {
+                    canViewAll: false,
+                    canEditAll: false,
+                    canDelete: false,
+                    canManageUsers: false,
+                    canManageSettings: false,
+                    properties: [property],
+                    accessibleModules: ['dashboard', 'bookings', 'calendar', 'messages', 'feedback']
+                }
+            };
+            
+            return permissions[role] || permissions['staff'];
+        }
+
+        // Setup user interface
+        function setupUserInterface() {
+            if (!currentUser) return;
+            
+            // Set user information
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('welcomeName').textContent = currentUser.name;
+            
+            // Format and display role
+            const roleNames = {
+                'system-admin': 'System Administrator',
+                'general-manager': 'General Manager',
+                'staff': 'Staff Member'
+            };
+            
+            const roleName = roleNames[currentUser.role] || currentUser.role;
+            document.getElementById('welcomeRole').textContent = roleName;
+            document.getElementById('roleBadge').textContent = roleName;
+            document.getElementById('roleBadge').className = `role-badge role-${currentUser.role}`;
+            
+            // Set user avatar initials
+            const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
+            document.getElementById('userAvatar').textContent = initials;
+            
+            // Setup property switcher
+            setupPropertySwitcher();
+            
+            // Setup navigation based on permissions
+            setupNavigation();
+            
+            // Start real-time listeners
+            startRealtimeListeners();
+        }
+
+        // Setup property switcher
+        function setupPropertySwitcher() {
+            const propertyToggle = document.getElementById('propertyToggle');
+            const propertyDropdown = document.getElementById('propertyDropdown');
+            
+            if (currentUser.permissions.properties.includes('all')) {
+                // Show all properties option
+                propertyToggle.innerHTML = `
+                    <i class="fas fa-globe"></i>
+                    <span>All Properties</span>
+                    <i class="fas fa-chevron-down"></i>
+                `;
+                
+                propertyDropdown.innerHTML = `
+                    <div class="property-option ${currentProperty === 'all' ? 'active' : ''}" data-property="all">
+                        <i class="fas fa-globe"></i>
+                        <span>All Properties</span>
+                    </div>
+                    <div class="property-option ${currentProperty === 'limuru' ? 'active' : ''}" data-property="limuru">
+                        <i class="fas fa-mountain"></i>
+                        <span>Limuru</span>
+                    </div>
+                    <div class="property-option ${currentProperty === 'kanamai' ? 'active' : ''}" data-property="kanamai">
+                        <i class="fas fa-umbrella-beach"></i>
+                        <span>Kanamai</span>
+                    </div>
+                    <div class="property-option ${currentProperty === 'kisumu' ? 'active' : ''}" data-property="kisumu">
+                        <i class="fas fa-hotel"></i>
+                        <span>Kisumu</span>
+                    </div>
+                `;
+                
+                // Add property selection event listeners
+                propertyToggle.addEventListener('click', () => {
+                    propertyDropdown.classList.toggle('show');
+                });
+                
+                document.querySelectorAll('.property-option').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const newProperty = this.getAttribute('data-property');
+                        if (newProperty !== currentProperty) {
+                            currentProperty = newProperty;
+                            loadDashboardData();
+                            updatePropertyDropdown();
+                        }
+                        propertyDropdown.classList.remove('show');
+                    });
+                });
+                
+            } else {
+                // Staff can only see their assigned property
+                const propertyNames = {
+                    'limuru': 'Limuru Country Home',
+                    'kanamai': 'Kanamai Beach Resort',
+                    'kisumu': 'Kisumu Hotel'
+                };
+                
+                const propertyName = propertyNames[currentUser.property] || currentUser.property;
+                const icon = getPropertyIcon(currentUser.property);
+                
+                propertyToggle.innerHTML = `
+                    <i class="${icon}"></i>
+                    <span>${propertyName}</span>
+                `;
+                
+                // Hide dropdown arrow
+                propertyToggle.style.cursor = 'default';
+            }
+            
+            // Show property name for staff in welcome message
+            if (currentUser.role === 'staff') {
+                const propertyNames = {
+                    'limuru': 'Limuru Country Home',
+                    'kanamai': 'Kanamai Beach Resort',
+                    'kisumu': 'Kisumu Hotel'
+                };
+                document.getElementById('propertyName').textContent = propertyNames[currentUser.property] || currentUser.property;
+                document.getElementById('welcomeProperty').style.display = 'inline';
+            }
+        }
+
+        function getPropertyIcon(property) {
+            const icons = {
+                'limuru': 'fas fa-mountain',
+                'kanamai': 'fas fa-umbrella-beach',
+                'kisumu': 'fas fa-hotel'
+            };
+            return icons[property] || 'fas fa-hotel';
+        }
+
+        function updatePropertyDropdown() {
+            document.querySelectorAll('.property-option').forEach(option => {
+                option.classList.remove('active');
+                if (option.getAttribute('data-property') === currentProperty) {
+                    option.classList.add('active');
+                }
+            });
+            
+            // Update toggle text
+            const propertyToggle = document.getElementById('propertyToggle');
+            if (currentProperty === 'all') {
+                propertyToggle.innerHTML = `
+                    <i class="fas fa-globe"></i>
+                    <span>All Properties</span>
+                    <i class="fas fa-chevron-down"></i>
+                `;
+            } else {
+                const propertyNames = {
+                    'limuru': 'Limuru',
+                    'kanamai': 'Kanamai',
+                    'kisumu': 'Kisumu'
+                };
+                const icon = getPropertyIcon(currentProperty);
+                
+                propertyToggle.innerHTML = `
+                    <i class="${icon}"></i>
+                    <span>${propertyNames[currentProperty]}</span>
+                    <i class="fas fa-chevron-down"></i>
+                `;
+            }
+        }
+
+        // Setup navigation based on permissions
+        function setupNavigation() {
+            const accessibleModules = currentUser.permissions.accessibleModules;
+            
+            // Show/hide navigation items based on permissions
+            document.querySelectorAll('.nav-link').forEach(link => {
+                const module = link.getAttribute('data-module');
+                
+                if (!accessibleModules.includes(module)) {
+                    link.parentElement.style.display = 'none';
+                }
+            });
+            
+            // Special handling for user management
+            if (!currentUser.permissions.canManageUsers) {
+                document.getElementById('usersNavItem').style.display = 'none';
+            }
+            
+            // Special handling for settings
+            if (!currentUser.permissions.canManageSettings) {
+                document.getElementById('settingsNavItem').style.display = 'none';
+            }
+        }
+
+        // Initialize event listeners
+        function initEventListeners() {
+            // User menu toggle
+            document.getElementById('userProfile').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('userMenu').classList.toggle('show');
+            });
+            
+            // Logout button
+            document.getElementById('logoutBtn').addEventListener('click', async function() {
+                try {
+                    await signOut(auth);
+                    localStorage.removeItem('jumuiaAdminUser');
+                    window.location.href = "index.html";
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    showAlert('Logout failed. Please try again.', 'error');
+                }
+            });
+            
+            // Profile button
+            document.getElementById('profileBtn').addEventListener('click', function() {
+                showAlert('Profile feature coming soon!', 'info');
+            });
+            
+            // Navigation
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (!authInitialized || !currentUser) {
+                        showAlert('Please wait for authentication to complete.', 'warning');
+                        return;
+                    }
+                    const module = this.getAttribute('data-module');
+                    loadModule(module);
+                });
+            });
+            
+            // Sidebar collapse
+            document.getElementById('collapseBtn').addEventListener('click', function() {
+                document.getElementById('adminSidebar').classList.toggle('collapsed');
+                const icon = this.querySelector('i');
+                icon.classList.toggle('fa-chevron-left');
+                icon.classList.toggle('fa-chevron-right');
+            });
+            
+            // Close dropdowns when clicking outside
+            document.addEventListener('click', function() {
+                document.getElementById('propertyDropdown').classList.remove('show');
+                document.getElementById('userMenu').classList.remove('show');
+            });
+        }
+
+        // Start real-time listeners for dashboard data
+        function startRealtimeListeners() {
+            listenForPendingBookings();
+            listenForUnreadMessages();
+        }
+
+        // Listen for pending bookings
+        function listenForPendingBookings() {
+            let bookingsQuery;
+            if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
+                bookingsQuery = query(
+                    collection(db, 'bookings'),
+                    where('status', '==', 'pending')
+                );
+            } else {
+                const property = currentProperty === 'all' ? currentUser.property : currentProperty;
+                bookingsQuery = query(
+                    collection(db, 'bookings'),
+                    where('property', '==', property),
+                    where('status', '==', 'pending')
+                );
+            }
+            
+            onSnapshot(bookingsQuery, (snapshot) => {
+                const pendingCount = snapshot.size;
+                document.getElementById('pendingBookings').textContent = pendingCount;
+                document.getElementById('pendingBookingsCount').textContent = pendingCount;
+                
+                // Show alert if there are pending bookings
+                if (pendingCount > 0) {
+                    showAlert(`You have ${pendingCount} pending booking${pendingCount > 1 ? 's' : ''} requiring attention.`, 'warning');
+                }
+            });
+        }
+
+        // Listen for unread messages
+        function listenForUnreadMessages() {
+            let messagesQuery;
+            if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
+                messagesQuery = query(
+                    collection(db, 'messages'),
+                    where('read', '==', false)
+                );
+            } else {
+                const property = currentProperty === 'all' ? currentUser.property : currentProperty;
+                messagesQuery = query(
+                    collection(db, 'messages'),
+                    where('property', '==', property),
+                    where('read', '==', false)
+                );
+            }
+            
+            onSnapshot(messagesQuery, (snapshot) => {
+                document.getElementById('unreadMessagesCount').textContent = snapshot.size;
+            });
+        }
+
+        // Load dashboard data
+        async function loadDashboardData() {
+            if (!currentUser) {
+                console.log('Cannot load dashboard data: No current user');
+                return;
+            }
+            
+            try {
+                // Show loading states
+                document.getElementById('occupancyRate').textContent = '...';
+                document.getElementById('checkinsCount').textContent = '...';
+                document.getElementById('todayRevenue').textContent = 'KES ...';
+                document.getElementById('pendingBookings').textContent = '...';
+                
+                // Load data in parallel
+                await Promise.all([
+                    loadOccupancyData(),
+                    loadCheckinsData(),
+                    loadRevenueData(),
+                    loadPropertyPerformance(),
+                    loadRecentActivity()
+                ]);
+                
+            } catch (error) {
+                console.error('Error loading dashboard data:', error);
+                showAlert('Failed to load dashboard data. Please refresh the page.', 'error');
+            }
+        }
+
+        // Load occupancy data
+        async function loadOccupancyData() {
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                
+                let activeQuery;
+                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
+                    activeQuery = query(
+                        collection(db, 'bookings'),
+                        where('status', 'in', ['confirmed', 'checked-in']),
+                        where('checkIn', '<=', today),
+                        where('checkOut', '>=', today)
+                    );
+                } else {
+                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
+                    activeQuery = query(
+                        collection(db, 'bookings'),
+                        where('property', '==', property),
+                        where('status', 'in', ['confirmed', 'checked-in']),
+                        where('checkIn', '<=', today),
+                        where('checkOut', '>=', today)
+                    );
+                }
+                
+                const snapshot = await getDocs(activeQuery);
+                const activeBookings = snapshot.size;
+                
+                // Calculate occupancy rate (assuming 30 rooms per property)
+                const totalRooms = currentProperty === 'all' ? 90 : 30; // 3 properties × 30 rooms
+                const occupancyRate = Math.round((activeBookings / totalRooms) * 100);
+                
+                document.getElementById('occupancyRate').textContent = `${occupancyRate}%`;
+                
+                // For demo, show random change
+                const change = Math.floor(Math.random() * 10) - 3;
+                const changeElement = document.getElementById('occupancyChange');
+                
+                if (change > 0) {
+                    changeElement.innerHTML = `<i class="fas fa-arrow-up"></i> ${change}% from yesterday`;
+                    changeElement.className = 'widget-change positive';
+                } else if (change < 0) {
+                    changeElement.innerHTML = `<i class="fas fa-arrow-down"></i> ${Math.abs(change)}% from yesterday`;
+                    changeElement.className = 'widget-change negative';
+                } else {
+                    changeElement.innerHTML = 'No change from yesterday';
+                    changeElement.className = 'widget-change';
+                }
+                
+            } catch (error) {
+                console.error('Error loading occupancy data:', error);
+                document.getElementById('occupancyRate').textContent = 'Error';
+                document.getElementById('occupancyChange').innerHTML = '<span class="text-danger">Failed to load</span>';
+            }
+        }
+
+        // Load check-ins data
+        async function loadCheckinsData() {
+            try {
+                const today = new Date().toISOString().split('T')[0];
+                
+                let checkinsQuery;
+                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
+                    checkinsQuery = query(
+                        collection(db, 'bookings'),
+                        where('checkIn', '==', today),
+                        where('status', 'in', ['confirmed', 'checked-in'])
+                    );
+                } else {
+                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
+                    checkinsQuery = query(
+                        collection(db, 'bookings'),
+                        where('property', '==', property),
+                        where('checkIn', '==', today),
+                        where('status', 'in', ['confirmed', 'checked-in'])
+                    );
+                }
+                
+                const snapshot = await getDocs(checkinsQuery);
+                document.getElementById('checkinsCount').textContent = snapshot.size;
+                
+            } catch (error) {
+                console.error('Error loading check-ins data:', error);
+                document.getElementById('checkinsCount').textContent = '0';
+            }
+        }
+
+        // Load revenue data
+        async function loadRevenueData() {
+            try {
+                const today = new Date();
+                const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+                const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
+                
+                let revenueQuery;
+                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
+                    revenueQuery = query(
+                        collection(db, 'bookings'),
+                        where('status', 'in', ['confirmed', 'checked-in', 'checked-out']),
+                        where('checkIn', '>=', startOfMonth.toISOString().split('T')[0]),
+                        where('checkIn', '<=', endOfMonth.toISOString().split('T')[0])
+                    );
+                } else {
+                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
+                    revenueQuery = query(
+                        collection(db, 'bookings'),
+                        where('property', '==', property),
+                        where('status', 'in', ['confirmed', 'checked-in', 'checked-out']),
+                        where('checkIn', '>=', startOfMonth.toISOString().split('T')[0]),
+                        where('checkIn', '<=', endOfMonth.toISOString().split('T')[0])
+                    );
+                }
+                
+                const snapshot = await getDocs(revenueQuery);
+                let totalRevenue = 0;
+                
+                snapshot.forEach(doc => {
+                    const booking = doc.data();
+                    totalRevenue += booking.totalAmount || 0;
+                });
+                
+                document.getElementById('todayRevenue').textContent = `KES ${totalRevenue.toLocaleString()}`;
+                
+                // For demo, show random change
+                const change = Math.floor(Math.random() * 20) - 5;
+                const changeElement = document.getElementById('revenueChange');
+                
+                if (change > 0) {
+                    changeElement.innerHTML = `<i class="fas fa-arrow-up"></i> ${change}% from last month`;
+                    changeElement.className = 'widget-change positive';
+                } else if (change < 0) {
+                    changeElement.innerHTML = `<i class="fas fa-arrow-down"></i> ${Math.abs(change)}% from last month`;
+                    changeElement.className = 'widget-change negative';
+                } else {
+                    changeElement.innerHTML = 'No change from last month';
+                    changeElement.className = 'widget-change';
+                }
+                
+            } catch (error) {
+                console.error('Error loading revenue data:', error);
+                document.getElementById('todayRevenue').textContent = 'KES 0';
+            }
+        }
+
+        // Load property performance
+        async function loadPropertyPerformance() {
+            try {
+                const properties = ['limuru', 'kanamai', 'kisumu'];
+                const performanceTable = document.getElementById('propertyPerformance');
+                
+                // Only show for system admin and general manager
+                if (currentUser.role !== 'system-admin' && currentUser.role !== 'general-manager') {
+                    document.getElementById('propertyComparisonSection').style.display = 'none';
+                    return;
+                }
+                
+                performanceTable.innerHTML = '';
+                
+                for (const property of properties) {
+                    if (currentProperty !== 'all' && currentProperty !== property) {
+                        continue;
+                    }
+                    
+                    // Get active bookings for this property
+                    const today = new Date().toISOString().split('T')[0];
+                    const bookingsQuery = query(
+                        collection(db, 'bookings'),
+                        where('property', '==', property),
+                        where('status', 'in', ['confirmed', 'checked-in']),
+                        where('checkIn', '<=', today),
+                        where('checkOut', '>=', today)
+                    );
+                    
+                    const snapshot = await getDocs(bookingsQuery);
+                    
+                    // Calculate metrics
+                    let revenue = 0;
+                    let activeBookings = 0;
+                    
+                    snapshot.forEach(doc => {
+                        const booking = doc.data();
+                        revenue += booking.totalAmount || 0;
+                        activeBookings++;
+                    });
+                    
+                    // Get total bookings for this month
+                    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+                    const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+                    
+                    const monthlyBookingsQuery = query(
+                        collection(db, 'bookings'),
+                        where('property', '==', property),
+                        where('status', 'in', ['confirmed', 'checked-in', 'checked-out']),
+                        where('checkIn', '>=', startOfMonth.toISOString().split('T')[0]),
+                        where('checkIn', '<=', endOfMonth.toISOString().split('T')[0])
+                    );
+                    
+                    const monthlySnapshot = await getDocs(monthlyBookingsQuery);
+                    const totalBookings = monthlySnapshot.size;
+                    
+                    // Calculate occupancy rate
+                    const occupancyRate = Math.min(100, Math.round((activeBookings / 30) * 100));
+                    
+                    // Property names
+                    const propertyNames = {
+                        'limuru': 'Limuru Country Home',
+                        'kanamai': 'Kanamai Beach Resort',
+                        'kisumu': 'Kisumu Hotel'
+                    };
+                    
+                    // Status indicator
+                    let status = 'Good';
+                    let statusColor = 'success';
+                    
+                    if (occupancyRate >= 80) {
+                        status = 'Full';
+                        statusColor = 'success';
+                    } else if (occupancyRate >= 50) {
+                        status = 'Busy';
+                        statusColor = 'info';
+                    } else if (occupancyRate >= 20) {
+                        status = 'Available';
+                        statusColor = 'warning';
+                    } else {
+                        status = 'Quiet';
+                        statusColor = 'secondary';
+                    }
+                    
+                    performanceTable.innerHTML += `
+                        <tr>
+                            <td><strong>${propertyNames[property]}</strong></td>
+                            <td>
+                                <div>${occupancyRate}%</div>
+                                <div class="progress-bar">
+                                    <div class="progress-fill" style="width: ${occupancyRate}%"></div>
+                                </div>
+                            </td>
+                            <td>KES ${Math.round(revenue / 1000)}K</td>
+                            <td>${totalBookings}</td>
+                            <td><span class="text-${statusColor}">${status}</span></td>
+                        </tr>
+                    `;
+                }
+                
+                if (performanceTable.innerHTML === '') {
+                    performanceTable.innerHTML = `
+                        <tr>
+                            <td colspan="5" style="text-align: center; padding: 30px;">
+                                No data available for selected property
+                            </td>
+                        </tr>
+                    `;
+                }
+                
+            } catch (error) {
+                console.error('Error loading property performance:', error);
+                document.getElementById('propertyPerformance').innerHTML = `
+                    <tr>
+                        <td colspan="5" style="text-align: center; padding: 30px; color: #dc3545;">
+                            <i class="fas fa-exclamation-circle"></i> Failed to load property data
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Load recent activity
+        async function loadRecentActivity() {
+            try {
+                let activitiesQuery;
+                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
+                    activitiesQuery = query(
+                        collection(db, 'activities'),
+                        orderBy('timestamp', 'desc'),
+                        limit(10)
+                    );
+                } else {
+                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
+                    activitiesQuery = query(
+                        collection(db, 'activities'),
+                        where('property', '==', property),
+                        orderBy('timestamp', 'desc'),
+                        limit(10)
+                    );
+                }
+                
+                const snapshot = await getDocs(activitiesQuery);
+                const activityList = document.getElementById('recentActivity');
+                activityList.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    activityList.innerHTML = `
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-info-circle"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">No recent activity</div>
+                                <div class="activity-time">Activities will appear here</div>
+                            </div>
+                        </li>
+                    `;
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const activity = doc.data();
+                    const timeAgo = getTimeAgo(activity.timestamp?.toDate() || new Date());
+                    
+                    const iconClass = getActivityIcon(activity.type);
+                    const iconColor = getActivityColor(activity.type);
+                    
+                    activityList.innerHTML += `
+                        <li class="activity-item">
+                            <div class="activity-icon" style="background-color: ${iconColor}; color: white;">
+                                <i class="${iconClass}"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">${activity.description}</div>
+                                <div class="activity-time">${activity.user || 'System'} • ${timeAgo}</div>
+                            </div>
+                        </li>
+                    `;
+                });
+                
+            } catch (error) {
+                console.error('Error loading recent activity:', error);
+                document.getElementById('recentActivity').innerHTML = `
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background-color: #dc3545; color: white;">
+                            <i class="fas fa-exclamation-circle"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">Failed to load activities</div>
+                            <div class="activity-time">Please try again later</div>
+                        </div>
+                    </li>
+                `;
+            }
+        }
+
+        // Helper function to get time ago
+        function getTimeAgo(date) {
+            const seconds = Math.floor((new Date() - date) / 1000);
+            
+            let interval = seconds / 31536000;
+            if (interval > 1) return Math.floor(interval) + " years ago";
+            
+            interval = seconds / 2592000;
+            if (interval > 1) return Math.floor(interval) + " months ago";
+            
+            interval = seconds / 86400;
+            if (interval > 1) return Math.floor(interval) + " days ago";
+            
+            interval = seconds / 3600;
+            if (interval > 1) return Math.floor(interval) + " hours ago";
+            
+            interval = seconds / 60;
+            if (interval > 1) return Math.floor(interval) + " minutes ago";
+            
+            return "Just now";
+        }
+
+        // Helper function to get activity icon
+        function getActivityIcon(type) {
+            const icons = {
+                'booking': 'fas fa-calendar-check',
+                'checkin': 'fas fa-sign-in-alt',
+                'checkout': 'fas fa-sign-out-alt',
+                'payment': 'fas fa-credit-card',
+                'review': 'fas fa-star',
+                'message': 'fas fa-comment',
+                'user': 'fas fa-user-plus',
+                'system': 'fas fa-cog'
+            };
+            return icons[type] || 'fas fa-info-circle';
+        }
+
+        // Helper function to get activity color
+        function getActivityColor(type) {
+            const colors = {
+                'booking': '#22440f',
+                'checkin': '#1a5c1a',
+                'checkout': '#f3a435',
+                'payment': '#28a745',
+                'review': '#ffc107',
+                'message': '#17a2b8',
+                'user': '#6f42c1',
+                'system': '#6c757d'
+            };
+            return colors[type] || '#22440f';
+        }
+
+        // Load module function
+        async function loadModule(moduleName) {
+            try {
+                // Check permissions
+                if (!currentUser.permissions.accessibleModules.includes(moduleName)) {
+                    showAlert(`You don't have permission to access the ${moduleName} module.`, 'error');
+                    return;
+                }
+                
+                // Update active navigation
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.classList.remove('active');
+                });
+                document.querySelector(`.nav-link[data-module="${moduleName}"]`).classList.add('active');
+                
+                currentModule = moduleName;
+                
+                // Update URL hash
+                window.location.hash = moduleName;
+                
+                // Show loading state
+                const mainContent = document.getElementById('mainContentArea');
+                mainContent.innerHTML = `
+                    <div class="module-loading">
+                        <div class="loading"></div>
+                        <p>Loading ${moduleName} module...</p>
+                    </div>
+                `;
+                
+                if (moduleName === 'dashboard') {
+                    // Reload dashboard
+                    mainContent.innerHTML = document.getElementById('dashboardModule').outerHTML;
+                    loadDashboardData();
+                } else {
+                    // Load module from external file
+                    const response = await fetch(`modules/${moduleName}.html`);
+                    
+                    if (!response.ok) {
+                        throw new Error(`Module "${moduleName}" not found`);
+                    }
+                    
+                    const html = await response.text();
+                    mainContent.innerHTML = html;
+                    
+                    // Load module JavaScript if it exists
+                    try {
+                        const scriptResponse = await fetch(`modules/${moduleName}.js`);
+                        if (scriptResponse.ok) {
+                            const scriptText = await scriptResponse.text();
+                            const script = document.createElement('script');
+                            script.textContent = scriptText;
+                            document.head.appendChild(script);
+                        }
+                    } catch (error) {
+                        console.log(`No JavaScript found for ${moduleName} module`);
+                    }
+                    
+                    // Initialize module if init function exists
+                    if (typeof window[`init${capitalizeFirstLetter(moduleName)}`] === 'function') {
+                        window[`init${capitalizeFirstLetter(moduleName)}`]();
+                    }
+                }
+                
+            } catch (error) {
+                console.error(`Error loading module ${moduleName}:`, error);
+                
+                const mainContent = document.getElementById('mainContentArea');
+                mainContent.innerHTML = `
+                    <div class="module-error">
+                        <i class="fas fa-exclamation-circle"></i>
+                        <h3>Failed to load module</h3>
+                        <p>Error: ${error.message}</p>
+                        <button onclick="loadModule('dashboard')" class="btn btn-primary" style="margin-top: 20px;">
+                            <i class="fas fa-tachometer-alt"></i> Return to Dashboard
+                        </button>
+                    </div>
+                `;
+            }
+        }
+
+        // Helper function to capitalize first letter
+        function capitalizeFirstLetter(string) {
+            return string.charAt(0).toUpperCase() + string.slice(1);
+        }
+
+        // Show alert function
+        function showAlert(message, type = 'info') {
+            const alertBanner = document.getElementById('alertBanner');
+            const alertMessage = document.getElementById('alertMessage');
+            
+            // Set message and type
+            alertMessage.textContent = message;
+            
+            // Set color based on type
+            switch(type) {
+                case 'success':
+                    alertBanner.style.backgroundColor = '#d4edda';
+                    alertBanner.style.color = '#155724';
+                    alertBanner.style.borderLeftColor = '#c3e6cb';
+                    break;
+                case 'error':
+                    alertBanner.style.backgroundColor = '#f8d7da';
+                    alertBanner.style.color = '#721c24';
+                    alertBanner.style.borderLeftColor = '#f5c6cb';
+                    break;
+                case 'warning':
+                    alertBanner.style.backgroundColor = '#fff3cd';
+                    alertBanner.style.color = '#856404';
+                    alertBanner.style.borderLeftColor = '#ffc107';
+                    break;
+                case 'info':
+                    alertBanner.style.backgroundColor = '#cce5ff';
+                    alertBanner.style.color = '#004085';
+                    alertBanner.style.borderLeftColor = '#b8daff';
+                    break;
+            }
+            
+            alertBanner.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertBanner.style.display = 'none';
+            }, 5000);
+        }
+
+        // Handle URL hash changes
+        function checkUrlHash() {
+            const hash = window.location.hash.substring(1);
+            if (hash && hash !== 'dashboard') {
+                const navLink = document.querySelector(`.nav-link[data-module="${hash}"]`);
+                if (navLink) {
+                    setTimeout(() => {
+                        loadModule(hash);
+                    }, 100);
+                }
+            }
+        }
+
+        // Handle browser back/forward
+        window.addEventListener('popstate', function() {
+            checkUrlHash();
+        });
+
+        // Make functions available globally
+        window.loadModule = loadModule;
+        window.showAlert = showAlert;
+
+        // Check URL hash on load
+        checkUrlHash();
+
+        // Handle window resize for responsive sidebar
+        window.addEventListener('resize', function() {
+            if (window.innerWidth <= 992) {
+                document.getElementById('adminSidebar').classList.add('collapsed');
+            }
+        });
+
+    </script>
+    <script src="modules/common.js"></script>
+</body>
+</html>

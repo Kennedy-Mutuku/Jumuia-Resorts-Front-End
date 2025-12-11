@@ -1,0 +1,1313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rooms & Rates - Jumuia Hotel Kisumu</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* KISUMU COLOR SCHEME */
+        :root {
+            --primary-green: #024423;
+            --primary-orange: #f3a435;
+            --primary-white: #ffffff;
+            --secondary-green: #1a5c38;
+            --dark-green: #012d18;
+            --light-green: #e9f5e5;
+            --lake-blue: #006994;
+            --lake-light: #d4eaf7;
+            --gray-bg: #f8f9fa;
+            --gray-border: #e0e0e0;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--gray-bg);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Resort Header */
+        .resort-header {
+            background-color: var(--primary-white);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            padding: 10px 0;
+        }
+
+        .header-top-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .home-link {
+            color: var(--primary-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .home-link:hover {
+            color: var(--primary-orange);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .resort-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .resort-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .resort-logo h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--primary-green);
+        }
+
+        .resort-location {
+            font-size: 0.9rem;
+            color: var(--primary-orange);
+            font-weight: 500;
+        }
+
+        .resort-nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .resort-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .resort-nav a:hover {
+            color: var(--primary-orange);
+        }
+
+        .resort-nav a.active {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .resort-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+        }
+
+        .btn-primary:hover {
+            background-color: #e5941f;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+        }
+
+        .btn-lake {
+            background-color: var(--lake-blue);
+            color: var(--primary-white);
+        }
+
+        .btn-lake:hover {
+            background-color: #005a82;
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-green);
+        }
+
+        /* Page Hero */
+        .page-hero {
+            background: linear-gradient(rgba(2, 68, 35, 0.85), rgba(2, 68, 35, 0.85)), url('../../images/resorts/kisumu/execcutive.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--primary-white);
+            padding: 180px 0 100px;
+            margin-top: 120px;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary-white);
+        }
+
+        .page-hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Room Types Section */
+        .rooms-section {
+            padding: 80px 0;
+        }
+
+        .room-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 40px;
+            margin-bottom: 60px;
+        }
+
+        .room-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            border: 1px solid var(--gray-border);
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .room-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .room-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .room-content {
+            padding: 30px;
+        }
+
+        .room-content h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--primary-green);
+        }
+
+        .room-features {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .room-features li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+        }
+
+        .room-features i {
+            color: var(--primary-green);
+            width: 20px;
+        }
+
+        .room-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin: 20px 0;
+        }
+
+        .price-period {
+            font-size: 1rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* Rates Table Section */
+        .rates-section {
+            padding: 80px 0;
+            background-color: var(--light-green);
+        }
+
+        .rates-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--gray-border);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .rate-tab {
+            padding: 15px 30px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            background: var(--primary-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .rate-tab:hover {
+            color: var(--primary-green);
+            transform: translateY(-3px);
+        }
+
+        .rate-tab.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+            background: linear-gradient(135deg, var(--primary-white), var(--light-green));
+        }
+
+        .rates-table-container {
+            overflow-x: auto;
+            margin-bottom: 30px;
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .rates-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .rates-table th {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            padding: 15px;
+            text-align: left;
+            font-weight: 600;
+        }
+
+        .rates-table td {
+            padding: 15px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .rates-table tr:nth-child(even) {
+            background-color: var(--light-green);
+        }
+
+        .rates-table tr:hover {
+            background-color: rgba(243, 164, 53, 0.1);
+        }
+
+        .table-note {
+            font-style: italic;
+            color: var(--text-light);
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        /* Packages Section */
+        .packages-section {
+            padding: 80px 0;
+            background-color: var(--primary-white);
+        }
+
+        .packages-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .package-card {
+            background: linear-gradient(135deg, #f8f9fa, var(--lake-light));
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .package-card:hover {
+            border-color: var(--primary-orange);
+            transform: translateY(-5px);
+        }
+
+        .package-card.special {
+            border-color: var(--primary-orange);
+            position: relative;
+            overflow: hidden;
+            background: linear-gradient(135deg, var(--lake-light), var(--light-green));
+        }
+
+        .package-card.special::before {
+            content: 'RECOMMENDED';
+            position: absolute;
+            top: 20px;
+            right: -40px;
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+            padding: 5px 40px;
+            transform: rotate(45deg);
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .package-icon {
+            width: 70px;
+            height: 70px;
+            background-color: var(--light-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .package-icon i {
+            font-size: 1.8rem;
+            color: var(--primary-green);
+        }
+
+        .package-price {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin: 20px 0;
+        }
+
+        /* Policy Section */
+        .policy-section {
+            padding: 80px 0;
+            background-color: var(--gray-bg);
+        }
+
+        .policy-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .policy-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+        }
+
+        .policy-card h3 {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            color: var(--primary-green);
+        }
+
+        .policy-card h3 i {
+            color: var(--primary-orange);
+        }
+
+        .policy-list {
+            list-style: none;
+        }
+
+        .policy-list li {
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .policy-list li:last-child {
+            border-bottom: none;
+        }
+
+        /* Facilities Section */
+        .facilities-section {
+            padding: 80px 0;
+            background-color: var(--lake-light);
+        }
+
+        .facilities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+
+        .facility-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .facility-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .facility-icon {
+            width: 70px;
+            height: 70px;
+            background-color: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .facility-icon i {
+            font-size: 1.8rem;
+            color: var(--primary-white);
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--primary-white);
+        }
+
+        .cta-section h2 {
+            color: var(--primary-white);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Footer */
+        .resort-footer {
+            background-color: var(--dark-green);
+            color: var(--primary-white);
+            padding: 70px 0 30px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--primary-white);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--primary-white);
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-orange);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .room-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .resort-nav {
+                position: fixed;
+                top: 120px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 120px);
+                background-color: var(--primary-white);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 40px;
+                transition: left 0.3s;
+                gap: 30px;
+            }
+            
+            .resort-nav.active {
+                left: 0;
+            }
+            
+            .page-hero {
+                padding: 150px 0 80px;
+                margin-top: 100px;
+            }
+            
+            .rates-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .rate-tab {
+                width: 100%;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .room-content {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Resort Header -->
+    <header class="resort-header">
+        <div class="header-top">
+            <div class="container header-top-content">
+                <a href="../../index.html" class="home-link">
+                    <i class="fas fa-home"></i>
+                    <span>Back to Jumuia Resorts Home</span>
+                </a>
+                <div class="header-actions">
+                    <a href="tel:+254713576969" class="home-link">
+                        <i class="fas fa-phone"></i>
+                        <span>+254 713 576969</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container resort-header-content">
+            <div class="resort-logo">
+                <svg class="logo-img" viewBox="0 0 133 78">
+                    <path d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
+                    <path d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
+                    <path d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
+                    <path d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                </svg>
+                <div>
+                    <h1>Jumuia Hotel Kisumu</h1>
+                    <p class="resort-location">Kisumu, Kenya</p>
+                </div>
+            </div>
+            
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <nav class="resort-nav" id="resortNav">
+                <a href="index.html">Home</a>
+                <a href="rooms.html" class="active">Rooms & Rates</a>
+                <a href="conference.html">Conference</a>
+                <a href="offers.html">Offers</a>
+                <a href="excursions.html">Excursions</a>
+                <a href="feedback.html">Rate Us</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="booking.html" class="btn btn-primary">Book Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Rooms & Accommodation</h1>
+            <p>Experience comfortable stays in our well-appointed rooms and suites. Choose from standard rooms, executive suites, and junior suites designed for both business and leisure travelers.</p>
+        </div>
+    </section>
+
+    <!-- Room Types Section -->
+    <section class="rooms-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Room Types</h2>
+                <p>Each room is designed for comfort, with modern amenities and warm hospitality</p>
+            </div>
+            
+            <div class="room-grid">
+                <!-- Standard Single -->
+                <div class="room-card">
+                    <div class="room-image" style="background-image: url('../../images/resorts/kisumu/standard-single_standard-single.jpg');">
+                        <span class="room-tag">Standard</span>
+                    </div>
+                    <div class="room-content">
+                        <h3>Standard Single Room</h3>
+                        <p>Comfortable single rooms perfect for solo travelers, featuring all essential amenities for a pleasant stay in Kisumu.</p>
+                        
+                        <ul class="room-features">
+                            <li><i class="fas fa-bed"></i> Single Bed</li>
+                            <li><i class="fas fa-wifi"></i> Free WiFi</li>
+                            <li><i class="fas fa-tv"></i> Flat-screen TV</li>
+                            <li><i class="fas fa-coffee"></i> Tea/Coffee Maker</li>
+                            <li><i class="fas fa-bath"></i> En-suite Bathroom</li>
+                        </ul>
+                        
+                        <div class="room-price">KES 5,500 <span class="price-period">B&B per night</span></div>
+                        
+                        <a href="booking.html" class="btn btn-primary" style="width: 100%;">Book This Room</a>
+                    </div>
+                </div>
+                
+                <!-- Standard Double/Twin -->
+                <div class="room-card">
+                    <div class="room-image" style="background-image: url('../../images/resorts/kisumu/standard-double_standard-double.jpg');">
+                        <span class="room-tag">Popular Choice</span>
+                    </div>
+                    <div class="room-content">
+                        <h3>Standard Double/Twin Room</h3>
+                        <p>Spacious double or twin rooms perfect for couples, friends, or colleagues traveling together.</p>
+                        
+                        <ul class="room-features">
+                            <li><i class="fas fa-bed"></i> Double or Twin Beds</li>
+                            <li><i class="fas fa-wifi"></i> High-speed WiFi</li>
+                            <li><i class="fas fa-tv"></i> Smart TV</li>
+                            <li><i class="fas fa-concierge-bell"></i> Room Service</li>
+                            <li><i class="fas fa-bath"></i> Modern Bathroom</li>
+                        </ul>
+                        
+                        <div class="room-price">KES 7,500 <span class="price-period">B&B per room</span></div>
+                        
+                        <a href="booking.html" class="btn btn-primary" style="width: 100%;">Book This Room</a>
+                    </div>
+                </div>
+                
+                <!-- Junior Suite Single -->
+                <div class="room-card">
+                    <div class="room-image" style="background-image: url('../../images/resorts/kisumu/twins_twins.jpg');">
+                        <span class="room-tag">Executive</span>
+                    </div>
+                    <div class="room-content">
+                        <h3>Junior Suite Single</h3>
+                        <p>Spacious junior suite with separate living area, perfect for business travelers or those seeking extra comfort.</p>
+                        
+                        <ul class="room-features">
+                            <li><i class="fas fa-bed"></i> King-size Bed</li>
+                            <li><i class="fas fa-wifi"></i> Premium WiFi</li>
+                            <li><i class="fas fa-tv"></i> Large Smart TV</li>
+                            <li><i class="fas fa-couch"></i> Separate Seating Area</li>
+                            <li><i class="fas fa-bath"></i> Bathroom with Amenities</li>
+                        </ul>
+                        
+                        <div class="room-price">KES 8,000 <span class="price-period">B&B per night</span></div>
+                        
+                        <a href="booking.html" class="btn btn-primary" style="width: 100%;">Book This Room</a>
+                    </div>
+                </div>
+                
+                <!-- Junior Suite Double -->
+                <div class="room-card">
+                    <div class="room-image" style="background-image: url('../../images/resorts/kisumu/execcutive.jpg');">
+                        <span class="room-tag">Premium</span>
+                    </div>
+                    <div class="room-content">
+                        <h3>Junior Suite Double</h3>
+                        <p>Luxurious junior suite with elegant decor, perfect for special occasions or executive stays.</p>
+                        
+                        <ul class="room-features">
+                            <li><i class="fas fa-bed"></i> King-size Bed</li>
+                            <li><i class="fas fa-wifi"></i> Premium WiFi</li>
+                            <li><i class="fas fa-tv"></i> Large Smart TV</li>
+                            <li><i class="fas fa-door-open"></i> Spacious Layout</li>
+                            <li><i class="fas fa-hot-tub"></i> Bathtub & Shower</li>
+                        </ul>
+                        
+                        <div class="room-price">KES 9,000 <span class="price-period">B&B per room</span></div>
+                        
+                        <a href="booking.html" class="btn btn-lake" style="width: 100%;">Book This Room</a>
+                    </div>
+                </div>
+                
+                <!-- Conference Package Room -->
+                <div class="room-card">
+                    <div class="room-image" style="background-image: url('../../images/resorts/kisumu/Triple-room_triple-rooms.jpg');">
+                        <span class="room-tag">Conference</span>
+                    </div>
+                    <div class="room-content">
+                        <h3>Conference Package Room</h3>
+                        <p>Special rates for conference attendees with access to all hotel facilities and meeting spaces.</p>
+                        
+                        <ul class="room-features">
+                            <li><i class="fas fa-bed"></i> Choice of Bed Type</li>
+                            <li><i class="fas fa-wifi"></i> Business Center Access</li>
+                            <li><i class="fas fa-tv"></i> Smart TV</li>
+                            <li><i class="fas fa-users"></i> Conference Discount</li>
+                            <li><i class="fas fa-utensils"></i> Meal Packages Available</li>
+                        </ul>
+                        
+                        <div class="room-price">From KES 7,500 <span class="price-period">B&B per person</span></div>
+                        
+                        <div style="display: flex; gap: 10px; margin-top: 20px;">
+                            <a href="conference.html" class="btn btn-primary" style="flex: 1;">Conference Info</a>
+                            <a href="booking.html" class="btn btn-secondary" style="flex: 1;">Book Package</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Rates Section -->
+    <section class="rates-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Detailed Rates 2025</h2>
+                <p>All rates are in Kenyan Shillings and inclusive of statutory taxes</p>
+            </div>
+            
+            <div class="rates-tabs">
+                <div class="rate-tab active" data-tab="accommodation">Accommodation Rates (KES)</div>
+                <div class="rate-tab" data-tab="usd">Accommodation Rates (USD)</div>
+                <div class="rate-tab" data-tab="conference">Conference Packages</div>
+            </div>
+            
+            <div class="rates-table-container">
+                <!-- Residential Rates Table (KES) -->
+                <div class="rates-content" id="accommodationRates">
+                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">RESIDENTIAL RATES - KENYAN SHILLINGS (KES)</h3>
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>ROOM TYPE</th>
+                                <th>BED & BREAKFAST</th>
+                                <th>HALF BOARD</th>
+                                <th>FULL BOARD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Standard Single</strong></td>
+                                <td>5,500</td>
+                                <td>7,500</td>
+                                <td>6,500</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Standard Double/Twin</strong></td>
+                                <td>7,500</td>
+                                <td>11,500</td>
+                                <td>9,500</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Junior Suite Single</strong></td>
+                                <td>8,000</td>
+                                <td>10,000</td>
+                                <td>9,000</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Junior Suite Double</strong></td>
+                                <td>9,000</td>
+                                <td>13,000</td>
+                                <td>11,000</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="table-note">All rates are per room per night, inclusive of taxes</p>
+                </div>
+                
+                <!-- USD Rates Table (Hidden by default) -->
+                <div class="rates-content" id="usdRates" style="display: none;">
+                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">NON-RESIDENTIAL RATES - US DOLLARS (USD)</h3>
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>ROOM TYPE</th>
+                                <th>BED & BREAKFAST</th>
+                                <th>HALF BOARD</th>
+                                <th>FULL BOARD</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Standard Single</strong></td>
+                                <td>66</td>
+                                <td>86</td>
+                                <td>76</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Standard Double/Twin</strong></td>
+                                <td>96</td>
+                                <td>142</td>
+                                <td>118</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Junior Suite Single</strong></td>
+                                <td>89</td>
+                                <td>110</td>
+                                <td>100</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Junior Suite Double</strong></td>
+                                <td>100</td>
+                                <td>122</td>
+                                <td>110</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="table-note">All rates are per room per night, inclusive of taxes</p>
+                </div>
+                
+                <!-- Conference Packages Table (Hidden by default) -->
+                <div class="rates-content" id="conferenceRates" style="display: none;">
+                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">CONFERENCE PACKAGES</h3>
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>PACKAGE</th>
+                                <th>KES PER PERSON</th>
+                                <th>USD PER PERSON</th>
+                                <th>INCLUDES</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Jumuia Corporate</strong></td>
+                                <td>7,900</td>
+                                <td>86</td>
+                                <td>Conference facilities, meals, accommodation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Jumuia Executive</strong></td>
+                                <td>8,515</td>
+                                <td>108</td>
+                                <td>Premium conference, meals, executive room</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Full Day Conference</strong></td>
+                                <td>2,500</td>
+                                <td>33</td>
+                                <td>Conference room, tea breaks, lunch</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Half Day Conference</strong></td>
+                                <td>2,000</td>
+                                <td>27</td>
+                                <td>Conference room, tea break</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <p class="table-note">Conference packages include venue, equipment, and specified meals</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Facilities Section -->
+    <section class="facilities-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Hotel Facilities</h2>
+                <p>Enjoy our comprehensive facilities during your stay in Kisumu</p>
+            </div>
+            
+            <div class="facilities-grid">
+                <div class="facility-card">
+                    <div class="facility-icon">
+                        <i class="fas fa-swimming-pool"></i>
+                    </div>
+                    <h3>Swimming Pool</h3>
+                    <p>Refresh in our outdoor swimming pool with separate adult and children's sections.</p>
+                    <p style="color: var(--primary-orange); font-weight: 600; margin-top: 15px;">Adults: KES 500 | Children: KES 300</p>
+                </div>
+                
+                <div class="facility-card">
+                    <div class="facility-icon">
+                        <i class="fas fa-conference"></i>
+                    </div>
+                    <h3>Conference Facilities</h3>
+                    <p>State-of-the-art conference rooms for 20 to 200 delegates with modern AV equipment.</p>
+                    <p style="color: var(--primary-orange); font-weight: 600; margin-top: 15px;">Multiple room sizes available</p>
+                </div>
+                
+                <div class="facility-card">
+                    <div class="facility-icon">
+                        <i class="fas fa-wifi"></i>
+                    </div>
+                    <h3>High-Speed Internet</h3>
+                    <p>Complimentary high-speed WiFi throughout the hotel for all guests.</p>
+                    <p style="color: var(--primary-orange); font-weight: 600; margin-top: 15px;">Free for all guests</p>
+                </div>
+                
+                <div class="facility-card">
+                    <div class="facility-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>Restaurant & Bar</h3>
+                    <p>Enjoy local and international cuisine at our restaurant and relax at the bar.</p>
+                    <p style="color: var(--primary-orange); font-weight: 600; margin-top: 15px;">Open 6:00 AM - 11:00 PM</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Policy Section -->
+    <section class="policy-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Important Policies</h2>
+                <p>Please review our policies before booking</p>
+            </div>
+            
+            <div class="policy-grid">
+                <div class="policy-card">
+                    <h3><i class="fas fa-child"></i> Child Policy</h3>
+                    <ul class="policy-list">
+                        <li><strong>Children below 3 years:</strong> Free (Sharing with parents)</li>
+                        <li><strong>Children 3-12 years sharing with parents:</strong> 50% of adult rate</li>
+                        <li><strong>Children 3-12 years in own room:</strong> 75% of adult rate</li>
+                        <li><strong>Maximum 2 children per room</strong></li>
+                    </ul>
+                </div>
+                
+                <div class="policy-card">
+                    <h3><i class="fas fa-clock"></i> Check-in/Check-out</h3>
+                    <ul class="policy-list">
+                        <li><strong>Check-in time:</strong> 2:00 PM</li>
+                        <li><strong>Check-out time:</strong> 11:00 AM</li>
+                        <li><strong>Day room (12pm-6pm):</strong> 75% of room rate</li>
+                        <li><strong>Late check-out (after 6pm):</strong> Full night's rate</li>
+                    </ul>
+                </div>
+                
+                <div class="policy-card">
+                    <h3><i class="fas fa-bed"></i> Extra Bed & Person Policy</h3>
+                    <ul class="policy-list">
+                        <li><strong>Extra bed for adults:</strong> 40% of twin/double room rate</li>
+                        <li><strong>Extra person in a room:</strong> KES 2,000.00</li>
+                        <li><strong>Food supplement per person:</strong> KES 1,000.00</li>
+                        <li><strong>Swimming pool access:</strong> Separate charges apply</li>
+                    </ul>
+                </div>
+                
+                <div class="policy-card">
+                    <h3><i class="fas fa-info-circle"></i> General Notes</h3>
+                    <ul class="policy-list">
+                        <li>Rates inclusive of statutory taxes</li>
+                        <li>Rates subject to change without notice</li>
+                        <li>Special rates for groups and conferences</li>
+                        <li>Local excursions charged separately</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready for Your Stay in Kisumu?</h2>
+            <p>Book your stay today and experience the exceptional hospitality of Jumuia Hotel Kisumu.</p>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 40px; flex-wrap: wrap;">
+                <a href="booking.html" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">Book Your Stay Now</a>
+                <a href="conference.html" class="btn btn-secondary" style="padding: 15px 40px; font-size: 1.1rem;">View Conference Packages</a>
+                <a href="excursions.html" class="btn btn-lake" style="padding: 15px 40px; font-size: 1.1rem;">Explore Kisumu Excursions</a>
+            </div>
+            <div style="margin-top: 30px;">
+                <a href="tel:+254713576969" class="btn btn-primary" style="padding: 12px 30px; font-size: 1rem;">
+                    <i class="fas fa-phone"></i> Call: +254 713 576969
+                </a>
+                <a href="tel:+254115994486" class="btn btn-secondary" style="padding: 12px 30px; font-size: 1rem; margin-left: 10px;">
+                    <i class="fas fa-phone"></i> Alternative: +254 115 994486
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="resort-footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Jumuia Hotel Kisumu</h3>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Premier hotel in Kisumu perfect for conferences, business trips, and family vacations on Lake Victoria.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms & Rates</a></li>
+                        <li><a href="conference.html">Conference</a></li>
+                        <li><a href="offers.html">Special Offers</a></li>
+                        <li><a href="excursions.html">Excursions</a></li>
+                        <li><a href="feedback.html">Rate Us</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="booking.html">Booking</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Other Resorts</h3>
+                    <ul class="footer-links">
+                        <li><a href="../limuru/index.html">Jumuia Conference & Country Home Limuru</a></li>
+                        <li><a href="../kanamai/index.html">Jumuia Conference & Beach Resort Kanamai</a></li>
+                        <li><a href="../../index.html">Jumuia Resorts Main</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <div style="color: rgba(255,255,255,0.8);">
+                        <p><i class="fas fa-phone"></i> +254 713 576969</p>
+                        <p><i class="fas fa-phone"></i> +254 115 994486</p>
+                        <p><i class="fas fa-envelope"></i> reservations.kisumu@resortjumuia.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Kisumu, Kenya</p>
+                        <p><i class="fas fa-globe"></i> www.resortjumuia.com</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Jumuia Hotel Kisumu. All rights reserved.</p>
+                <p style="margin-top: 10px;">Part of Jumuia Resorts Limited</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('resortNav').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.resort-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('resortNav').classList.remove('active');
+            });
+        });
+
+        // Rates tabs functionality
+        const rateTabs = document.querySelectorAll('.rate-tab');
+        const rateContents = document.querySelectorAll('.rates-content');
+        
+        rateTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                rateTabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                // Hide all content
+                rateContents.forEach(content => {
+                    content.style.display = 'none';
+                });
+                
+                // Show corresponding content
+                const tabName = this.getAttribute('data-tab');
+                document.getElementById(tabName + 'Rates').style.display = 'block';
+            });
+        });
+
+        // Initialize with accommodation rates showing
+        document.getElementById('accommodationRates').style.display = 'block';
+
+        // Room booking functionality
+        document.querySelectorAll('.room-card .btn-primary').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const roomCard = this.closest('.room-card');
+                const roomTitle = roomCard.querySelector('h3').textContent;
+                const roomPrice = roomCard.querySelector('.room-price').textContent;
+                
+                // Save room selection to localStorage for booking page
+                localStorage.setItem('selectedRoom', roomTitle);
+                localStorage.setItem('selectedPrice', roomPrice);
+                
+                // Redirect to booking page
+                window.location.href = 'booking.html';
+            });
+        });
+    </script>
+    
+    <!-- Load main.js -->
+    <script src="../js/main.js"></script>
+</body>
+</html>

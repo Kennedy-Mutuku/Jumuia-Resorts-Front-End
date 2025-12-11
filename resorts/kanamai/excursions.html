@@ -1,0 +1,1805 @@
+<!-- resorts/kanamai/excursions.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Excursions & Activities - Jumuia Conference & Beach Resort Kanamai</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* KANAMAI COLOR SCHEME */
+        :root {
+            --primary-green: #22440f;
+            --primary-orange: #f3a435;
+            --primary-white: #ffffff;
+            --secondary-green: #024423;
+            --dark-green: #153800;
+            --light-green: #e9f5e5;
+            --ocean-blue: #006994;
+            --beach-sand: #f5e8d0;
+            --gray-bg: #f8f9fa;
+            --gray-border: #e0e0e0;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--gray-bg);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Resort Header - EXACTLY like Kanamai Home Page */
+        .resort-header {
+            background-color: var(--primary-white);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-top {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            padding: 10px 0;
+        }
+
+        .header-top-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .home-link {
+            color: var(--primary-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+
+        .home-link:hover {
+            color: var(--primary-orange);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .resort-header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .resort-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 50px;
+            height: 50px;
+        }
+
+        .resort-logo h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--primary-green);
+        }
+
+        .resort-location {
+            font-size: 0.9rem;
+            color: var(--primary-orange);
+            font-weight: 500;
+        }
+
+        .resort-nav {
+            display: flex;
+            gap: 25px;
+        }
+
+        .resort-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .resort-nav a:hover {
+            color: var(--primary-orange);
+        }
+
+        .resort-nav a.active {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .resort-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+        }
+
+        .btn-primary:hover {
+            background-color: #e5941f;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+        }
+
+        .btn-ocean {
+            background-color: var(--ocean-blue);
+            color: var(--primary-white);
+        }
+
+        .btn-ocean:hover {
+            background-color: #005a82;
+            transform: translateY(-2px);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-green);
+        }
+
+        /* Page Hero - Beach Themed */
+        .page-hero {
+            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(4, 68, 15, 0.85)), url('../../images/resorts/kanamai/execursion.jpg');
+            background-size: cover;
+            background-position: center;
+            color: var(--primary-white);
+            padding: 180px 0 100px;
+            margin-top: 120px;
+            text-align: center;
+        }
+
+        .page-hero h1 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            color: var(--primary-white);
+        }
+
+        .page-hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Section Header */
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* Excursions Categories */
+        .categories-section {
+            padding: 80px 0;
+            background-color: var(--beach-sand);
+        }
+
+        .categories-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            border-bottom: 1px solid var(--gray-border);
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .category-tab {
+            padding: 15px 30px;
+            font-weight: 600;
+            cursor: pointer;
+            color: var(--text-light);
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: var(--primary-white);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .category-tab:hover {
+            color: var(--primary-green);
+            transform: translateY(-3px);
+        }
+
+        .category-tab.active {
+            color: var(--primary-orange);
+            border-bottom-color: var(--primary-orange);
+            background: linear-gradient(135deg, var(--primary-white), var(--light-green));
+        }
+
+        /* Excursions Grid */
+        .excursions-section {
+            padding: 80px 0;
+        }
+
+        .excursions-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 60px;
+        }
+
+        .excursion-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            position: relative;
+            border: 1px solid var(--gray-border);
+        }
+
+        .excursion-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .excursion-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+        }
+
+        .excursion-tag {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+            padding: 8px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 600;
+        }
+
+        .excursion-content {
+            padding: 30px;
+        }
+
+        .excursion-content h3 {
+            font-size: 1.6rem;
+            margin-bottom: 15px;
+            color: var(--primary-green);
+        }
+
+        .excursion-details {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-border);
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .excursion-detail {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .excursion-detail i {
+            color: var(--primary-orange);
+        }
+
+        .excursion-description {
+            margin-bottom: 20px;
+            color: var(--text-light);
+            line-height: 1.7;
+        }
+
+        .excursion-features {
+            list-style: none;
+            margin: 20px 0;
+        }
+
+        .excursion-features li {
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+        }
+
+        .excursion-features i {
+            color: var(--primary-green);
+            width: 20px;
+        }
+
+        .excursion-price {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin: 20px 0;
+        }
+
+        .price-note {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 400;
+        }
+
+        /* Guided Tours Section */
+        .guided-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--light-green), var(--beach-sand));
+        }
+
+        .guided-content {
+            text-align: center;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .guided-content p {
+            font-size: 1.1rem;
+            margin-bottom: 40px;
+            color: var(--text-light);
+        }
+
+        .guided-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .guided-feature {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            text-align: center;
+            transition: transform 0.3s;
+        }
+
+        .guided-feature:hover {
+            transform: translateY(-5px);
+        }
+
+        .guided-icon {
+            width: 70px;
+            height: 70px;
+            background-color: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .guided-icon i {
+            font-size: 1.8rem;
+            color: var(--primary-white);
+        }
+
+        .guided-feature h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--primary-green);
+        }
+
+        /* Water Activities Section */
+        .water-activities {
+            padding: 80px 0;
+            background-color: var(--primary-white);
+        }
+
+        .activities-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .activity-card {
+            background: linear-gradient(135deg, #f8f9fa, var(--light-green));
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            border: 2px solid transparent;
+        }
+
+        .activity-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary-orange);
+        }
+
+        .activity-icon {
+            font-size: 2.5rem;
+            color: var(--ocean-blue);
+            margin-bottom: 20px;
+        }
+
+        .activity-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--primary-green);
+        }
+
+        /* Booking Process */
+        .booking-process {
+            padding: 80px 0;
+            background-color: var(--beach-sand);
+        }
+
+        .process-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .process-step {
+            text-align: center;
+            position: relative;
+        }
+
+        .process-step:not(:last-child)::after {
+            content: '➜';
+            position: absolute;
+            top: 40px;
+            right: -15px;
+            color: var(--primary-orange);
+            font-size: 1.5rem;
+        }
+
+        .step-number {
+            width: 80px;
+            height: 80px;
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0 auto 20px;
+        }
+
+        .process-step h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+            color: var(--primary-green);
+        }
+
+        /* Gallery Preview */
+        .gallery-preview {
+            padding: 80px 0;
+            background-color: var(--primary-white);
+        }
+
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+        }
+
+        .gallery-item {
+            height: 200px;
+            border-radius: var(--radius);
+            overflow: hidden;
+            position: relative;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+
+        .gallery-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(34, 68, 15, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .gallery-item:hover .gallery-overlay {
+            opacity: 1;
+        }
+
+        .gallery-overlay i {
+            color: var(--primary-white);
+            font-size: 2rem;
+        }
+
+        /* FAQ Section */
+        .faq-section {
+            padding: 80px 0;
+            background-color: var(--gray-bg);
+        }
+
+        .faq-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+        }
+
+        .faq-question {
+            padding: 20px 30px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: var(--light-green);
+        }
+
+        .faq-question h3 {
+            font-size: 1.2rem;
+            margin: 0;
+            color: var(--primary-green);
+        }
+
+        .faq-toggle {
+            color: var(--primary-orange);
+            font-size: 1.2rem;
+            transition: transform 0.3s;
+        }
+
+        .faq-answer {
+            padding: 0 30px;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s, padding 0.3s;
+        }
+
+        .faq-answer.active {
+            padding: 20px 30px;
+            max-height: 500px;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 80px 0;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--primary-white);
+        }
+
+        .cta-section h2 {
+            color: var(--primary-white);
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            max-width: 700px;
+            margin: 0 auto 40px;
+            font-size: 1.2rem;
+            opacity: 0.9;
+        }
+
+        /* Footer - EXACTLY like Kanamai Home Page */
+        .resort-footer {
+            background-color: var(--dark-green);
+            color: var(--primary-white);
+            padding: 70px 0 30px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--primary-white);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--primary-white);
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-orange);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Modal for Gallery */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.9);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .modal-content {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .modal-content img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--radius);
+        }
+
+        .close-modal {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: var(--primary-white);
+            font-size: 3rem;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close-modal:hover {
+            color: var(--primary-orange);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .page-hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .excursions-grid {
+                grid-template-columns: 1fr;
+                max-width: 500px;
+                margin: 0 auto 40px;
+            }
+            
+            .process-step:not(:last-child)::after {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .resort-nav {
+                position: fixed;
+                top: 120px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 120px);
+                background-color: var(--primary-white);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 40px;
+                transition: left 0.3s;
+                gap: 30px;
+            }
+            
+            .resort-nav.active {
+                left: 0;
+            }
+            
+            .page-hero {
+                padding: 150px 0 80px;
+                margin-top: 100px;
+            }
+            
+            .categories-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .category-tab {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .process-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .page-hero h1 {
+                font-size: 2rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+            
+            .excursion-content {
+                padding: 20px;
+            }
+            
+            .excursion-details {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Resort Header -->
+    <header class="resort-header">
+        <div class="header-top">
+            <div class="container header-top-content">
+                <a href="../../index.html" class="home-link">
+                    <i class="fas fa-home"></i>
+                    <span>Back to Jumuia Resorts Home</span>
+                </a>
+                <div class="header-actions">
+                    <a href="tel:+254710288043" class="home-link">
+                        <i class="fas fa-phone"></i>
+                        <span>0710 288 043</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="container resort-header-content">
+            <div class="resort-logo">
+                <svg class="logo-img" viewBox="0 0 133 78">
+                    <path d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
+                    <path d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
+                    <path d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
+                    <path d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                </svg>
+                <div>
+                    <h1>Jumuia Conference & Beach Resort</h1>
+                    <p class="resort-location">Kanamai Coast, Kenya</p>
+                </div>
+            </div>
+            
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <nav class="resort-nav" id="resortNav">
+                <a href="index.html" class="active">Home</a>
+                <a href="rooms.html">Rooms & Rates</a>
+                <a href="conference.html">Conference</a>
+                <a href="offers.html">Offers</a>
+                <a href="excursions.html">Excursions</a>
+                <a href="feedback.html">Rate us</a>
+                <a href="gallery.html">Gallery</a>
+                <a href="booking.html" class="btn btn-primary">Book Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Page Hero -->
+    <section class="page-hero">
+        <div class="container">
+            <h1>Kanamai Beach Excursions & Activities</h1>
+            <p>Discover the breathtaking beauty of the Kenyan Coast through our curated excursions and beach activities. Experience ocean adventures, cultural tours, and coastal exploration.</p>
+        </div>
+    </section>
+
+    <!-- Excursions Categories -->
+    <section class="categories-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Explore the Kenyan Coast</h2>
+                <p>Choose from various categories of coastal excursions and activities</p>
+            </div>
+            
+            <div class="categories-tabs">
+                <div class="category-tab active" data-category="all">
+                    <i class="fas fa-umbrella-beach"></i>
+                    <span>All Excursions</span>
+                </div>
+                <div class="category-tab" data-category="water">
+                    <i class="fas fa-swimmer"></i>
+                    <span>Water Activities</span>
+                </div>
+                <div class="category-tab" data-category="cultural">
+                    <i class="fas fa-landmark"></i>
+                    <span>Cultural Tours</span>
+                </div>
+                <div class="category-tab" data-category="daytrips">
+                    <i class="fas fa-ship"></i>
+                    <span>Day Trips</span>
+                </div>
+                <div class="category-tab" data-category="adventure">
+                    <i class="fas fa-hiking"></i>
+                    <span>Adventure</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Excursions Grid -->
+    <section class="excursions-section">
+        <div class="container">
+            <div class="excursions-grid">
+                <!-- Dhow Sailing at Wasini -->
+                <div class="excursion-card" data-category="water daytrips">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Dhow\ Sailing\ at\ Wasini\ Island.gif');">
+                        <span class="excursion-tag">Full Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Dhow Sailing at Wasini Island</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>Full Day (8-10 hours)</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-12 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-ship"></i>
+                                <span>Traditional Dhow</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Experience traditional dhow sailing to Wasini Island with snorkeling in the Kisite-Mpunguti Marine Park, seafood lunch, and dolphin watching.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Traditional dhow sailing</li>
+                            <li><i class="fas fa-check"></i> Snorkeling gear provided</li>
+                            <li><i class="fas fa-check"></i> Fresh seafood lunch included</li>
+                            <li><i class="fas fa-check"></i> Dolphin watching opportunity</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 8,500 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=dhow-wasini" class="btn btn-ocean" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+                
+                <!-- Mombasa City Tour -->
+                <div class="excursion-card" data-category="cultural daytrips">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Mombasa\ City\ Tour.jpg');">
+                        <span class="excursion-tag">Full Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Mombasa City Tour</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>Full Day (8-10 hours)</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-8 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-car"></i>
+                                <span>Transport included</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Explore Mombasa's rich history, culture, and landmarks including Fort Jesus, Old Town, markets, and modern city attractions.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Fort Jesus tour</li>
+                            <li><i class="fas fa-check"></i> Old Town walking tour</li>
+                            <li><i class="fas fa-check"></i> Local markets visit</li>
+                            <li><i class="fas fa-check"></i> Professional guide</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 6,500 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=mombasa-tour" class="btn btn-primary" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+                
+                <!-- Haller Park Half Day -->
+                <div class="excursion-card" data-category="adventure">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Haller\ Park\ Wildlife\ Tour.jpg');">
+                        <span class="excursion-tag">Half Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Haller Park Wildlife Tour</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>4-5 hours</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-10 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-hippo"></i>
+                                <span>Wildlife</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Visit Haller Park, a transformed quarry now home to giraffes, hippos, crocodiles, and various bird species in a beautiful nature park setting.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Giraffe feeding experience</li>
+                            <li><i class="fas fa-check"></i> Crocodile farm tour</li>
+                            <li><i class="fas fa-check"></i> Nature walk</li>
+                            <li><i class="fas fa-check"></i> Butterfly pavilion</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 3,500 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=haller-park" class="btn btn-primary" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+                
+                <!-- Fort Jesus Half Day -->
+                <div class="excursion-card" data-category="cultural">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Fort\ Jesus\ Museum\ Tour.jpg');">
+                        <span class="excursion-tag">Half Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Fort Jesus Museum Tour</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>3-4 hours</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-8 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-landmark"></i>
+                                <span>Historical</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Explore the UNESCO World Heritage Site of Fort Jesus, a 16th-century Portuguese fort with fascinating history and architecture overlooking the Indian Ocean.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Guided museum tour</li>
+                            <li><i class="fas fa-check"></i> Historical artifacts viewing</li>
+                            <li><i class="fas fa-check"></i> Oceanfront views</li>
+                            <li><i class="fas fa-check"></i> Souvenir shops</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 2,800 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=fort-jesus" class="btn btn-primary" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+                
+                <!-- Mamba Village Tour -->
+                <div class="excursion-card" data-category="adventure">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Mamba\ Village\ Crocodile\ Farm.jpeg');">
+                        <span class="excursion-tag">Half Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Mamba Village Crocodile Farm</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>3-4 hours</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-10 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-dragon"></i>
+                                <span>Crocodiles</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Visit East Africa's largest crocodile farm with over 10,000 crocodiles. Witness feeding sessions and learn about these fascinating reptiles.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Crocodile feeding show</li>
+                            <li><i class="fas fa-check"></i> Botanical garden</li>
+                            <li><i class="fas fa-check"></i> Ostrich park</li>
+                            <li><i class="fas fa-check"></i> Horse riding available</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 3,000 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=mamba-village" class="btn btn-primary" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+                
+                <!-- Jumbo & Gede Ruins -->
+                <div class="excursion-card" data-category="cultural">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Jumbo\ &\ Gede\ Ruins\ Tour.jpg');">
+                        <span class="excursion-tag">Full Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Jumbo & Gede Ruins Tour</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>6-8 hours</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-6 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-history"></i>
+                                <span>Archaeological</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Explore the mysterious ancient Swahili ruins of Jumbo and Gede, abandoned stone towns with fascinating history and forest settings.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Guided archaeological tour</li>
+                            <li><i class="fas fa-check"></i> Forest nature walk</li>
+                            <li><i class="fas fa-check"></i> Museum visit</li>
+                            <li><i class="fas fa-check"></i> Picnic lunch included</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 5,500 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=ruins-tour" class="btn btn-primary" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+                
+                <!-- Wild Water Park -->
+                <div class="excursion-card" data-category="water adventure">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Wild\ Waters\ Park.jpg');">
+                        <span class="excursion-tag">Half Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Wild Waters Park</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>4-6 hours</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-8 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-swimming-pool"></i>
+                                <span>Water Park</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Enjoy thrilling water slides, wave pools, and lazy rivers at one of Mombasa's premier water parks. Perfect for families and adventure seekers.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Unlimited water slides</li>
+                            <li><i class="fas fa-check"></i> Wave pool</li>
+                            <li><i class="fas fa-check"></i> Lazy river</li>
+                            <li><i class="fas fa-check"></i> Kids play area</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 4,000 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=water-park" class="btn btn-ocean" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+                
+                <!-- Go-Cart Racing Nyali -->
+                <div class="excursion-card" data-category="adventure">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Go-Cart\ Racing\ at\ Nyali.jpg');">
+                        <span class="excursion-tag">Half Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Go-Cart Racing at Nyali</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>3-4 hours</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-6 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-tachometer-alt"></i>
+                                <span>Racing</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Experience the thrill of go-cart racing on professional tracks in Nyali. Perfect for racing enthusiasts and adrenaline seekers.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Professional go-cart track</li>
+                            <li><i class="fas fa-check"></i> Safety gear provided</li>
+                            <li><i class="fas fa-check"></i> Racing instruction</li>
+                            <li><i class="fas fa-check"></i> Timing and scoring</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 3,500 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=go-cart" class="btn btn-primary" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Day Trips Section -->
+            <div class="section-header" id="dayTrips">
+                <h2>Full Day Coastal Trips</h2>
+                <p>Explore the wider coastal region with our extended day trips</p>
+            </div>
+            
+            <div class="excursions-grid">
+                <!-- Watamu Beach Day Trip -->
+                <div class="excursion-card" data-category="water daytrips">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Watamu\ Beach.jpg');">
+                        <span class="excursion-tag">Full Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Watamu Beach Day Trip</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>10-12 hours</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-6 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-umbrella-beach"></i>
+                                <span>Beach Paradise</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Visit the stunning Watamu Beach with its white sands and turquoise waters. Includes snorkeling, beach relaxation, and local seafood lunch.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Beach relaxation</li>
+                            <li><i class="fas fa-check"></i> Snorkeling equipment</li>
+                            <li><i class="fas fa-check"></i> Fresh seafood lunch</li>
+                            <li><i class="fas fa-check"></i> Local market visit</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 7,500 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=watamu-beach" class="btn btn-ocean" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+                
+                <!-- Malindi Full Day Tour -->
+                <div class="excursion-card" data-category="cultural daytrips">
+                    <div class="excursion-image" style="background-image: url('../../images/resorts/kanamai/Malindi\ Full\ Day\ Tour.jpg');">
+                        <span class="excursion-tag">Full Day</span>
+                    </div>
+                    <div class="excursion-content">
+                        <h3>Malindi Full Day Tour</h3>
+                        <div class="excursion-details">
+                            <div class="excursion-detail">
+                                <i class="fas fa-clock"></i>
+                                <span>10-12 hours</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-users"></i>
+                                <span>2-6 people</span>
+                            </div>
+                            <div class="excursion-detail">
+                                <i class="fas fa-monument"></i>
+                                <span>Cultural</span>
+                            </div>
+                        </div>
+                        <p class="excursion-description">Explore the historic town of Malindi with visits to the Vasco da Gama Pillar, Malindi Marine Park, and traditional Swahili villages.</p>
+                        
+                        <ul class="excursion-features">
+                            <li><i class="fas fa-check"></i> Vasco da Gama Pillar</li>
+                            <li><i class="fas fa-check"></i> Malindi Marine Park</li>
+                            <li><i class="fas fa-check"></i> Swahili village tour</li>
+                            <li><i class="fas fa-check"></i> Seafood lunch included</li>
+                        </ul>
+                        
+                        <div class="excursion-price">KES 9,000 <span class="price-note">per person</span></div>
+                        
+                        <a href="booking.html?excursion=malindi-tour" class="btn btn-primary" style="width: 100%;">Book This Excursion</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Water Activities Section -->
+    <section class="water-activities">
+        <div class="container">
+            <div class="section-header">
+                <h2>Beach & Water Activities at Kanamai</h2>
+                <p>Enjoy our on-site water activities and beach experiences</p>
+            </div>
+            
+            <div class="activities-grid">
+                <div class="activity-card">
+                    <div class="activity-icon">
+                        <i class="fas fa-swimmer"></i>
+                    </div>
+                    <h3>Beach Walks</h3>
+                    <p>Enjoy peaceful morning or sunset walks along our pristine private beach. Feel the Kanamai breeze as you explore the shoreline.</p>
+                    <p style="color: var(--primary-orange); font-weight: 600; margin-top: 15px;">Complimentary for Guests</p>
+                </div>
+                
+                <div class="activity-card">
+                    <div class="activity-icon">
+                        <i class="fas fa-water"></i>
+                    </div>
+                    <h3>Reef Exploration</h3>
+                    <p>Adventure walks to the reef during low tide. Discover tidal pools, marine life, and coastal ecosystems with our guides.</p>
+                    <p style="color: var(--primary-orange); font-weight: 600; margin-top: 15px;">KES 500 per person</p>
+                </div>
+                
+                <div class="activity-card">
+                    <div class="activity-icon">
+                        <i class="fas fa-ship"></i>
+                    </div>
+                    <h3>Boat Riding</h3>
+                    <p>Experience the ocean with our boat rides along the coast. Available for fishing trips or scenic coastal tours.</p>
+                    <p style="color: var(--primary-orange); font-weight: 600; margin-top: 15px;">From KES 2,000</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Guided Tours Section -->
+    <section class="guided-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Guided Tours & Services</h2>
+                <p>Our experienced coastal guides ensure safe and memorable experiences</p>
+            </div>
+            
+            <div class="guided-content">
+                <p>We make quick arrangements for guided tours of the Coast region. All our excursions are led by experienced, knowledgeable guides who are passionate about sharing the beauty and stories of the Kenyan coast.</p>
+                
+                <div class="guided-features">
+                    <div class="guided-feature">
+                        <div class="guided-icon">
+                            <i class="fas fa-user-shield"></i>
+                        </div>
+                        <h3>Safety First</h3>
+                        <p>All guides are trained in first aid and safety procedures. Water activities include life jackets and safety equipment.</p>
+                    </div>
+                    
+                    <div class="guided-feature">
+                        <div class="guided-icon">
+                            <i class="fas fa-graduation-cap"></i>
+                        </div>
+                        <h3>Expert Guides</h3>
+                        <p>Local guides with extensive knowledge of coastal history, marine life, and Swahili culture.</p>
+                    </div>
+                    
+                    <div class="guided-feature">
+                        <div class="guided-icon">
+                            <i class="fas fa-camera"></i>
+                        </div>
+                        <h3>Photography Support</h3>
+                        <p>Guides help you capture the best coastal moments and know the perfect photography spots.</p>
+                    </div>
+                    
+                    <div class="guided-feature">
+                        <div class="guided-icon">
+                            <i class="fas fa-concierge-bell"></i>
+                        </div>
+                        <h3>Customizable Tours</h3>
+                        <p>We can customize excursions to suit your interests, schedule, and special requirements.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Booking Process -->
+    <section class="booking-process">
+        <div class="container">
+            <div class="section-header">
+                <h2>How to Book Coastal Excursions</h2>
+                <p>Simple steps to organize your Kanamai adventures</p>
+            </div>
+            
+            <div class="process-steps">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3>Choose Your Excursion</h3>
+                    <p>Browse our coastal activities and select the excursions that interest you. Consider duration, group size, and adventure level.</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3>Check Availability</h3>
+                    <p>Contact our excursion desk at the resort or book online. We recommend booking at least 24-48 hours in advance.</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3>Confirm & Prepare</h3>
+                    <p>Receive confirmation and preparation guidelines. We'll advise on clothing, equipment, and meeting points.</p>
+                </div>
+                
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3>Enjoy Your Coastal Adventure</h3>
+                    <p>Meet your guide at the designated time. All equipment, transport, and instructions provided for your experience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Preview --> 
+    <section class="gallery-preview"> 
+        <div class="container"> 
+            <div class="section-header"> 
+                <h2>Coastal Excursion Gallery</h2> 
+                <p>See what our guests have experienced along the Kenyan Coast</p> 
+            </div> <div class="gallery-grid"></div>
+
+            <div class="gallery-grid">
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Dhow Sailing at Wasini.gif">
+                    <img src="../../images/resorts/kanamai/Dhow Sailing at Wasini Island.gif" alt="Dhow Sailing at Wasini Island">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Mombasa City Tour.jpg">
+                    <img src="../../images/resorts/kanamai/Mombasa City Tour.jpg" alt="Mombasa City Tour">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Haller Park Wildlife Tour.jpg">
+                    <img src="../../images/resorts/kanamai/Haller Park Wildlife Tour.jpg" alt="Haller Park Wildlife Tour">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Fort Jesus Museum Tour.jpg">
+                    <img src="../../images/resorts/kanamai/Fort Jesus Museum Tour.jpg" alt="Fort Jesus Museum Tour">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Mamba Village Crocodile Farm.jpeg">
+                    <img src="../../images/resorts/kanamai/Mamba Village Crocodile Farm.jpeg" alt="Mamba Village Crocodile Farm">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Jumbo & Gede Ruins Tour.jpg">
+                    <img src="../../images/resorts/kanamai/Jumbo & Gede Ruins Tour.jpg" alt="Jumbo & Gede Ruins Tour">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Wild Waters Park.jpg">
+                    <img src="../../images/resorts/kanamai/Wild Waters Park.jpg" alt="Wild Waters Park">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Go-Cart Racing at Nyali.jpg">
+                    <img src="../../images/resorts/kanamai/Go-Cart Racing at Nyali.jpg" alt="Go-Cart Racing at Nyali">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Watamu Beach.jpg">
+                    <img src="../../images/resorts/kanamai/Watamu Beach.jpg" alt="Watamu Beach Day Trip">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" data-src="../../images/resorts/kanamai/Malindi Full Day Tour.jpg">
+                    <img src="../../images/resorts/kanamai/Malindi Full Day Tour.jpg" alt="Malindi Full Day Tour">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section class="faq-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Frequently Asked Questions</h2>
+                <p>Common questions about our coastal excursions and activities</p>
+            </div>
+            
+            <div class="faq-container">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What should I wear for coastal excursions?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Light, comfortable clothing, swimwear under clothes for water activities, hat, sunglasses, and sunscreen. For cultural tours, modest clothing is recommended. Water shoes are useful for reef walks.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Are excursions suitable for children?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Yes! Many of our excursions are family-friendly. Beach walks, Haller Park, Wild Waters Park, and Mamba Village are particularly popular with children. Age recommendations vary by activity.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What happens in case of bad weather?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>For water activities, we monitor weather and sea conditions. If an excursion needs to be canceled due to unsafe conditions, we will offer to reschedule or provide a full refund.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Are meals included in excursion packages?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Most full-day excursions include lunch (typically seafood or local cuisine). Half-day excursions include water and snacks. Please check individual excursion descriptions for specific inclusions.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>What is your cancellation policy?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Cancellations made 24 hours or more before the excursion receive a full refund. Cancellations less than 24 hours before receive 50% refund. No-shows are non-refundable. Weather-related cancellations are fully refundable.</p>
+                    </div>
+                </div>
+                
+                <div class="faq-item">
+                    <div class="faq-question">
+                        <h3>Can we customize our own tour itinerary?</h3>
+                        <span class="faq-toggle">+</span>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Absolutely! We specialize in creating personalized coastal experiences. Contact our excursion desk to discuss combining multiple activities or creating a custom itinerary for your group.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready for Your Coastal Adventure?</h2>
+            <p>Book your excursions today and create unforgettable memories along Kenya's beautiful coastline.</p>
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 40px; flex-wrap: wrap;">
+                <a href="booking.html" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">Book Excursions Now</a>
+                <a href="tel:+254710288043" class="btn btn-secondary" style="padding: 15px 40px; font-size: 1.1rem;">
+                    <i class="fas fa-phone"></i> Call: 0710 288 043
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery Modal -->
+    <div class="modal" id="galleryModal">
+        <span class="close-modal">&times;</span>
+        <div class="modal-content">
+            <img id="modalImage" src="" alt="">
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="resort-footer">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Kanamai Beach Resort</h3>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Beautiful beachfront resort perfect for conferences, church events, and family vacations on the Kenyan coast.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="rooms.html">Rooms & Rates</a></li>
+                        <li><a href="conference.html">Conference</a></li>
+                        <li><a href="excursions.html">Excursions</a></li>
+                        <li><a href="gallery.html">Gallery</a></li>
+                        <li><a href="booking.html">Booking</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Other Resorts</h3>
+                    <ul class="footer-links">
+                        <li><a href="../limuru/index.html">Limuru Country Home</a></li>
+                        <li><a href="../kisumu/index.html">Kisumu Hotel</a></li>
+                        <li><a href="../../index.html">Jumuia Resorts Main</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Info</h3>
+                    <div style="color: rgba(255,255,255,0.8);">
+                        <p><i class="fas fa-phone"></i> 0710 288 043</p>
+                        <p><i class="fas fa-envelope"></i> reservations.kanamai@resortjumuia.com</p>
+                        <p><i class="fas fa-map-marker-alt"></i> Kanamai Coast, Kenya</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2024 Jumuia Conference & Beach Resort Kanamai. All rights reserved.</p>
+                <p style="margin-top: 10px;">Part of Jumuia Resorts Limited</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('resortNav').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.resort-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('resortNav').classList.remove('active');
+            });
+        });
+
+        // Category tabs functionality
+        const categoryTabs = document.querySelectorAll('.category-tab');
+        const excursionCards = document.querySelectorAll('.excursion-card');
+        
+        categoryTabs.forEach(tab => {
+            tab.addEventListener('click', function() {
+                // Remove active class from all tabs
+                categoryTabs.forEach(t => t.classList.remove('active'));
+                // Add active class to clicked tab
+                this.classList.add('active');
+                
+                const category = this.getAttribute('data-category');
+                
+                // Show/hide excursion cards based on category
+                excursionCards.forEach(card => {
+                    const cardCategories = card.getAttribute('data-category').split(' ');
+                    if (category === 'all' || cardCategories.includes(category)) {
+                        card.style.display = 'block';
+                    } else {
+                        card.style.display = 'none';
+                    }
+                });
+            });
+        });
+
+        // FAQ functionality
+        const faqQuestions = document.querySelectorAll('.faq-question');
+        
+        faqQuestions.forEach(question => {
+            question.addEventListener('click', function() {
+                const answer = this.nextElementSibling;
+                const toggle = this.querySelector('.faq-toggle');
+                
+                // Close other open answers
+                document.querySelectorAll('.faq-answer').forEach(otherAnswer => {
+                    if (otherAnswer !== answer && otherAnswer.classList.contains('active')) {
+                        otherAnswer.classList.remove('active');
+                        otherAnswer.previousElementSibling.querySelector('.faq-toggle').textContent = '+';
+                    }
+                });
+                
+                // Toggle current answer
+                answer.classList.toggle('active');
+                toggle.textContent = answer.classList.contains('active') ? '−' : '+';
+            });
+        });
+
+        // Gallery modal functionality
+        const galleryItems = document.querySelectorAll('.gallery-item');
+        const modal = document.getElementById('galleryModal');
+        const modalImage = document.getElementById('modalImage');
+        const closeModal = document.querySelector('.close-modal');
+        
+        galleryItems.forEach(item => {
+            item.addEventListener('click', function() {
+                const imageSrc = this.getAttribute('data-src');
+                modalImage.src = imageSrc;
+                modal.style.display = 'flex';
+            });
+        });
+        
+        closeModal.addEventListener('click', function() {
+            modal.style.display = 'none';
+        });
+        
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Close modal with Escape key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape' && modal.style.display === 'flex') {
+                modal.style.display = 'none';
+            }
+        });
+
+        // Check URL parameters for pre-selected category
+        const urlParams = new URLSearchParams(window.location.search);
+        const categoryParam = urlParams.get('category');
+        if (categoryParam) {
+            const tabToActivate = document.querySelector(`.category-tab[data-category="${categoryParam}"]`);
+            if (tabToActivate) {
+                tabToActivate.click();
+            }
+        }
+    </script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

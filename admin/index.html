@@ -1,0 +1,925 @@
+<!-- admin/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumuia Resorts - Admin Login</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-green: #22440f;
+            --primary-orange: #f3a435;
+            --primary-white: #ffffff;
+            --secondary-green: #1a5c1a;
+            --light-green: #e9f5e5;
+            --dark-green: #153800;
+            --gray-bg: #f8f9fa;
+            --gray-border: #e0e0e0;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 450px;
+        }
+
+        .login-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-img {
+            width: 80px;
+            height: 80px;
+        }
+
+        .login-header h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2rem;
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .login-header p {
+            color: var(--text-light);
+            font-size: 1rem;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: var(--primary-green);
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid var(--gray-border);
+            border-radius: var(--radius);
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(243, 164, 53, 0.1);
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-with-icon i {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: var(--text-light);
+        }
+
+        .input-with-icon .form-control {
+            padding-left: 45px;
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            color: var(--text-light);
+        }
+
+        .forgot-password {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: color 0.3s;
+        }
+
+        .forgot-password:hover {
+            color: var(--primary-orange);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+        }
+
+        .btn-primary:hover {
+            background-color: #e5941f;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+            margin-top: 15px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+        }
+
+        .login-footer {
+            text-align: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 1px solid var(--gray-border);
+        }
+
+        .login-footer p {
+            color: var(--text-light);
+            font-size: 0.9rem;
+        }
+
+        .login-footer a {
+            color: var(--primary-green);
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        .login-footer a:hover {
+            color: var(--primary-orange);
+        }
+
+        .alert {
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 25px;
+            display: none;
+        }
+
+        .alert-error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .role-selection {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .role-option {
+            padding: 12px;
+            border: 2px solid var(--gray-border);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: var(--primary-white);
+        }
+
+        .role-option:hover {
+            border-color: var(--primary-green);
+        }
+
+        .role-option.active {
+            border-color: var(--primary-orange);
+            background-color: rgba(243, 164, 53, 0.1);
+        }
+
+        .role-option i {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            margin-bottom: 8px;
+        }
+
+        .role-option div {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+
+        @media (max-width: 576px) {
+            .login-card {
+                padding: 30px 20px;
+            }
+            
+            .role-selection {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-footer {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+        }
+        /* Adding new styles for property assignment */
+        .property-assignment {
+            display: none;
+            margin-bottom: 25px;
+        }
+        
+        .property-options {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        
+        .property-option {
+            padding: 12px;
+            border: 2px solid var(--gray-border);
+            border-radius: var(--radius);
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            background-color: var(--primary-white);
+        }
+        
+        .property-option:hover {
+            border-color: var(--primary-green);
+        }
+        
+        .property-option.selected {
+            border-color: var(--primary-orange);
+            background-color: rgba(243, 164, 53, 0.1);
+        }
+        
+        .property-option i {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            margin-bottom: 8px;
+        }
+        
+        .property-option div {
+            font-size: 0.85rem;
+            font-weight: 600;
+        }
+    </style>
+    
+    <!-- Firebase SDKs - Updated to v10.7.1 -->
+    <script type="module">
+        // Firebase Core - Using v10.7.1 to match dashboard
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+
+        // Firebase Auth
+        import {
+            getAuth,
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            createUserWithEmailAndPassword
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+
+        // Firestore
+        import {
+            getFirestore,
+            collection,
+            doc,
+            setDoc,
+            getDoc,
+            addDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
+            authDomain: "jumuia-resort-limited.firebaseapp.com",
+            projectId: "jumuia-resort-limited",
+            storageBucket: "jumuia-resort-limited.firebasestorage.app",
+            messagingSenderId: "152170552230",
+            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
+            measurementId: "G-Q7BWHJ9C3M"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+
+        // Auth
+        const auth = getAuth(app);
+        window.firebaseAuth = auth;
+        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
+        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
+
+        // Firestore
+        const db = getFirestore(app);
+
+        // Make Firestore globally accessible
+        window.db = db;
+        window.collection = collection;
+        window.doc = doc;
+        window.setDoc = setDoc;
+        window.getDoc = getDoc;
+        window.addDoc = addDoc;
+        window.serverTimestamp = serverTimestamp;
+
+        // Redirect if already logged in
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // Check if user has admin profile
+                try {
+                    const userDoc = await getDoc(doc(db, "admins", user.uid));
+                    if (userDoc.exists()) {
+                        // User is admin, redirect to dashboard
+                        window.location.href = "dashboard.html";
+                    } else {
+                        // User exists in auth but not in admins collection
+                        await auth.signOut();
+                        localStorage.removeItem('jumuiaAdminUser');
+                    }
+                } catch (error) {
+                    console.error("Error checking admin status:", error);
+                }
+            }
+        });
+    </script>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="login-header">
+                <div class="logo">
+                    <svg class="logo-img" viewBox="0 0 133 78">
+                        <path d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#22440f" stroke-width="0.75"/>
+                        <path d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#22440f" stroke-width="0.75"/>
+                        <path d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#22440f"/>
+                        <path d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#22440f"/>
+                        <path d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#22440f"/>
+                        <path d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                    </svg>
+                </div>
+                <h1>Jumuia Resorts Admin</h1>
+                <p>Access your management dashboard</p>
+            </div>
+
+            <div class="alert alert-error" id="errorAlert">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="errorMessage">Invalid credentials. Please try again.</span>
+            </div>
+
+            <div class="alert alert-success" id="successAlert">
+                <i class="fas fa-check-circle"></i>
+                <span id="successMessage">Login successful! Redirecting...</span>
+            </div>
+
+            <form id="loginForm">
+                <div class="role-selection">
+                    <div class="role-option active" data-role="system-admin">
+                        <i class="fas fa-user-shield"></i>
+                        <div>System Admin</div>
+                    </div>
+                    <div class="role-option" data-role="general-manager">
+                        <i class="fas fa-user-tie"></i>
+                        <div>General Manager</div>
+                    </div>
+                    <div class="role-option" data-role="staff">
+                        <i class="fas fa-user"></i>
+                        <div>Staff</div>
+                    </div>
+                </div>
+
+                <!-- Property Assignment (shown only for staff role) -->
+                <div class="property-assignment" id="propertyAssignment">
+                    <label class="form-label">Select Property</label>
+                    <div class="property-options">
+                        <div class="property-option selected" data-property="kisumu">
+                            <i class="fas fa-hotel"></i>
+                            <div>Kisumu Hotel</div>
+                        </div>
+                        <div class="property-option" data-property="limuru">
+                            <i class="fas fa-mountain"></i>
+                            <div>Limuru Country Home</div>
+                        </div>
+                        <div class="property-option" data-property="kanamai">
+                            <i class="fas fa-umbrella-beach"></i>
+                            <div>Kanamai Beach Resort</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="email" class="form-control" placeholder="admin@resortjumuia.com" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                    </div>
+                </div>
+
+                <div class="form-footer">
+                    <label class="remember-me">
+                        <input type="checkbox" id="rememberMe">
+                        <span>Remember me</span>
+                    </label>
+                    <a href="#" class="forgot-password">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i>
+                    <span>Login to Dashboard</span>
+                </button>
+
+                <div style="display: flex; gap: 10px; margin-top: 15px;">
+                    <button type="button" class="btn btn-secondary" onclick="openRegister()" style="flex: 1;">
+                        <i class="fas fa-user-plus"></i> Register
+                    </button>
+                    <button type="button" class="btn btn-secondary" onclick="window.location.href='../index.html'" style="flex: 1;">
+                        <i class="fas fa-arrow-left"></i> Main Website
+                    </button>
+                </div>
+            </form>
+
+            <div class="login-footer">
+                <p>Need help? Contact <a href="mailto:support@resortjumuia.com">support@resortjumuia.com</a></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Modal -->
+    <div id="registerModal" class="modal-overlay">
+        <div class="modal-content">
+            <h2 style="color:#22440f; margin-bottom:20px; text-align:center;">Create Admin Account</h2>
+
+            <div class="form-group">
+                <label class="form-label">Full Name</label>
+                <input type="text" id="regName" class="form-control" placeholder="John Doe">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Email Address</label>
+                <input type="email" id="regEmail" class="form-control" placeholder="newadmin@resortjumuia.com">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Password</label>
+                <input type="password" id="regPassword" class="form-control" placeholder="Create password (min. 6 characters)">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Select Role</label>
+                <select id="regRole" class="form-control">
+                    <option value="system-admin">System Admin (Full Access)</option>
+                    <option value="general-manager">General Manager (Full Access)</option>
+                    <option value="staff">Staff (Property Specific)</option>
+                </select>
+            </div>
+
+            <div class="form-group" id="regPropertyGroup" style="display: none;">
+                <label class="form-label">Assign Property</label>
+                <div class="property-options">
+                    <div class="property-option selected" data-property="kisumu">
+                        <i class="fas fa-hotel"></i>
+                        <div>Kisumu Hotel</div>
+                    </div>
+                    <div class="property-option" data-property="limuru">
+                        <i class="fas fa-mountain"></i>
+                        <div>Limuru Country Home</div>
+                    </div>
+                    <div class="property-option" data-property="kanamai">
+                        <i class="fas fa-umbrella-beach"></i>
+                        <div>Kanamai Beach Resort</div>
+                    </div>
+                </div>
+            </div>
+
+            <button id="registerSubmit" class="btn btn-primary" style="margin-top:15px; width: 100%;">
+                <i class="fas fa-user-plus"></i> Create Account
+            </button>
+
+            <button onclick="closeRegister()" class="btn btn-secondary" style="margin-top:10px; width: 100%;">
+                Cancel
+            </button>
+
+            <p id="registerMsg" style="margin-top:15px; text-align:center; color:red; display:none;"></p>
+        </div>
+    </div>
+
+    <style>
+        .modal-overlay {
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0,0,0,0.6); 
+            display: none; 
+            align-items: center;
+            justify-content: center; 
+            z-index: 9999;
+        }
+        
+        .modal-content {
+            background: var(--primary-white); 
+            padding: 30px; 
+            border-radius: var(--radius); 
+            width: 90%; 
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+    </style>
+
+    <script>
+        // Role selection with property assignment logic
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function() {
+                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('active'));
+                this.classList.add('active');
+                
+                // Show/hide property assignment based on role
+                const role = this.getAttribute('data-role');
+                const propertyAssignment = document.getElementById('propertyAssignment');
+                
+                if (role === 'staff') {
+                    propertyAssignment.style.display = 'block';
+                } else {
+                    propertyAssignment.style.display = 'none';
+                }
+            });
+        });
+
+        // Property selection for login
+        document.querySelectorAll('.property-option').forEach(option => {
+            option.addEventListener('click', function() {
+                if (!this.closest('#propertyAssignment') && !this.closest('#regPropertyGroup')) return;
+                
+                const parent = this.closest('.property-options');
+                parent.querySelectorAll('.property-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+            });
+        });
+
+        // Form submission - SIMPLIFIED VERSION
+        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const selectedRole = document.querySelector('.role-option.active').getAttribute('data-role');
+            const loginBtn = document.getElementById('loginBtn');
+            
+            // Get selected property for staff
+            let selectedProperty = 'all';
+            if (selectedRole === 'staff') {
+                const selectedPropertyOption = document.querySelector('#propertyAssignment .property-option.selected');
+                selectedProperty = selectedPropertyOption ? selectedPropertyOption.getAttribute('data-property') : 'kisumu';
+            } else if (selectedRole === 'system-admin' || selectedRole === 'general-manager') {
+                selectedProperty = 'all';
+            }
+            
+            // Show loading state
+            loginBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Authenticating...';
+            loginBtn.disabled = true;
+            
+            // Hide previous alerts
+            document.getElementById('errorAlert').style.display = 'none';
+            document.getElementById('successAlert').style.display = 'none';
+            
+            try {
+                // Firebase authentication
+                const auth = window.firebaseAuth;
+                const userCredential = await window.signInWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Check if user exists in admins collection
+                const adminDoc = await window.getDoc(window.doc(db, "admins", user.uid));
+                
+                if (!adminDoc.exists()) {
+                    throw new Error("You do not have admin access. Please contact system administrator.");
+                }
+
+                const adminData = adminDoc.data();
+                
+                // Store session data
+                const sessionData = {
+                    uid: user.uid,
+                    email: user.email,
+                    name: adminData.name || user.email.split('@')[0],
+                    role: adminData.role,
+                    property: adminData.property || 'all',
+                    loginTime: new Date().toISOString(),
+                    permissions: getPermissions(adminData.role)
+                };
+                
+                localStorage.setItem('jumuiaAdminUser', JSON.stringify(sessionData));
+                
+                // Show success message and redirect
+                document.getElementById('successAlert').style.display = 'block';
+                document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
+                
+                // Redirect after short delay
+                setTimeout(() => {
+                    window.location.href = "dashboard.html";
+                }, 1000);
+                
+            } catch (error) {
+                // Show error message
+                document.getElementById('errorAlert').style.display = 'block';
+                
+                let errorMessage = "Login failed. Please check your credentials.";
+                
+                // Handle specific Firebase errors
+                if (error.code) {
+                    switch (error.code) {
+                        case 'auth/invalid-email':
+                            errorMessage = "Invalid email address format.";
+                            break;
+                        case 'auth/user-disabled':
+                            errorMessage = "This account has been disabled.";
+                            break;
+                        case 'auth/user-not-found':
+                            errorMessage = "No account found with this email.";
+                            break;
+                        case 'auth/wrong-password':
+                            errorMessage = "Incorrect password.";
+                            break;
+                        case 'auth/too-many-requests':
+                            errorMessage = "Too many failed attempts. Please try again later.";
+                            break;
+                        case 'auth/network-request-failed':
+                            errorMessage = "Network error. Please check your connection.";
+                            break;
+                        default:
+                            if (error.message.includes("admin access")) {
+                                errorMessage = "You do not have admin access. Please contact system administrator.";
+                            } else {
+                                errorMessage = error.message || "Login failed. Please try again.";
+                            }
+                    }
+                } else if (error.message.includes("admin access")) {
+                    errorMessage = "You do not have admin access. Please contact system administrator.";
+                }
+                
+                document.getElementById('errorMessage').textContent = errorMessage;
+                
+                // Reset button
+                loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login to Dashboard';
+                loginBtn.disabled = false;
+            }
+        });
+
+        // Registration role change
+        document.getElementById('regRole').addEventListener('change', function() {
+            const propertyGroup = document.getElementById('regPropertyGroup');
+            if (this.value === 'staff') {
+                propertyGroup.style.display = 'block';
+            } else {
+                propertyGroup.style.display = 'none';
+            }
+        });
+
+        // Registration function
+        window.openRegister = () => {
+            document.getElementById("registerModal").style.display = "flex";
+        };
+
+        window.closeRegister = () => {
+            document.getElementById("registerModal").style.display = "none";
+            document.getElementById('registerMsg').style.display = 'none';
+            document.getElementById('registerMsg').textContent = '';
+            
+            // Clear form
+            document.getElementById("regName").value = '';
+            document.getElementById("regEmail").value = '';
+            document.getElementById("regPassword").value = '';
+            document.getElementById("regRole").value = 'system-admin';
+            document.getElementById('regPropertyGroup').style.display = 'none';
+        };
+
+        // Register new user
+        document.getElementById("registerSubmit").addEventListener("click", async () => {
+            const name = document.getElementById("regName").value;
+            const email = document.getElementById("regEmail").value;
+            const password = document.getElementById("regPassword").value;
+            const role = document.getElementById("regRole").value;
+            const msg = document.getElementById("registerMsg");
+            
+            // Get selected property for staff
+            let property = 'all';
+            if (role === 'staff') {
+                const selectedProperty = document.querySelector('#regPropertyGroup .property-option.selected');
+                property = selectedProperty ? selectedProperty.getAttribute('data-property') : 'kisumu';
+            }
+
+            msg.style.display = "none";
+
+            if (!name || !email || !password) {
+                msg.innerText = "All fields are required.";
+                msg.style.display = "block";
+                return;
+            }
+
+            if (password.length < 6) {
+                msg.innerText = "Password must be at least 6 characters.";
+                msg.style.display = "block";
+                return;
+            }
+
+            try {
+                const auth = window.firebaseAuth;
+                const db = window.db;
+                
+                // Create auth user
+                const userCredential = await window.createUserWithEmailAndPassword(auth, email, password);
+                const user = userCredential.user;
+
+                // Create admin document
+                await window.setDoc(window.doc(db, "admins", user.uid), {
+                    name: name,
+                    email: email,
+                    role: role,
+                    property: property,
+                    createdAt: new Date().toISOString(),
+                    createdBy: auth.currentUser ? auth.currentUser.uid : 'system',
+                    status: 'active',
+                    permissions: getPermissions(role)
+                });
+
+                // Add to activity log
+                await window.addDoc(window.collection(db, "activities"), {
+                    type: "user-registration",
+                    description: `New ${role} account created for ${name}`,
+                    user: auth.currentUser ? auth.currentUser.email : 'system',
+                    timestamp: window.serverTimestamp(),
+                    metadata: { email: email, role: role, property: property }
+                });
+
+                msg.style.color = "green";
+                msg.innerText = "✓ Registration successful!";
+                msg.style.display = "block";
+
+                setTimeout(() => {
+                    closeRegister();
+                    
+                    // Show success in login form
+                    document.getElementById('successAlert').style.display = 'block';
+                    document.getElementById('successMessage').textContent = 'Account created successfully! You can now login.';
+                    
+                    // Pre-fill email field
+                    document.getElementById('email').value = email;
+                }, 1500);
+
+            } catch (error) {
+                let errorMsg = error.message;
+                
+                // Handle specific Firebase errors
+                if (error.code === 'auth/email-already-in-use') {
+                    errorMsg = "This email is already registered.";
+                } else if (error.code === 'auth/invalid-email') {
+                    errorMsg = "Invalid email address format.";
+                } else if (error.code === 'auth/weak-password') {
+                    errorMsg = "Password is too weak. Use at least 6 characters.";
+                }
+                
+                msg.innerText = errorMsg;
+                msg.style.display = "block";
+                console.error("Registration error:", error);
+            }
+        });
+
+        // Helper function to get permissions based on role
+        function getPermissions(role) {
+            const permissions = {
+                'system-admin': {
+                    canViewAll: true,
+                    canEditAll: true,
+                    canDelete: true,
+                    canManageUsers: true,
+                    canManageSettings: true,
+                    properties: ['limuru', 'kanamai', 'kisumu', 'all']
+                },
+                'general-manager': {
+                    canViewAll: true,
+                    canEditAll: true,
+                    canDelete: true,
+                    canManageUsers: false,
+                    canManageSettings: false,
+                    properties: ['limuru', 'kanamai', 'kisumu', 'all']
+                },
+                'staff': {
+                    canViewAll: false,
+                    canEditAll: false,
+                    canDelete: false,
+                    canManageUsers: false,
+                    canManageSettings: false,
+                    properties: [] // Will be set based on assigned property
+                }
+            };
+            
+            return permissions[role] || permissions['staff'];
+        }
+
+        // Remember me functionality
+        window.addEventListener('load', function() {
+            const rememberedEmail = localStorage.getItem('rememberedEmail');
+            if (rememberedEmail) {
+                document.getElementById('email').value = rememberedEmail;
+                document.getElementById('rememberMe').checked = true;
+            }
+        });
+
+        document.getElementById('rememberMe').addEventListener('change', function() {
+            const email = document.getElementById('email').value;
+            if (this.checked && email) {
+                localStorage.setItem('rememberedEmail', email);
+            } else {
+                localStorage.removeItem('rememberedEmail');
+            }
+        });
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(event) {
+            const modal = document.getElementById('registerModal');
+            if (event.target === modal) {
+                closeRegister();
+            }
+        });
+
+        // Prevent form submission on Enter key in registration modal
+        document.querySelectorAll('#registerModal input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    document.getElementById('registerSubmit').click();
+                }
+            });
+        });
+    </script>
+</body>
+</html>

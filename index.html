@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumuia Resorts - Luxury Hotels & Conference Centers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-green: #22440f;
+            --primary-orange: #f3a435;
+            --primary-white: #ffffff;
+            --secondary-green: #024423;
+            --dark-green: #153800;
+            --light-green: #e9f5e5;
+            --gray-bg: #f8f9fa;
+            --gray-border: #e0e0e0;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary-white);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--primary-green);
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .main-nav a:hover {
+            color: var(--primary-orange);
+        }
+
+        .main-nav a.active {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .main-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .btn {
+            padding: 10px 25px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+        }
+
+        .btn-primary:hover {
+            background-color: #e5941f;
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-green);
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 100vh;
+            color: var(--primary-white);
+            padding: 180px 0 100px;
+            margin-top: 90px;
+            text-align: center;
+            overflow: hidden;
+            background: linear-gradient(rgba(34, 68, 15, 0.8), rgba(34, 68, 15, 0.8))
+        }
+
+        /* Slideshow Background */
+        .hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
+            animation: slideShow 18s infinite;
+            filter: brightness(0.6);
+        }
+
+        /* Slideshow Animation */
+        @keyframes slideShow {
+            0% {
+                background-image: url('../../images/resorts/limuru/limuru-front.jpeg');
+            }
+            33% {
+                background-image: url('../../images/resorts/kanamai/Reception-kanamai.jpg');
+            }
+            66% {
+                background-image: url('../../images/resorts/kisumu/resort1.jpg');
+            }
+            100% {
+                background-image: url('../../images/resorts/limuru/limuru-front.jpeg');
+            }
+        }
+
+
+        .hero h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            color: var(--primary-white);
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto 40px;
+            opacity: 0.9;
+        }
+
+        /* Resorts Grid */
+        .resorts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .resort-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+        }
+
+        .resort-card:hover {
+            transform: translateY(-10px);
+        }
+
+        .resort-img {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .resort-content {
+            padding: 30px;
+        }
+
+        .resort-content h3 {
+            font-size: 1.5rem;
+            margin-bottom: 10px;
+        }
+
+        .resort-location {
+            color: var(--primary-orange);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .resort-location i {
+            font-size: 1rem;
+        }
+
+        .resort-content p {
+            color: var(--text-light);
+            margin-bottom: 25px;
+        }
+
+        .resort-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        .feature-tag {
+            background-color: var(--light-green);
+            color: var(--primary-green);
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Services Section */
+        .services-section {
+            padding: 80px 0;
+            background-color: var(--gray-bg);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 50px;
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .section-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .service-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s;
+            text-align: center;
+        }
+
+        .service-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .service-icon {
+            width: 70px;
+            height: 70px;
+            background-color: var(--primary-green);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+        }
+
+        .service-icon i {
+            font-size: 1.8rem;
+            color: var(--primary-white);
+        }
+
+        .service-card h3 {
+            font-size: 1.4rem;
+            margin-bottom: 15px;
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-green);
+            color: var(--primary-white);
+            padding: 70px 0 30px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--primary-white);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .contact-item i {
+            color: var(--primary-orange);
+        }
+
+        .social-links {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--primary-white);
+            transition: all 0.3s;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-orange);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 992px) {
+            .hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .main-nav {
+                gap: 20px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-nav {
+                position: fixed;
+                top: 90px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 90px);
+                background-color: var(--primary-white);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 40px;
+                transition: left 0.3s;
+                gap: 30px;
+            }
+            
+            .main-nav.active {
+                left: 0;
+            }
+            
+            .hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .resorts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .hero {
+                padding: 150px 0 80px;
+            }
+            
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.9rem;
+            }
+            
+            .section-header h2 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header & Navigation -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <svg class="logo-img" viewBox="0 0 133 78">
+                    <path class="st0" d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path class="st0" d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path class="st1" d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
+                    <path class="st1" d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
+                    <path class="st1" d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
+                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                </svg>
+                <div class="logo-text">
+                    <h1>Jumuia Resorts</h1>
+                    <p>Luxury Hotels & Conference Centers</p>
+                </div>
+            </a>
+            
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <nav class="main-nav" id="mainNav">
+                <a href="index.html" class="active">Home</a>
+                <a href="#resorts">Our Resorts</a>
+                <a href="#services">Services</a>
+                <a href="offers.html" class="active">Offers</a>
+                <a href="feedback.html"class="active">Feedback</a>
+                <a href="#contact">Contact</a>
+                <a href="admin/index.html" class="btn-secondary">Admin Login</a>
+                
+            </nav>
+            
+            <div class="header-actions">
+                <a href="booking.html" class="btn btn-primary">Book Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-content">
+            <h1>Hospitality With A Christian Touch</h1>
+            <p class="tagline">Christian Values with Great Zeal to Customer Satisfaction</p>
+            <p class="description">The resorts' ideal locations offer both business and holiday destinations for the business traveller, honeymooners, family getaways, meetings, conferencing, or just a weekend getaway.</p>
+            <a href="#resorts" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 40px;">Explore Our Resorts</a>
+        </div>
+    </section>
+
+    <!-- Resorts Section -->
+    <section class="container" id="resorts" style="padding: 100px 0;">
+        <div class="section-header">
+            <h2>Our Luxury Resorts</h2>
+            <p>Choose from our three unique properties, each offering distinct experiences and amenities</p>
+        </div>
+        
+        <div class="resorts-grid">
+            <!-- Limuru Resort Card -->
+            <div class="resort-card">
+               <div class="resort-img" style="background-image: url('../../images/resorts/limuru/limuru-front.jpeg');"></div>
+                <div class="resort-content">
+                    <h3>Jumuia Conference & Country Home</h3>
+                    <div class="resort-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Limuru, Kenya</span>
+                    </div>
+                    <p>Nestled in the serene Limuru highlands, perfect for conferences, retreats, and church events with breathtaking views and tranquil surroundings.</p>
+                    
+                    <div class="resort-features">
+                        <span class="feature-tag">Conference Facilities</span>
+                        <span class="feature-tag">Hostel Accommodation</span>
+                        <span class="feature-tag">Church Events</span>
+                        <span class="feature-tag">Nature Walks</span>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <a href="resorts/limuru/index.html" class="btn btn-primary">Explore Resort</a>
+                        <a href="resorts/limuru/booking.html" class="btn btn-secondary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kanamai Resort Card -->
+            <div class="resort-card">
+                <div class="resort-img" style="background-image: url('../../images/resorts/kanamai/Reception-kanamai.jpg');"></div>
+                <div class="resort-content">
+                    <h3>Jumuia Conference & Beach Resort</h3>
+                    <div class="resort-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Kanamai Coast, Kenya</span>
+                    </div>
+                    <p>Breathtaking beachfront location with conference facilities, swimming pools, and coastal adventure activities for the perfect getaway.</p>
+                    
+                    <div class="resort-features">
+                        <span class="feature-tag">Beachfront</span>
+                        <span class="feature-tag">Swimming Pool</span>
+                        <span class="feature-tag">Water Sports</span>
+                        <span class="feature-tag">Beach Events</span>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <a href="resorts/kanamai/index.html" class="btn btn-primary">Explore Resort</a>
+                        <a href="resorts/kanamai/booking.html" class="btn btn-secondary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Kisumu Resort Card -->
+            <div class="resort-card">
+                <div class="resort-img" style="background-image: url('../../images/resorts/kisumu/resort1.jpg');"></div>
+                <div class="resort-content">
+                    <h3>Jumuia Hotel Kisumu</h3>
+                    <div class="resort-location">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Kisumu, Kenya</span>
+                    </div>
+                    <p>Experience urban comfort and convenience, perfect for business travel, conferences, and events at the center of Kisumu city.</p>
+                    
+                    <div class="resort-features">
+                        <span class="feature-tag">City Center</span>
+                        <span class="feature-tag">Swimming Pool</span>
+                        <span class="feature-tag">Hostel Rooms</span>
+                        <span class="feature-tag">Restaurant & Dining</span>
+                    </div>
+                    
+                    <div style="display: flex; gap: 15px; margin-top: 20px;">
+                        <a href="resorts/kisumu/index.html" class="btn btn-primary">Explore Resort</a>
+                        <a href="resorts/kisumu/booking.html" class="btn btn-secondary">Book Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Services Section -->
+    <section class="services-section" id="services">
+        <div class="container">
+            <div class="section-header">
+                <h2>Our Services & Amenities</h2>
+                <p>Each Jumuia resort offers a unique blend of services tailored to meet your needs</p>
+            </div>
+            
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <h3>Conferencing & Events</h3>
+                    <p>State-of-the-art conference facilities for corporate meetings, workshops, and large events.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-bed"></i>
+                    </div>
+                    <h3>Accommodation</h3>
+                    <p>Comfortable rooms ranging from standard to executive suites with various meal packages.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-utensils"></i>
+                    </div>
+                    <h3>24-Hour Restaurant</h3>
+                    <p>Round-the-clock dining with local and international cuisine to suit all tastes.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-truck"></i>
+                    </div>
+                    <h3>Outside Catering</h3>
+                    <p>Professional catering services for events at your preferred location.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-swimming-pool"></i>
+                    </div>
+                    <h3>Swimming Pools</h3>
+                    <p>Refreshing pools available at Kanamai and Kisumu resorts for guests' enjoyment.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Hostel Facilities</h3>
+                    <p>Budget-friendly hostel accommodation available at Limuru and Kisumu resorts.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-heart"></i>
+                    </div>
+                    <h3>Weddings & Honeymoons</h3>
+                    <p>Romantic settings and packages for unforgettable weddings and honeymoons.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-church"></i>
+                    </div>
+                    <h3>Church Events</h3>
+                    <p>Special packages for church retreats, conferences, and prayer gatherings.</p>
+                </div>
+                
+                <div class="service-card">
+                    <div class="service-icon">
+                        <i class="fas fa-hiking"></i>
+                    </div>
+                    <h3>Safaris & Excursions</h3>
+                    <p>Curated adventure packages to explore Kenya's beautiful landscapes and wildlife.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Jumuia Resorts</h3>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Luxury hospitality across Kenya with world-class facilities and exceptional service.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Our Resorts</h3>
+                    <ul class="footer-links">
+                        <li><a href="resorts/limuru/index.html">Limuru Conference & Country Home</a></li>
+                        <li><a href="resorts/kanamai/index.html">Kanamai Beach Resort</a></li>
+                        <li><a href="resorts/kisumu/index.html">Kisumu Hotel</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="#resorts">Our Resorts</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="admin/index.html">Admin Login</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>Main Office: +254 20 2048881</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@resortjumuia.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-globe"></i>
+                            <span>www.resortjumuia.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2025 Jumuia Resorts Limited. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Mobile menu toggle
+        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+            document.getElementById('mainNav').classList.toggle('active');
+        });
+
+        // Close mobile menu when clicking on a link
+        document.querySelectorAll('.main-nav a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('mainNav').classList.remove('active');
+            });
+        });
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
+            authDomain: "jumuia-resort-limited.firebaseapp.com",
+            projectId: "jumuia-resort-limited",
+            storageBucket: "jumuia-resort-limited.firebasestorage.app",
+            messagingSenderId: "152170552230",
+            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
+            measurementId: "G-Q7BWHJ9C3M"
+        };
+    </script>
+    <!-- Load main.js -->
+    <script src="js/main.js"></script>
+</body>
+</html>
