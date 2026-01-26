@@ -7,6 +7,12 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- IMPORTANT: Use different Firebase version than booking pages to avoid conflicts -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    
     <style>
         :root {
             --primary-green: #22440f;
@@ -51,7 +57,7 @@
             padding: 0 20px; 
         }
         
-        /* Admin Header - Enhanced */
+        /* Admin Header */
         .admin-header { 
             background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
             box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
@@ -60,7 +66,6 @@
             top: 0; 
             z-index: 1000; 
             padding: 15px 0;
-            backdrop-filter: blur(10px);
         }
 
         .header-container { 
@@ -78,14 +83,12 @@
         .logo-img { 
             width: 45px; 
             height: 45px;
-            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
         }
 
         .admin-logo h1 { 
             font-size: 1.5rem; 
             margin-bottom: 5px; 
             color: var(--primary-white);
-            text-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
 
         .admin-logo p { 
@@ -105,7 +108,6 @@
 
         .current-property { 
             background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
             color: var(--primary-white); 
             padding: 10px 20px; 
             border-radius: var(--radius); 
@@ -114,13 +116,11 @@
             align-items: center; 
             gap: 10px; 
             min-width: 220px;
-            border: 1px solid rgba(255,255,255,0.2);
             transition: var(--transition);
         }
 
         .current-property:hover { 
             background: rgba(255, 255, 255, 0.2);
-            transform: translateY(-1px);
         }
 
         .property-dropdown { 
@@ -155,16 +155,11 @@
 
         .property-option:hover { 
             background-color: var(--light-green); 
-            transform: translateX(5px);
         }
 
         .property-option.active { 
-            background: linear-gradient(to right, var(--primary-orange), #ff9d00);
+            background-color: var(--primary-green);
             color: var(--primary-white); 
-        }
-
-        .property-option.active i {
-            color: var(--primary-white);
         }
 
         .property-option:last-child { 
@@ -197,17 +192,6 @@
             color: var(--primary-white); 
             font-weight: 600;
             font-size: 1.1rem;
-            border: 2px solid rgba(255,255,255,0.3);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            transition: var(--transition);
-        }
-
-        .avatar:hover {
-            transform: scale(1.05);
-        }
-
-        .user-profile:hover .avatar {
-            transform: scale(1.05);
         }
 
         .user-name { 
@@ -232,7 +216,6 @@
             min-width: 220px; 
             z-index: 1001;
             margin-top: 10px;
-            animation: fadeIn 0.3s ease;
         }
 
         .user-menu.show { 
@@ -251,7 +234,6 @@
 
         .menu-item:hover { 
             background-color: var(--light-green); 
-            transform: translateX(5px);
         }
 
         .menu-item:last-child { 
@@ -272,7 +254,7 @@
             margin-top: 80px; 
         }
         
-        /* Enhanced Sidebar */
+        /* Sidebar */
         .admin-sidebar { 
             width: 280px; 
             background-color: var(--primary-white); 
@@ -297,7 +279,6 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            background: linear-gradient(to right, var(--light-green), transparent);
         }
 
         .collapse-btn { 
@@ -306,18 +287,6 @@
             color: var(--primary-green); 
             cursor: pointer; 
             font-size: 1.2rem;
-            width: 30px;
-            height: 30px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: var(--transition);
-        }
-
-        .collapse-btn:hover { 
-            background-color: var(--light-green);
-            transform: rotate(180deg);
         }
 
         .nav-menu { 
@@ -337,24 +306,17 @@
             text-decoration: none; 
             transition: var(--transition); 
             position: relative; 
-            border-left: 4px solid transparent;
         }
 
         .nav-link:hover { 
             background-color: var(--light-green); 
             color: var(--primary-green); 
-            border-left-color: var(--primary-green);
-            padding-left: 30px;
         }
 
         .nav-link.active { 
-            background: linear-gradient(to right, var(--primary-orange), transparent);
-            color: var(--primary-white); 
-            border-left-color: var(--primary-green);
-        }
-
-        .nav-link.active .nav-icon { 
-            color: var(--primary-white); 
+            background-color: var(--light-green);
+            color: var(--primary-green); 
+            border-left: 4px solid var(--primary-green);
         }
 
         .nav-icon { 
@@ -375,16 +337,13 @@
         }
 
         .badge { 
-            background: linear-gradient(135deg, var(--primary-orange), #ff9d00);
+            background-color: var(--primary-orange);
             color: var(--primary-white); 
             padding: 4px 10px; 
             border-radius: 12px; 
             font-size: 0.75rem; 
             font-weight: 600; 
             margin-left: auto;
-            min-width: 24px;
-            text-align: center;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .nav-divider { 
@@ -394,8 +353,6 @@
             font-weight: 600; 
             text-transform: uppercase; 
             letter-spacing: 1px;
-            background: var(--light-green);
-            margin-top: 10px;
         }
 
         .admin-sidebar.collapsed .nav-divider { 
@@ -451,7 +408,6 @@
 
         .breadcrumb a:hover { 
             color: var(--primary-orange);
-            text-decoration: underline; 
         }
 
         .action-buttons { 
@@ -471,25 +427,15 @@
             display: inline-flex; 
             align-items: center; 
             gap: 10px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-        }
-
-        .btn:hover { 
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0,0,0,0.15);
-        }
-
-        .btn:active { 
-            transform: translateY(0);
         }
 
         .btn-primary { 
-            background: linear-gradient(135deg, var(--primary-orange), #ff9d00);
+            background-color: var(--primary-orange);
             color: var(--primary-white); 
         }
 
         .btn-primary:hover { 
-            background: linear-gradient(135deg, #e5941f, #e88c00);
+            background-color: #e5941f;
         }
 
         .btn-secondary { 
@@ -502,18 +448,8 @@
             background-color: var(--primary-green); 
             color: var(--primary-white); 
         }
-
-        .btn-success {
-            background: linear-gradient(135deg, #28a745, #20c997);
-            color: var(--primary-white);
-        }
-
-        .btn-danger {
-            background: linear-gradient(135deg, #dc3545, #e83e8c);
-            color: var(--primary-white);
-        }
         
-        /* Enhanced Dashboard Widgets */
+        /* Dashboard Widgets */
         .dashboard-widgets { 
             display: grid; 
             grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); 
@@ -527,24 +463,10 @@
             padding: 25px; 
             box-shadow: var(--shadow);
             transition: var(--transition);
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--gray-border);
         }
 
         .widget:hover { 
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
-        }
-
-        .widget::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 4px;
-            background: linear-gradient(to right, var(--primary-orange), var(--primary-green));
         }
 
         .widget-header { 
@@ -565,7 +487,6 @@
             font-weight: 700; 
             color: var(--primary-green); 
             margin: 15px 0;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .widget-change { 
@@ -587,14 +508,13 @@
         .widget-icon { 
             width: 60px; 
             height: 60px; 
-            background: linear-gradient(135deg, var(--light-green), #d4edd9);
+            background-color: var(--light-green);
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             font-size: 1.8rem; 
             color: var(--primary-green);
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         .widget-footer {
@@ -605,14 +525,13 @@
             color: var(--text-light);
         }
         
-        /* Enhanced Recent Activity */
+        /* Recent Activity */
         .activity-section { 
             background-color: var(--primary-white); 
             border-radius: var(--radius); 
             padding: 25px; 
             box-shadow: var(--shadow);
             margin-bottom: 40px; 
-            border: 1px solid var(--gray-border);
         }
 
         .activity-section h3 {
@@ -631,13 +550,6 @@
             gap: 15px; 
             padding: 15px 0; 
             border-bottom: 1px solid var(--gray-border);
-            transition: var(--transition);
-        }
-
-        .activity-item:hover {
-            background-color: var(--light-green);
-            padding-left: 10px;
-            border-radius: var(--radius);
         }
 
         .activity-item:last-child { 
@@ -647,14 +559,13 @@
         .activity-icon { 
             width: 45px; 
             height: 45px; 
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            background-color: var(--primary-green);
             border-radius: 50%; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             color: var(--primary-white); 
             font-size: 1.1rem;
-            flex-shrink: 0;
         }
 
         .activity-details { 
@@ -672,13 +583,12 @@
             color: var(--text-light); 
         }
         
-        /* Enhanced Property Comparison */
+        /* Property Comparison */
         .property-comparison { 
             background-color: var(--primary-white); 
             border-radius: var(--radius); 
             padding: 25px; 
             box-shadow: var(--shadow);
-            border: 1px solid var(--gray-border);
         }
 
         .comparison-table { 
@@ -688,27 +598,20 @@
         }
 
         .comparison-table th { 
-            background: linear-gradient(to right, var(--primary-green), var(--secondary-green));
+            background-color: var(--primary-green);
             color: var(--primary-white); 
             padding: 15px; 
             text-align: left; 
             font-weight: 600;
-            position: sticky;
-            top: 0;
         }
 
         .comparison-table td { 
             padding: 15px; 
             border-bottom: 1px solid var(--gray-border);
-            transition: var(--transition);
-        }
-
-        .comparison-table tr:hover td { 
-            background-color: var(--light-green);
         }
 
         .comparison-table tr:nth-child(even) { 
-            background-color: rgba(233, 245, 229, 0.3); 
+            background-color: var(--light-green); 
         }
 
         .progress-bar { 
@@ -721,12 +624,11 @@
 
         .progress-fill { 
             height: 100%; 
-            background: linear-gradient(to right, var(--primary-orange), #ff9d00);
+            background-color: var(--primary-orange);
             border-radius: 4px;
-            transition: width 1s ease;
         }
         
-        /* Enhanced Loading State */
+        /* Loading State */
         .loading { 
             display: inline-block; 
             width: 20px; 
@@ -746,69 +648,41 @@
             to { opacity: 1; transform: translateY(0); }
         }
         
-        /* Enhanced Role-based styling */
-        .role-badge {
-            display: inline-block;
-            padding: 6px 12px;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+        /* Alert */
+        .alert { 
+            padding: 15px; 
+            border-radius: var(--radius); 
+            margin-bottom: 20px; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
         }
 
-        .role-system-admin {
-            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
-            color: white;
+        .alert-success { 
+            background-color: #d4edda; 
+            color: #155724; 
+            border-left: 4px solid #28a745;
         }
 
-        .role-general-manager {
-            background: linear-gradient(135deg, var(--primary-orange), #ff9d00);
-            color: white;
+        .alert-error { 
+            background-color: #f8d7da; 
+            color: #721c24; 
+            border-left: 4px solid #dc3545;
         }
 
-        .role-staff {
-            background: linear-gradient(135deg, #6c757d, #495057);
-            color: white;
+        .alert-warning { 
+            background-color: #fff3cd; 
+            color: #856404; 
+            border-left: 4px solid #ffc107;
+        }
+
+        .alert-info { 
+            background-color: #cce5ff; 
+            color: #004085; 
+            border-left: 4px solid #17a2b8;
         }
         
-        /* Module Loading Styles */
-        .module-container {
-            padding: 0;
-        }
-
-        .module-loading {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 400px;
-            flex-direction: column;
-            gap: 20px;
-        }
-
-        .module-loading .loading {
-            width: 50px;
-            height: 50px;
-            border-width: 4px;
-            border-top-color: var(--primary-orange);
-        }
-
-        .module-error {
-            text-align: center;
-            padding: 60px 20px;
-            background: white;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            margin: 20px;
-        }
-
-        .module-error i {
-            font-size: 3rem;
-            color: #dc3545;
-            margin-bottom: 20px;
-        }
-
-        /* Enhanced Status colors */
+        /* Status badges */
         .status-badge {
             padding: 6px 12px;
             border-radius: 20px;
@@ -826,22 +700,7 @@
             background-color: #d4edda;
             color: #155724;
         }
-
-        .status-checked-in {
-            background-color: #cce5ff;
-            color: #004085;
-        }
-
-        .status-checked-out {
-            background-color: #e2e3e5;
-            color: #383d41;
-        }
-
-        .status-cancelled {
-            background-color: #f8d7da;
-            color: #721c24;
-        }
-
+        
         /* Quick Actions */
         .quick-actions {
             display: grid;
@@ -851,21 +710,19 @@
         }
 
         .quick-action-card {
-            background: linear-gradient(135deg, var(--primary-white), var(--light-green));
+            background-color: var(--primary-white);
             border-radius: var(--radius);
             padding: 25px;
             text-align: center;
             text-decoration: none;
             color: var(--text-dark);
             transition: var(--transition);
-            border: 1px solid var(--gray-border);
             box-shadow: var(--shadow);
         }
 
         .quick-action-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
-            background: linear-gradient(135deg, var(--primary-white), #d4edd9);
+            background-color: var(--light-green);
             color: var(--primary-green);
         }
 
@@ -875,17 +732,29 @@
             margin-bottom: 15px;
         }
 
-        /* Analytics Chart Container */
+        /* Chart Container */
         .chart-container {
             background: var(--primary-white);
             border-radius: var(--radius);
             padding: 25px;
             box-shadow: var(--shadow);
             margin-bottom: 40px;
-            border: 1px solid var(--gray-border);
         }
 
-        /* Responsive Design - Enhanced */
+        /* Return to Dashboard Button */
+        .return-to-dashboard {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            z-index: 1000;
+            display: none;
+        }
+        
+        .return-to-dashboard.show {
+            display: block;
+        }
+        
+        /* Responsive Design */
         @media (max-width: 1200px) {
             .dashboard-widgets { 
                 grid-template-columns: repeat(2, 1fr); 
@@ -937,30 +806,17 @@
             .admin-content {
                 padding: 15px;
             }
-            .page-title h1 {
-                font-size: 1.5rem;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- Mobile Menu Toggle -->
-    <button class="mobile-menu-toggle" id="mobileMenuToggle" style="display: none;">
-        <i class="fas fa-bars"></i>
-    </button>
-
     <!-- Admin Header -->
     <header class="admin-header">
         <div class="container header-container">
             <div class="admin-logo">
-                <svg class="logo-img" viewBox="0 0 133 78">
-                    <path d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#22440f" stroke-width="0.75"/>
-                    <path d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#22440f" stroke-width="0.75"/>
-                    <path d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#22440f"/>
-                    <path d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#22440f"/>
-                    <path d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#22440f"/>
-                    <path d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
-                </svg>
+                <div style="width: 45px; height: 45px; background: white; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <span style="color: var(--primary-green); font-weight: bold;">JR</span>
+                </div>
                 <div>
                     <h1>Jumuia Resorts</h1>
                     <p>Admin Dashboard</p>
@@ -971,21 +827,34 @@
                 <div class="property-switcher">
                     <div class="current-property" id="propertyToggle">
                         <i class="fas fa-hotel"></i>
-                        <span id="currentPropertyText">Loading...</span>
+                        <span id="currentPropertyText">All Properties</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="property-dropdown" id="propertyDropdown">
-                        <!-- Property options will be populated here -->
+                        <div class="property-option active" data-property="all">
+                            <i class="fas fa-globe"></i>
+                            <span>All Properties</span>
+                        </div>
+                        <div class="property-option" data-property="limuru">
+                            <i class="fas fa-mountain"></i>
+                            <span>Limuru Country Home</span>
+                        </div>
+                        <div class="property-option" data-property="kanamai">
+                            <i class="fas fa-umbrella-beach"></i>
+                            <span>Kanamai Beach Resort</span>
+                        </div>
+                        <div class="property-option" data-property="kisumu">
+                            <i class="fas fa-hotel"></i>
+                            <span>Kisumu Hotel</span>
+                        </div>
                     </div>
                 </div>
                 
                 <div class="user-profile" id="userProfile">
-                    <div class="avatar" id="userAvatar">U</div>
+                    <div class="avatar" id="userAvatar">A</div>
                     <div>
-                        <div class="user-name" id="userName">Loading...</div>
-                        <div class="user-role" id="userRole">
-                            <span class="role-badge" id="roleBadge">Loading...</span>
-                        </div>
+                        <div class="user-name" id="userName">Administrator</div>
+                        <div class="user-role" id="userRole">System Admin</div>
                     </div>
                     <i class="fas fa-chevron-down"></i>
                     <div class="user-menu" id="userMenu">
@@ -996,10 +865,6 @@
                         <div class="menu-item" id="settingsBtn">
                             <i class="fas fa-cog"></i>
                             <span>Settings</span>
-                        </div>
-                        <div class="menu-item" id="helpBtn">
-                            <i class="fas fa-question-circle"></i>
-                            <span>Help & Support</span>
                         </div>
                         <div class="menu-item logout" id="logoutBtn">
                             <i class="fas fa-sign-out-alt"></i>
@@ -1036,7 +901,7 @@
                     <a href="#bookings" class="nav-link" data-module="bookings">
                         <i class="fas fa-calendar-check nav-icon"></i>
                         <span class="nav-text">All Bookings</span>
-                        <span class="badge" id="pendingBookingsCount">0</span>
+                        <span class="badge" id="pendingBookingsCount">3</span>
                     </a>
                 </div>
                 <div class="nav-item">
@@ -1046,54 +911,17 @@
                     </a>
                 </div>
                 
-                <div class="nav-divider">Marketing & Offers</div>
-                <div class="nav-item" id="offersNavItem">
-                    <a href="#offers" class="nav-link" data-module="offers">
-                        <i class="fas fa-bullhorn nav-icon"></i>
-                        <span class="nav-text">Promotions & Offers</span>
-                    </a>
-                </div>
-                
-                <div class="nav-divider">Content Management</div>
-                <div class="nav-item" id="contentNavItem">
-                    <a href="#content" class="nav-link" data-module="content">
-                        <i class="fas fa-edit nav-icon"></i>
-                        <span class="nav-text">Content Editor</span>
-                    </a>
-                </div>
-                
-                <div class="nav-divider">Communication</div>
-                <div class="nav-item">
-                    <a href="#messages" class="nav-link" data-module="messages">
-                        <i class="fas fa-comments nav-icon"></i>
-                        <span class="nav-text">Messages Center</span>
-                        <span class="badge" id="unreadMessagesCount">0</span>
-                    </a>
-                </div>
-                <div class="nav-item">
-                    <a href="#feedback" class="nav-link" data-module="feedback">
-                        <i class="fas fa-star nav-icon"></i>
-                        <span class="nav-text">Guest Reviews</span>
-                    </a>
-                </div>
-                
                 <div class="nav-divider">Management</div>
-                <div class="nav-item" id="usersNavItem">
+                <div class="nav-item">
                     <a href="#users" class="nav-link" data-module="users">
                         <i class="fas fa-users-cog nav-icon"></i>
                         <span class="nav-text">User Management</span>
                     </a>
                 </div>
-                <div class="nav-item" id="reportsNavItem">
+                <div class="nav-item">
                     <a href="#reports" class="nav-link" data-module="reports">
                         <i class="fas fa-chart-bar nav-icon"></i>
-                        <span class="nav-text">Analytics & Reports</span>
-                    </a>
-                </div>
-                <div class="nav-item" id="settingsNavItem">
-                    <a href="#settings" class="nav-link" data-module="settings">
-                        <i class="fas fa-cog nav-icon"></i>
-                        <span class="nav-text">System Settings</span>
+                        <span class="nav-text">Reports</span>
                     </a>
                 </div>
             </nav>
@@ -1101,12 +929,11 @@
 
         <!-- Main Content Area -->
         <main class="admin-content" id="mainContentArea">
-            <!-- Dashboard Module -->
             <div id="dashboardModule" class="module-content active">
                 <div class="content-header">
                     <div class="page-title">
-                        <h1 id="dashboardTitle">Dashboard Overview</h1>
-                        <p id="dashboardSubtitle">Welcome back! Here's what's happening today.</p>
+                        <h1>Dashboard Overview</h1>
+                        <p>Welcome back, Administrator! Here's what's happening today.</p>
                     </div>
                     <div class="breadcrumb">
                         <a href="#dashboard"><i class="fas fa-home"></i> Home</a>
@@ -1115,33 +942,15 @@
                     </div>
                 </div>
 
-                <!-- Welcome Message -->
-                <div id="welcomeMessage" style="background: linear-gradient(135deg, var(--primary-green), var(--secondary-green)); color: white; padding: 30px; border-radius: var(--radius); margin-bottom: 30px; box-shadow: var(--shadow);">
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div>
-                            <h2 style="color: white; margin-bottom: 10px; font-size: 1.8rem;">Welcome back, <span id="welcomeName">Admin</span>!</h2>
-                            <p style="opacity: 0.9;">You are logged in as <strong><span id="welcomeRole">System Administrator</span></strong> 
-                            <span id="welcomeProperty" style="display: none;">for <strong><span id="propertyName"></span></strong></span></p>
-                            <p style="margin-top: 10px; font-size: 0.9rem; opacity: 0.8;"><i class="fas fa-clock"></i> Last login: <span id="lastLoginTime">Just now</span></p>
-                        </div>
-                        <div id="dateTimeDisplay" style="text-align: right;">
-                            <div style="font-size: 2rem; font-weight: bold;" id="currentTime">--:--</div>
-                            <div style="opacity: 0.9;" id="currentDate">Loading...</div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Alert Banner -->
-                <div id="alertBanner" style="display: none; margin-bottom: 30px; animation: fadeIn 0.5s;">
-                    <div class="alert-content" style="padding: 15px; border-radius: var(--radius); display: flex; align-items: center; gap: 15px;">
-                        <i class="fas fa-exclamation-triangle" id="alertIcon"></i>
-                        <div style="flex: 1;">
-                            <strong id="alertTitle">Alert:</strong> <span id="alertMessage"></span>
-                        </div>
-                        <button onclick="document.getElementById('alertBanner').style.display = 'none'" style="background: none; border: none; color: inherit; cursor: pointer; font-size: 1.2rem;">
-                            <i class="fas fa-times"></i>
-                        </button>
+                <div id="alertBanner" style="display: none;" class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <div style="flex: 1;">
+                        <span id="alertMessage"></span>
                     </div>
+                    <button onclick="document.getElementById('alertBanner').style.display = 'none'" style="background: none; border: none; color: inherit; cursor: pointer;">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
 
                 <!-- Quick Actions -->
@@ -1160,13 +969,6 @@
                         <h3>Today's Schedule</h3>
                         <p>View daily activities</p>
                     </a>
-                    <a href="#messages" class="quick-action-card" data-module="messages">
-                        <div class="quick-action-icon">
-                            <i class="fas fa-comments"></i>
-                        </div>
-                        <h3>Quick Reply</h3>
-                        <p>Respond to messages</p>
-                    </a>
                     <a href="#reports" class="quick-action-card" data-module="reports">
                         <div class="quick-action-icon">
                             <i class="fas fa-chart-line"></i>
@@ -1182,9 +984,10 @@
                         <div class="widget-header">
                             <div>
                                 <div class="widget-title">Today's Occupancy</div>
-                                <div class="widget-stat" id="occupancyRate">0%</div>
-                                <div class="widget-change" id="occupancyChange">
-                                    <span><i class="fas fa-spinner fa-spin"></i> Loading...</span>
+                                <div class="widget-stat">78%</div>
+                                <div class="widget-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>5% from yesterday</span>
                                 </div>
                             </div>
                             <div class="widget-icon">
@@ -1200,9 +1003,9 @@
                         <div class="widget-header">
                             <div>
                                 <div class="widget-title">Today's Check-ins</div>
-                                <div class="widget-stat" id="checkinsCount">0</div>
-                                <div class="widget-change" id="checkinsChange">
-                                    <span>No data</span>
+                                <div class="widget-stat">8</div>
+                                <div class="widget-change">
+                                    <span>3 scheduled</span>
                                 </div>
                             </div>
                             <div class="widget-icon">
@@ -1210,7 +1013,7 @@
                             </div>
                         </div>
                         <div class="widget-footer">
-                            <i class="fas fa-clock"></i> <span id="nextCheckin">No upcoming check-ins</span>
+                            <i class="fas fa-clock"></i> Next: 14:00 (Room 101)
                         </div>
                     </div>
 
@@ -1218,9 +1021,10 @@
                         <div class="widget-header">
                             <div>
                                 <div class="widget-title">Today's Revenue</div>
-                                <div class="widget-stat" id="todayRevenue">KES 0</div>
-                                <div class="widget-change" id="revenueChange">
-                                    <span>No data</span>
+                                <div class="widget-stat">KES 245,800</div>
+                                <div class="widget-change positive">
+                                    <i class="fas fa-arrow-up"></i>
+                                    <span>12% from yesterday</span>
                                 </div>
                             </div>
                             <div class="widget-icon">
@@ -1228,7 +1032,7 @@
                             </div>
                         </div>
                         <div class="widget-footer">
-                            <i class="fas fa-chart-line"></i> <span id="revenueTrend">Calculating trend...</span>
+                            <i class="fas fa-chart-line"></i> Up 12% this week
                         </div>
                     </div>
 
@@ -1236,9 +1040,9 @@
                         <div class="widget-header">
                             <div>
                                 <div class="widget-title">Pending Actions</div>
-                                <div class="widget-stat" id="pendingBookings">0</div>
-                                <div class="widget-change" id="pendingChange">
-                                    <span>No data</span>
+                                <div class="widget-stat">3</div>
+                                <div class="widget-change">
+                                    <span>2 require action</span>
                                 </div>
                             </div>
                             <div class="widget-icon">
@@ -1265,7 +1069,7 @@
                 </div>
 
                 <!-- Property Comparison -->
-                <div class="property-comparison" id="propertyComparisonSection">
+                <div class="property-comparison">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
                         <h3 style="margin: 0;">Property Performance This Month</h3>
                         <div class="action-buttons">
@@ -1282,14 +1086,70 @@
                                 <th>Revenue</th>
                                 <th>Bookings</th>
                                 <th>Avg. Rating</th>
-                                <th>Status</th>
                             </tr>
                         </thead>
                         <tbody id="propertyPerformance">
                             <tr>
-                                <td colspan="6" style="text-align: center; padding: 30px;">
-                                    <div class="loading"></div>
-                                    <p style="margin-top: 10px;">Loading property data...</p>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <i class="fas fa-mountain"></i>
+                                        <strong>Limuru Country Home</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>75%</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 75%"></div>
+                                    </div>
+                                </td>
+                                <td><strong>KES 1,250,000</strong></td>
+                                <td>45</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                        4.5 <i class="fas fa-star" style="color: #ffc107;"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <i class="fas fa-umbrella-beach"></i>
+                                        <strong>Kanamai Beach Resort</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>65%</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 65%"></div>
+                                    </div>
+                                </td>
+                                <td><strong>KES 980,000</strong></td>
+                                <td>38</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                        4.8 <i class="fas fa-star" style="color: #ffc107;"></i>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <i class="fas fa-hotel"></i>
+                                        <strong>Kisumu Hotel</strong>
+                                    </div>
+                                </td>
+                                <td>
+                                    <div>85%</div>
+                                    <div class="progress-bar">
+                                        <div class="progress-fill" style="width: 85%"></div>
+                                    </div>
+                                </td>
+                                <td><strong>KES 1,450,000</strong></td>
+                                <td>52</td>
+                                <td>
+                                    <div style="display: flex; align-items: center; gap: 5px;">
+                                        4.3 <i class="fas fa-star" style="color: #ffc107;"></i>
+                                    </div>
                                 </td>
                             </tr>
                         </tbody>
@@ -1307,11 +1167,38 @@
                     <ul class="activity-list" id="recentActivity">
                         <li class="activity-item">
                             <div class="activity-icon">
-                                <i class="fas fa-spinner fa-spin"></i>
+                                <i class="fas fa-calendar-check"></i>
                             </div>
                             <div class="activity-details">
-                                <div class="activity-title">Loading activities...</div>
-                                <div class="activity-time">Please wait</div>
+                                <div class="activity-title">New booking confirmed for Room 101</div>
+                                <div class="activity-time">
+                                    <i class="fas fa-user"></i> System • 
+                                    <i class="fas fa-clock"></i> 5 minutes ago
+                                </div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-credit-card"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">Payment received for booking JUM-12345</div>
+                                <div class="activity-time">
+                                    <i class="fas fa-user"></i> System • 
+                                    <i class="fas fa-clock"></i> 1 hour ago
+                                </div>
+                            </div>
+                        </li>
+                        <li class="activity-item">
+                            <div class="activity-icon">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </div>
+                            <div class="activity-details">
+                                <div class="activity-title">Guest checked out from Room 205</div>
+                                <div class="activity-time">
+                                    <i class="fas fa-user"></i> Front Desk • 
+                                    <i class="fas fa-clock"></i> 2 hours ago
+                                </div>
                             </div>
                         </li>
                     </ul>
@@ -1320,1827 +1207,459 @@
         </main>
     </div>
 
-    <!-- Profile Modal -->
-    <div id="profileModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; align-items: center; justify-content: center;">
-        <div style="background: white; border-radius: var(--radius); width: 90%; max-width: 500px; max-height: 90vh; overflow-y: auto;">
-            <div style="padding: 30px;">
-                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px;">
-                    <h3 style="margin: 0; color: var(--primary-green);">My Profile</h3>
-                    <button onclick="closeProfileModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">&times;</button>
-                </div>
-                <div id="profileContent">
-                    <!-- Profile content will be loaded here -->
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { 
-            getAuth, 
-            onAuthStateChanged, 
-            signOut,
-            updateProfile
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            collection, 
-            getDocs, 
-            query, 
-            where, 
-            orderBy, 
-            limit, 
-            doc, 
-            getDoc,
-            onSnapshot,
-            updateDoc,
-            serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-        import { 
-            getStorage,
-            ref,
-            uploadBytes,
-            getDownloadURL
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-storage.js";
-
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
-            authDomain: "jumuia-resort-limited.firebaseapp.com",
-            projectId: "jumuia-resort-limited",
-            storageBucket: "jumuia-resort-limited.firebasestorage.app",
-            messagingSenderId: "152170552230",
-            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
-            measurementId: "G-Q7BWHJ9C3M"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-        const storage = getStorage(app);
-
-        // Global variables
-        let currentUser = null;
-        let currentProperty = 'all';
-        let currentModule = 'dashboard';
-        let authInitialized = false;
-        let realtimeListeners = [];
-        let charts = {};
-
-        // Initialize dashboard when DOM is loaded
-        document.addEventListener('DOMContentLoaded', function() {
-            initEventListeners();
-            setupRealTimeClock();
-            setTimeout(() => {
-                checkAuthentication();
-            }, 100);
-        });
-
-        // Setup real-time clock
-        function setupRealTimeClock() {
-            function updateDateTime() {
-                const now = new Date();
-                const time = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
-                const date = now.toLocaleDateString('en-KE', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                });
-                
-                if (document.getElementById('currentTime')) {
-                    document.getElementById('currentTime').textContent = time;
-                }
-                if (document.getElementById('currentDate')) {
-                    document.getElementById('currentDate').textContent = date;
-                }
+    <!-- JavaScript -->
+    <script>
+        // Dashboard Application
+        class DashboardApp {
+            constructor() {
+                this.currentUser = null;
+                this.currentProperty = 'all';
+                this.currentModule = 'dashboard';
+                this.isInitialized = false;
+                this.charts = {};
             }
             
-            updateDateTime();
-            setInterval(updateDateTime, 1000);
-        }
-
-        // Enhanced authentication check
-        async function checkAuthentication() {
-            try {
-                // Check localStorage for user data
-                const userData = JSON.parse(localStorage.getItem('jumuiaAdminUser'));
-                
-                if (!userData) {
-                    console.log('No session data in localStorage');
-                    window.location.href = "index.html";
-                    return;
-                }
-
-                // Check Firebase authentication
-                return new Promise((resolve, reject) => {
-                    const unsubscribe = onAuthStateChanged(auth, async (user) => {
-                        unsubscribe();
-                        
-                        if (!user) {
-                            console.log('No authenticated user in Firebase');
-                            localStorage.removeItem('jumuiaAdminUser');
-                            window.location.href = "index.html";
-                            return;
-                        }
-
-                        try {
-                            // Verify user exists in admins collection
-                            const userDoc = await getDoc(doc(db, "admins", user.uid));
-                            
-                            if (!userDoc.exists()) {
-                                console.log('User not found in admins collection');
-                                await signOut(auth);
-                                localStorage.removeItem('jumuiaAdminUser');
-                                window.location.href = "index.html";
-                                return;
-                            }
-
-                            const dbUserData = userDoc.data();
-                            
-                            // Update user session
-                            const updatedSession = {
-                                ...userData,
-                                uid: user.uid,
-                                email: user.email,
-                                name: dbUserData.name || userData.name,
-                                role: dbUserData.role,
-                                property: dbUserData.property || 'all',
-                                photoURL: dbUserData.photoURL || user.photoURL,
-                                permissions: getPermissions(dbUserData.role, dbUserData.property),
-                                lastLogin: new Date().toISOString()
-                            };
-                            
-                            localStorage.setItem('jumuiaAdminUser', JSON.stringify(updatedSession));
-                            currentUser = updatedSession;
-                            currentProperty = updatedSession.property === 'all' ? 'all' : updatedSession.property;
-
-                            // Setup UI
-                            setupUserInterface();
-                            loadDashboardData();
-                            initializeCharts();
-                            
-                            authInitialized = true;
-                            resolve();
-                            
-                        } catch (error) {
-                            console.error("Error in authentication:", error);
-                            localStorage.removeItem('jumuiaAdminUser');
-                            window.location.href = "index.html";
-                            reject(error);
-                        }
-                    });
-                });
-                
-            } catch (error) {
-                console.error("Authentication error:", error);
-                localStorage.removeItem('jumuiaAdminUser');
-                window.location.href = "index.html";
-            }
-        }
-
-        // Enhanced permissions function
-        function getPermissions(role, property) {
-            const permissions = {
-                'system-admin': {
-                    canViewAll: true,
-                    canEditAll: true,
-                    canDelete: true,
-                    canManageUsers: true,
-                    canManageSettings: true,
-                    canUploadMedia: true,
-                    canExportData: true,
-                    properties: ['limuru', 'kanamai', 'kisumu', 'all'],
-                    accessibleModules: ['dashboard', 'bookings', 'calendar', 'offers', 'content', 'messages', 'feedback', 'users', 'reports', 'settings']
-                },
-                'general-manager': {
-                    canViewAll: true,
-                    canEditAll: true,
-                    canDelete: true,
-                    canManageUsers: false,
-                    canManageSettings: false,
-                    canUploadMedia: true,
-                    canExportData: true,
-                    properties: ['limuru', 'kanamai', 'kisumu', 'all'],
-                    accessibleModules: ['dashboard', 'bookings', 'calendar', 'offers', 'content', 'messages', 'feedback', 'reports']
-                },
-                'staff': {
-                    canViewAll: false,
-                    canEditAll: false,
-                    canDelete: false,
-                    canManageUsers: false,
-                    canManageSettings: false,
-                    canUploadMedia: false,
-                    canExportData: false,
-                    properties: [property],
-                    accessibleModules: ['dashboard', 'bookings', 'calendar', 'messages', 'feedback']
-                }
-            };
-            
-            return permissions[role] || permissions['staff'];
-        }
-
-        // Setup user interface - Enhanced
-        function setupUserInterface() {
-            if (!currentUser) return;
-            
-            // Set user information
-            document.getElementById('userName').textContent = currentUser.name;
-            document.getElementById('welcomeName').textContent = currentUser.name;
-            
-            // Format and display role
-            const roleNames = {
-                'system-admin': 'System Administrator',
-                'general-manager': 'General Manager',
-                'staff': 'Staff Member'
-            };
-            
-            const roleName = roleNames[currentUser.role] || currentUser.role;
-            document.getElementById('welcomeRole').textContent = roleName;
-            document.getElementById('roleBadge').textContent = roleName;
-            document.getElementById('roleBadge').className = `role-badge role-${currentUser.role}`;
-            
-            // Set user avatar
-            if (currentUser.photoURL) {
-                document.getElementById('userAvatar').innerHTML = `<img src="${currentUser.photoURL}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-            } else {
-                const initials = currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                document.getElementById('userAvatar').textContent = initials;
-            }
-            
-            // Set last login time
-            if (currentUser.lastLogin) {
-                const lastLogin = new Date(currentUser.lastLogin);
-                const timeAgo = getTimeAgo(lastLogin);
-                document.getElementById('lastLoginTime').textContent = timeAgo;
-            }
-            
-            // Setup property switcher
-            setupPropertySwitcher();
-            
-            // Setup navigation based on permissions
-            setupNavigation();
-            
-            // Start real-time listeners
-            startRealtimeListeners();
-            
-            // Setup mobile menu
-            setupMobileMenu();
-        }
-
-        // Enhanced property switcher
-        function setupPropertySwitcher() {
-            const propertyToggle = document.getElementById('propertyToggle');
-            const propertyDropdown = document.getElementById('propertyDropdown');
-            
-            // Property data
-            const properties = [
-                { id: 'all', name: 'All Properties', icon: 'fa-globe' },
-                { id: 'limuru', name: 'Limuru Country Home', icon: 'fa-mountain' },
-                { id: 'kanamai', name: 'Kanamai Beach Resort', icon: 'fa-umbrella-beach' },
-                { id: 'kisumu', name: 'Kisumu Hotel', icon: 'fa-hotel' }
-            ];
-            
-            // Filter properties based on permissions
-            const accessibleProperties = properties.filter(prop => 
-                currentUser.permissions.properties.includes(prop.id)
-            );
-            
-            if (accessibleProperties.length > 1) {
-                // Find current property
-                const currentProp = accessibleProperties.find(p => p.id === currentProperty) || accessibleProperties[0];
-                
-                propertyToggle.innerHTML = `
-                    <i class="fas ${currentProp.icon}"></i>
-                    <span id="currentPropertyText">${currentProp.name}</span>
-                    <i class="fas fa-chevron-down"></i>
-                `;
-                
-                // Build dropdown
-                propertyDropdown.innerHTML = accessibleProperties.map(prop => `
-                    <div class="property-option ${prop.id === currentProperty ? 'active' : ''}" 
-                         data-property="${prop.id}">
-                        <i class="fas ${prop.icon}"></i>
-                        <span>${prop.name}</span>
-                    </div>
-                `).join('');
-                
-                // Add event listeners
-                propertyToggle.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    propertyDropdown.classList.toggle('show');
-                });
-                
-                propertyDropdown.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                });
-                
-                document.querySelectorAll('.property-option').forEach(option => {
-                    option.addEventListener('click', function() {
-                        const newProperty = this.getAttribute('data-property');
-                        if (newProperty !== currentProperty) {
-                            currentProperty = newProperty;
-                            updatePropertyDropdown();
-                            loadDashboardData();
-                            refreshCharts();
-                            showAlert(`Switched to ${this.querySelector('span').textContent}`, 'success');
-                        }
-                        propertyDropdown.classList.remove('show');
-                    });
-                });
-                
-                // Close dropdown when clicking outside
-                document.addEventListener('click', () => {
-                    propertyDropdown.classList.remove('show');
-                });
-                
-            } else {
-                // Only one property accessible
-                const prop = accessibleProperties[0];
-                propertyToggle.innerHTML = `
-                    <i class="fas ${prop.icon}"></i>
-                    <span id="currentPropertyText">${prop.name}</span>
-                `;
-                propertyToggle.style.cursor = 'default';
-            }
-        }
-
-        function updatePropertyDropdown() {
-            document.querySelectorAll('.property-option').forEach(option => {
-                option.classList.remove('active');
-                if (option.getAttribute('data-property') === currentProperty) {
-                    option.classList.add('active');
+            async init() {
+                try {
+                    console.log('Dashboard initializing...');
                     
-                    // Update toggle text
-                    const propertyToggle = document.getElementById('propertyToggle');
-                    const propertyText = option.querySelector('span').textContent;
-                    const propertyIcon = option.querySelector('i').className;
+                    // Initialize Firebase
+                    await this.initializeFirebase();
                     
-                    propertyToggle.innerHTML = `
-                        <i class="${propertyIcon}"></i>
-                        <span id="currentPropertyText">${propertyText}</span>
-                        <i class="fas fa-chevron-down"></i>
-                    `;
-                }
-            });
-        }
-
-        // Enhanced navigation setup
-        function setupNavigation() {
-            const accessibleModules = currentUser.permissions.accessibleModules;
-            
-            // Hide/show navigation items based on permissions
-            document.querySelectorAll('.nav-link').forEach(link => {
-                const module = link.getAttribute('data-module');
-                
-                if (!accessibleModules.includes(module)) {
-                    link.parentElement.style.display = 'none';
-                } else {
-                    link.parentElement.style.display = 'block';
-                }
-            });
-            
-            // Special handling for user management
-            if (!currentUser.permissions.canManageUsers) {
-                document.getElementById('usersNavItem').style.display = 'none';
-            }
-            
-            // Special handling for settings
-            if (!currentUser.permissions.canManageSettings) {
-                document.getElementById('settingsNavItem').style.display = 'none';
-            }
-            
-            // Special handling for reports
-            if (!currentUser.permissions.canExportData) {
-                document.getElementById('reportsNavItem').style.display = 'none';
-            }
-        }
-
-        // Enhanced event listeners
-        function initEventListeners() {
-            // User menu toggle
-            document.getElementById('userProfile').addEventListener('click', function(e) {
-                e.stopPropagation();
-                document.getElementById('userMenu').classList.toggle('show');
-            });
-            
-            // Logout button
-            document.getElementById('logoutBtn').addEventListener('click', async function() {
-                const confirmed = await showConfirmDialog('Are you sure you want to logout?', 'Logout Confirmation');
-                if (confirmed) {
-                    try {
-                        await signOut(auth);
-                        localStorage.removeItem('jumuiaAdminUser');
-                        window.location.href = "index.html";
-                    } catch (error) {
-                        console.error('Logout error:', error);
-                        showAlert('Logout failed. Please try again.', 'error');
-                    }
-                }
-            });
-            
-            // Profile button
-            document.getElementById('profileBtn').addEventListener('click', function() {
-                openProfileModal();
-            });
-            
-            // Settings button
-            document.getElementById('settingsBtn').addEventListener('click', function() {
-                loadModule('settings');
-                document.getElementById('userMenu').classList.remove('show');
-            });
-            
-            // Help button
-            document.getElementById('helpBtn').addEventListener('click', function() {
-                showAlert('Help documentation will be available soon!', 'info');
-                document.getElementById('userMenu').classList.remove('show');
-            });
-            
-            // Navigation
-            document.querySelectorAll('.nav-link').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    if (!authInitialized || !currentUser) {
-                        showAlert('Please wait for authentication to complete.', 'warning');
-                        return;
-                    }
-                    const module = this.getAttribute('data-module');
-                    loadModule(module);
-                    document.getElementById('userMenu').classList.remove('show');
-                });
-            });
-            
-            // Quick actions
-            document.querySelectorAll('.quick-action-card').forEach(card => {
-                card.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const module = this.getAttribute('data-module');
-                    if (module) {
-                        loadModule(module);
-                    }
-                });
-            });
-            
-            // Sidebar collapse
-            document.getElementById('collapseBtn').addEventListener('click', function() {
-                document.getElementById('adminSidebar').classList.toggle('collapsed');
-                const icon = this.querySelector('i');
-                icon.classList.toggle('fa-chevron-left');
-                icon.classList.toggle('fa-chevron-right');
-            });
-            
-            // Close dropdowns when clicking outside
-            document.addEventListener('click', function(e) {
-                if (!e.target.closest('.property-switcher')) {
-                    document.getElementById('propertyDropdown').classList.remove('show');
-                }
-                if (!e.target.closest('.user-profile')) {
-                    document.getElementById('userMenu').classList.remove('show');
-                }
-            });
-        }
-
-        // Mobile menu setup
-        function setupMobileMenu() {
-            const mobileToggle = document.getElementById('mobileMenuToggle');
-            const sidebar = document.getElementById('adminSidebar');
-            
-            if (window.innerWidth <= 992) {
-                mobileToggle.style.display = 'block';
-                sidebar.classList.remove('collapsed');
-            }
-            
-            mobileToggle.addEventListener('click', function() {
-                sidebar.classList.toggle('mobile-open');
-            });
-            
-            window.addEventListener('resize', function() {
-                if (window.innerWidth <= 992) {
-                    mobileToggle.style.display = 'block';
-                } else {
-                    mobileToggle.style.display = 'none';
-                    sidebar.classList.remove('mobile-open');
-                }
-            });
-        }
-
-        // Enhanced real-time listeners
-        function startRealtimeListeners() {
-            // Clear existing listeners
-            realtimeListeners.forEach(unsubscribe => unsubscribe());
-            realtimeListeners = [];
-            
-            listenForPendingBookings();
-            listenForUnreadMessages();
-            listenForRecentActivities();
-        }
-
-        // Enhanced pending bookings listener
-        function listenForPendingBookings() {
-            let bookingsQuery;
-            if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                bookingsQuery = query(
-                    collection(db, 'bookings'),
-                    where('status', '==', 'pending')
-                );
-            } else {
-                const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                bookingsQuery = query(
-                    collection(db, 'bookings'),
-                    where('property', '==', property),
-                    where('status', '==', 'pending')
-                );
-            }
-            
-            const unsubscribe = onSnapshot(bookingsQuery, (snapshot) => {
-                const pendingCount = snapshot.size;
-                document.getElementById('pendingBookings').textContent = pendingCount;
-                document.getElementById('pendingBookingsCount').textContent = pendingCount;
-                
-                if (pendingCount > 0) {
-                    showAlert(`You have ${pendingCount} pending booking${pendingCount > 1 ? 's' : ''} requiring attention.`, 'warning');
-                }
-            });
-            
-            realtimeListeners.push(unsubscribe);
-        }
-
-        // Enhanced unread messages listener
-        function listenForUnreadMessages() {
-            let messagesQuery;
-            if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                messagesQuery = query(
-                    collection(db, 'messages'),
-                    where('read', '==', false)
-                );
-            } else {
-                const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                messagesQuery = query(
-                    collection(db, 'messages'),
-                    where('property', '==', property),
-                    where('read', '==', false)
-                );
-            }
-            
-            const unsubscribe = onSnapshot(messagesQuery, (snapshot) => {
-                const unreadCount = snapshot.size;
-                document.getElementById('unreadMessagesCount').textContent = unreadCount;
-                
-                if (unreadCount > 0) {
-                    updateDashboardSubtitle(`${unreadCount} unread message${unreadCount > 1 ? 's' : ''}`);
-                }
-            });
-            
-            realtimeListeners.push(unsubscribe);
-        }
-
-        // Recent activities listener
-        function listenForRecentActivities() {
-            let activitiesQuery;
-            if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                activitiesQuery = query(
-                    collection(db, 'activities'),
-                    orderBy('timestamp', 'desc'),
-                    limit(5)
-                );
-            } else {
-                const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                activitiesQuery = query(
-                    collection(db, 'activities'),
-                    where('property', '==', property),
-                    orderBy('timestamp', 'desc'),
-                    limit(5)
-                );
-            }
-            
-            const unsubscribe = onSnapshot(activitiesQuery, (snapshot) => {
-                updateRecentActivity(snapshot);
-            });
-            
-            realtimeListeners.push(unsubscribe);
-        }
-
-        // Enhanced dashboard data loading
-        async function loadDashboardData() {
-            if (!currentUser) return;
-            
-            try {
-                showLoading(true, 'Loading dashboard data...');
-                
-                // Load all data in parallel
-                await Promise.all([
-                    loadOccupancyData(),
-                    loadCheckinsData(),
-                    loadRevenueData(),
-                    loadPropertyPerformance(),
-                    loadRecentActivity(),
-                    loadDashboardStats()
-                ]);
-                
-                // Update dashboard title
-                updateDashboardTitle();
-                
-            } catch (error) {
-                console.error('Error loading dashboard data:', error);
-                showAlert('Failed to load dashboard data. Please refresh the page.', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        // Enhanced occupancy data
-        async function loadOccupancyData() {
-            try {
-                const today = new Date().toISOString().split('T')[0];
-                
-                let activeQuery;
-                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                    activeQuery = query(
-                        collection(db, 'bookings'),
-                        where('status', 'in', ['confirmed', 'checked-in']),
-                        where('checkIn', '<=', today),
-                        where('checkOut', '>=', today)
-                    );
-                } else {
-                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                    activeQuery = query(
-                        collection(db, 'bookings'),
-                        where('property', '==', property),
-                        where('status', 'in', ['confirmed', 'checked-in']),
-                        where('checkIn', '<=', today),
-                        where('checkOut', '>=', today)
-                    );
-                }
-                
-                const snapshot = await getDocs(activeQuery);
-                const activeBookings = snapshot.size;
-                
-                // Calculate occupancy rate
-                const totalRooms = currentProperty === 'all' ? 90 : 30;
-                const occupancyRate = Math.round((activeBookings / totalRooms) * 100);
-                
-                document.getElementById('occupancyRate').textContent = `${occupancyRate}%`;
-                
-                // Calculate trend
-                const yesterday = new Date();
-                yesterday.setDate(yesterday.getDate() - 1);
-                const yesterdayStr = yesterday.toISOString().split('T')[0];
-                
-                let yesterdayQuery;
-                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                    yesterdayQuery = query(
-                        collection(db, 'bookings'),
-                        where('status', 'in', ['confirmed', 'checked-in']),
-                        where('checkIn', '<=', yesterdayStr),
-                        where('checkOut', '>=', yesterdayStr)
-                    );
-                } else {
-                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                    yesterdayQuery = query(
-                        collection(db, 'bookings'),
-                        where('property', '==', property),
-                        where('status', 'in', ['confirmed', 'checked-in']),
-                        where('checkIn', '<=', yesterdayStr),
-                        where('checkOut', '>=', yesterdayStr)
-                    );
-                }
-                
-                const yesterdaySnapshot = await getDocs(yesterdayQuery);
-                const yesterdayOccupancy = Math.round((yesterdaySnapshot.size / totalRooms) * 100);
-                
-                const change = occupancyRate - yesterdayOccupancy;
-                const changeElement = document.getElementById('occupancyChange');
-                
-                if (change > 0) {
-                    changeElement.innerHTML = `<i class="fas fa-arrow-up"></i> ${change}% from yesterday`;
-                    changeElement.className = 'widget-change positive';
-                } else if (change < 0) {
-                    changeElement.innerHTML = `<i class="fas fa-arrow-down"></i> ${Math.abs(change)}% from yesterday`;
-                    changeElement.className = 'widget-change negative';
-                } else {
-                    changeElement.innerHTML = 'No change from yesterday';
-                    changeElement.className = 'widget-change';
-                }
-                
-            } catch (error) {
-                console.error('Error loading occupancy data:', error);
-                document.getElementById('occupancyRate').textContent = 'Error';
-            }
-        }
-
-        // Enhanced check-ins data
-        async function loadCheckinsData() {
-            try {
-                const today = new Date().toISOString().split('T')[0];
-                const tomorrow = new Date();
-                tomorrow.setDate(tomorrow.getDate() + 1);
-                const tomorrowStr = tomorrow.toISOString().split('T')[0];
-                
-                // Today's check-ins
-                let checkinsQuery;
-                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                    checkinsQuery = query(
-                        collection(db, 'bookings'),
-                        where('checkIn', '==', today),
-                        where('status', 'in', ['confirmed', 'checked-in'])
-                    );
-                } else {
-                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                    checkinsQuery = query(
-                        collection(db, 'bookings'),
-                        where('property', '==', property),
-                        where('checkIn', '==', today),
-                        where('status', 'in', ['confirmed', 'checked-in'])
-                    );
-                }
-                
-                const snapshot = await getDocs(checkinsQuery);
-                document.getElementById('checkinsCount').textContent = snapshot.size;
-                
-                // Next check-in
-                let nextCheckinQuery;
-                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                    nextCheckinQuery = query(
-                        collection(db, 'bookings'),
-                        where('checkIn', '>=', today),
-                        where('status', '==', 'confirmed'),
-                        orderBy('checkIn', 'asc'),
-                        limit(1)
-                    );
-                } else {
-                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                    nextCheckinQuery = query(
-                        collection(db, 'bookings'),
-                        where('property', '==', property),
-                        where('checkIn', '>=', today),
-                        where('status', '==', 'confirmed'),
-                        orderBy('checkIn', 'asc'),
-                        limit(1)
-                    );
-                }
-                
-                const nextCheckinSnapshot = await getDocs(nextCheckinQuery);
-                if (!nextCheckinSnapshot.empty) {
-                    const nextCheckin = nextCheckinSnapshot.docs[0].data();
-                    const nextCheckinDate = new Date(nextCheckin.checkIn);
-                    const todayDate = new Date();
+                    // Setup UI components
+                    this.setupEventListeners();
+                    this.setupRealTimeClock();
+                    this.setupMobileMenu();
                     
-                    if (nextCheckinDate.toDateString() === todayDate.toDateString()) {
-                        document.getElementById('nextCheckin').textContent = 'Today';
-                    } else if (nextCheckinDate.toDateString() === tomorrow.toDateString()) {
-                        document.getElementById('nextCheckin').textContent = 'Tomorrow';
+                    // Initialize charts
+                    this.initializeCharts();
+                    
+                    // Setup demo user (in real app, this would come from Firebase Auth)
+                    this.setupDemoUser();
+                    
+                    // Mark as initialized
+                    this.isInitialized = true;
+                    
+                    // Show welcome message
+                    this.showAlert('Dashboard loaded successfully!', 'success');
+                    
+                } catch (error) {
+                    console.error('Initialization error:', error);
+                    this.showAlert('Failed to initialize dashboard. Please refresh the page.', 'error');
+                }
+            }
+            
+            async initializeFirebase() {
+                try {
+                    // Firebase configuration - SAME AS BOOKING PAGE
+                    const firebaseConfig = {
+                        apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
+                        authDomain: "jumuia-resort-limited.firebaseapp.com",
+                        projectId: "jumuia-resort-limited",
+                        storageBucket: "jumuia-resort-limited.firebasestorage.app",
+                        messagingSenderId: "152170552230",
+                        appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
+                        measurementId: "G-Q7BWHJ9C3M"
+                    };
+                    
+                    // Check if Firebase is already initialized
+                    if (!firebase.apps.length) {
+                        firebase.initializeApp(firebaseConfig, 'DashboardApp');
+                        console.log('Firebase initialized for dashboard');
                     } else {
-                        document.getElementById('nextCheckin').textContent = 
-                            nextCheckinDate.toLocaleDateString('en-KE', { weekday: 'short', month: 'short', day: 'numeric' });
-                    }
-                }
-                
-            } catch (error) {
-                console.error('Error loading check-ins data:', error);
-                document.getElementById('checkinsCount').textContent = '0';
-            }
-        }
-
-        // Enhanced revenue data
-        async function loadRevenueData() {
-            try {
-                const today = new Date();
-                const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
-                const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
-                
-                let revenueQuery;
-                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                    revenueQuery = query(
-                        collection(db, 'bookings'),
-                        where('status', 'in', ['confirmed', 'checked-in', 'checked-out']),
-                        where('checkIn', '>=', startOfMonth.toISOString().split('T')[0]),
-                        where('checkIn', '<=', endOfMonth.toISOString().split('T')[0])
-                    );
-                } else {
-                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                    revenueQuery = query(
-                        collection(db, 'bookings'),
-                        where('property', '==', property),
-                        where('status', 'in', ['confirmed', 'checked-in', 'checked-out']),
-                        where('checkIn', '>=', startOfMonth.toISOString().split('T')[0]),
-                        where('checkIn', '<=', endOfMonth.toISOString().split('T')[0])
-                    );
-                }
-                
-                const snapshot = await getDocs(revenueQuery);
-                let totalRevenue = 0;
-                
-                snapshot.forEach(doc => {
-                    const booking = doc.data();
-                    totalRevenue += booking.totalAmount || 0;
-                });
-                
-                // Format revenue
-                const formattedRevenue = formatCurrency(totalRevenue);
-                document.getElementById('todayRevenue').textContent = formattedRevenue;
-                
-                // Last month comparison
-                const lastMonthStart = new Date(today.getFullYear(), today.getMonth() - 1, 1);
-                const lastMonthEnd = new Date(today.getFullYear(), today.getMonth(), 0);
-                
-                let lastMonthQuery;
-                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                    lastMonthQuery = query(
-                        collection(db, 'bookings'),
-                        where('status', 'in', ['confirmed', 'checked-in', 'checked-out']),
-                        where('checkIn', '>=', lastMonthStart.toISOString().split('T')[0]),
-                        where('checkIn', '<=', lastMonthEnd.toISOString().split('T')[0])
-                    );
-                } else {
-                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                    lastMonthQuery = query(
-                        collection(db, 'bookings'),
-                        where('property', '==', property),
-                        where('status', 'in', ['confirmed', 'checked-in', 'checked-out']),
-                        where('checkIn', '>=', lastMonthStart.toISOString().split('T')[0]),
-                        where('checkIn', '<=', lastMonthEnd.toISOString().split('T')[0])
-                    );
-                }
-                
-                const lastMonthSnapshot = await getDocs(lastMonthQuery);
-                let lastMonthRevenue = 0;
-                lastMonthSnapshot.forEach(doc => {
-                    const booking = doc.data();
-                    lastMonthRevenue += booking.totalAmount || 0;
-                });
-                
-                const change = lastMonthRevenue > 0 ? 
-                    Math.round(((totalRevenue - lastMonthRevenue) / lastMonthRevenue) * 100) : 0;
-                
-                const changeElement = document.getElementById('revenueChange');
-                const trendElement = document.getElementById('revenueTrend');
-                
-                if (change > 0) {
-                    changeElement.innerHTML = `<i class="fas fa-arrow-up"></i> ${change}% from last month`;
-                    changeElement.className = 'widget-change positive';
-                    trendElement.textContent = `Up ${change}% from last month`;
-                } else if (change < 0) {
-                    changeElement.innerHTML = `<i class="fas fa-arrow-down"></i> ${Math.abs(change)}% from last month`;
-                    changeElement.className = 'widget-change negative';
-                    trendElement.textContent = `Down ${Math.abs(change)}% from last month`;
-                } else {
-                    changeElement.innerHTML = 'No change from last month';
-                    changeElement.className = 'widget-change';
-                    trendElement.textContent = 'Stable performance';
-                }
-                
-            } catch (error) {
-                console.error('Error loading revenue data:', error);
-                document.getElementById('todayRevenue').textContent = 'KES 0';
-            }
-        }
-
-        // Enhanced property performance
-        async function loadPropertyPerformance() {
-            try {
-                const properties = [
-                    { id: 'limuru', name: 'Limuru Country Home', icon: 'fa-mountain' },
-                    { id: 'kanamai', name: 'Kanamai Beach Resort', icon: 'fa-umbrella-beach' },
-                    { id: 'kisumu', name: 'Kisumu Hotel', icon: 'fa-hotel' }
-                ];
-                
-                const performanceTable = document.getElementById('propertyPerformance');
-                
-                // Hide for staff without all properties access
-                if (currentUser.role === 'staff' && currentProperty !== 'all') {
-                    document.getElementById('propertyComparisonSection').style.display = 'none';
-                    return;
-                }
-                
-                let performanceData = [];
-                
-                for (const property of properties) {
-                    if (currentProperty !== 'all' && currentProperty !== property.id) {
-                        continue;
+                        console.log('Firebase already initialized');
                     }
                     
-                    const today = new Date().toISOString().split('T')[0];
-                    const startOfMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
-                    const endOfMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0);
+                    // Initialize services
+                    this.db = firebase.firestore();
+                    this.auth = firebase.auth();
                     
-                    // Get active bookings
-                    const activeQuery = query(
-                        collection(db, 'bookings'),
-                        where('property', '==', property.id),
-                        where('status', 'in', ['confirmed', 'checked-in']),
-                        where('checkIn', '<=', today),
-                        where('checkOut', '>=', today)
-                    );
-                    
-                    const activeSnapshot = await getDocs(activeQuery);
-                    
-                    // Get monthly bookings
-                    const monthlyQuery = query(
-                        collection(db, 'bookings'),
-                        where('property', '==', property.id),
-                        where('status', 'in', ['confirmed', 'checked-in', 'checked-out']),
-                        where('checkIn', '>=', startOfMonth.toISOString().split('T')[0]),
-                        where('checkIn', '<=', endOfMonth.toISOString().split('T')[0])
-                    );
-                    
-                    const monthlySnapshot = await getDocs(monthlyQuery);
-                    
-                    // Calculate metrics
-                    let revenue = 0;
-                    let activeBookings = activeSnapshot.size;
-                    let monthlyBookings = monthlySnapshot.size;
-                    
-                    monthlySnapshot.forEach(doc => {
-                        const booking = doc.data();
-                        revenue += booking.totalAmount || 0;
+                    // Configure Firestore
+                    this.db.settings({
+                        timestampsInSnapshots: true
                     });
                     
-                    // Get average rating
-                    const feedbackQuery = query(
-                        collection(db, 'feedback'),
-                        where('property', '==', property.id),
-                        where('rating', '>=', 1),
-                        limit(50)
-                    );
+                    console.log('Firebase services ready');
                     
-                    const feedbackSnapshot = await getDocs(feedbackQuery);
-                    let totalRating = 0;
-                    let ratingCount = 0;
-                    
-                    feedbackSnapshot.forEach(doc => {
-                        const feedback = doc.data();
-                        if (feedback.rating) {
-                            totalRating += feedback.rating;
-                            ratingCount++;
-                        }
-                    });
-                    
-                    const avgRating = ratingCount > 0 ? (totalRating / ratingCount).toFixed(1) : 'N/A';
-                    
-                    // Calculate occupancy rate
-                    const occupancyRate = Math.min(100, Math.round((activeBookings / 30) * 100));
-                    
-                    // Determine status
-                    let status = 'Good';
-                    let statusColor = 'success';
-                    
-                    if (occupancyRate >= 80) {
-                        status = 'Full';
-                        statusColor = 'success';
-                    } else if (occupancyRate >= 50) {
-                        status = 'Busy';
-                        statusColor = 'info';
-                    } else if (occupancyRate >= 20) {
-                        status = 'Available';
-                        statusColor = 'warning';
-                    } else {
-                        status = 'Quiet';
-                        statusColor = 'secondary';
-                    }
-                    
-                    performanceData.push({
-                        property,
-                        occupancyRate,
-                        revenue,
-                        monthlyBookings,
-                        avgRating,
-                        status,
-                        statusColor
-                    });
+                } catch (error) {
+                    console.error('Firebase initialization failed:', error);
+                    // Continue with demo mode if Firebase fails
+                    this.showAlert('Running in demo mode. Some features may be limited.', 'warning');
                 }
-                
-                // Sort by revenue (highest first)
-                performanceData.sort((a, b) => b.revenue - a.revenue);
-                
-                // Update table
-                if (performanceData.length === 0) {
-                    performanceTable.innerHTML = `
-                        <tr>
-                            <td colspan="6" style="text-align: center; padding: 30px;">
-                                No data available for selected property
-                            </td>
-                        </tr>
-                    `;
-                } else {
-                    performanceTable.innerHTML = performanceData.map(data => `
-                        <tr>
-                            <td>
-                                <div style="display: flex; align-items: center; gap: 10px;">
-                                    <i class="fas ${data.property.icon}" style="color: var(--primary-green);"></i>
-                                    <strong>${data.property.name}</strong>
-                                </div>
-                            </td>
-                            <td>
-                                <div>${data.occupancyRate}%</div>
-                                <div class="progress-bar">
-                                    <div class="progress-fill" style="width: ${data.occupancyRate}%"></div>
-                                </div>
-                            </td>
-                            <td><strong>${formatCurrency(data.revenue)}</strong></td>
-                            <td>${data.monthlyBookings}</td>
-                            <td>
-                                ${data.avgRating === 'N/A' ? 'N/A' : `
-                                    <div style="display: flex; align-items: center; gap: 5px;">
-                                        ${data.avgRating} <i class="fas fa-star" style="color: #ffc107;"></i>
-                                    </div>
-                                `}
-                            </td>
-                            <td><span class="text-${data.statusColor}">${data.status}</span></td>
-                        </tr>
-                    `).join('');
-                }
-                
-            } catch (error) {
-                console.error('Error loading property performance:', error);
-                document.getElementById('propertyPerformance').innerHTML = `
-                    <tr>
-                        <td colspan="6" style="text-align: center; padding: 30px; color: #dc3545;">
-                            <i class="fas fa-exclamation-circle"></i> Failed to load property data
-                        </td>
-                    </tr>
-                `;
-            }
-        }
-
-        // Enhanced recent activity
-        async function loadRecentActivity() {
-            try {
-                let activitiesQuery;
-                if (currentProperty === 'all' && currentUser.permissions.properties.includes('all')) {
-                    activitiesQuery = query(
-                        collection(db, 'activities'),
-                        orderBy('timestamp', 'desc'),
-                        limit(10)
-                    );
-                } else {
-                    const property = currentProperty === 'all' ? currentUser.property : currentProperty;
-                    activitiesQuery = query(
-                        collection(db, 'activities'),
-                        where('property', '==', property),
-                        orderBy('timestamp', 'desc'),
-                        limit(10)
-                    );
-                }
-                
-                const snapshot = await getDocs(activitiesQuery);
-                updateRecentActivity(snapshot);
-                
-            } catch (error) {
-                console.error('Error loading recent activity:', error);
-                document.getElementById('recentActivity').innerHTML = `
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background-color: #dc3545; color: white;">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
-                        <div class="activity-details">
-                            <div class="activity-title">Failed to load activities</div>
-                            <div class="activity-time">Please try again later</div>
-                        </div>
-                    </li>
-                `;
-            }
-        }
-
-        function updateRecentActivity(snapshot) {
-            const activityList = document.getElementById('recentActivity');
-            
-            if (snapshot.empty) {
-                activityList.innerHTML = `
-                    <li class="activity-item">
-                        <div class="activity-icon">
-                            <i class="fas fa-info-circle"></i>
-                        </div>
-                        <div class="activity-details">
-                            <div class="activity-title">No recent activity</div>
-                            <div class="activity-time">Activities will appear here</div>
-                        </div>
-                    </li>
-                `;
-                return;
             }
             
-            activityList.innerHTML = '';
-            
-            snapshot.forEach(doc => {
-                const activity = doc.data();
-                const timeAgo = getTimeAgo(activity.timestamp?.toDate() || new Date());
-                
-                const iconClass = getActivityIcon(activity.type);
-                const iconColor = getActivityColor(activity.type);
-                
-                activityList.innerHTML += `
-                    <li class="activity-item">
-                        <div class="activity-icon" style="background: linear-gradient(135deg, ${iconColor}, ${lightenColor(iconColor, 20)}); color: white;">
-                            <i class="${iconClass}"></i>
-                        </div>
-                        <div class="activity-details">
-                            <div class="activity-title">${activity.description}</div>
-                            <div class="activity-time">
-                                <i class="fas fa-user"></i> ${activity.user || 'System'} • 
-                                <i class="fas fa-clock"></i> ${timeAgo}
-                                ${activity.property ? ` • <i class="fas fa-hotel"></i> ${getPropertyName(activity.property)}` : ''}
-                            </div>
-                        </div>
-                    </li>
-                `;
-            });
-        }
-
-        // Initialize charts
-        function initializeCharts() {
-            if (!currentUser.permissions.canExportData) return;
-            
-            // Revenue chart
-            const revenueCtx = document.getElementById('revenueChart')?.getContext('2d');
-            if (revenueCtx) {
-                charts.revenueChart = new Chart(revenueCtx, {
-                    type: 'line',
-                    data: {
-                        labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
-                        datasets: [{
-                            label: 'Revenue',
-                            data: [1200000, 1900000, 1500000, 1800000, 2200000, 2100000],
-                            borderColor: 'rgb(34, 68, 15)',
-                            backgroundColor: 'rgba(34, 68, 15, 0.1)',
-                            tension: 0.4,
-                            fill: true
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                display: false
-                            },
-                            tooltip: {
-                                callbacks: {
-                                    label: function(context) {
-                                        return `KES ${context.raw.toLocaleString()}`;
-                                    }
-                                }
-                            }
-                        },
-                        scales: {
-                            y: {
-                                beginAtZero: true,
-                                ticks: {
-                                    callback: function(value) {
-                                        return 'KES ' + (value / 1000000) + 'M';
-                                    }
-                                }
-                            }
-                        }
-                    }
-                });
-            }
-            
-            // Occupancy chart
-            const occupancyCtx = document.getElementById('occupancyChart')?.getContext('2d');
-            if (occupancyCtx) {
-                charts.occupancyChart = new Chart(occupancyCtx, {
-                    type: 'doughnut',
-                    data: {
-                        labels: ['Occupied', 'Available'],
-                        datasets: [{
-                            data: [65, 35],
-                            backgroundColor: [
-                                'rgb(243, 164, 53)',
-                                'rgb(233, 245, 229)'
-                            ],
-                            borderWidth: 0
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'bottom'
-                            }
-                        },
-                        cutout: '70%'
-                    }
-                });
-            }
-        }
-
-        function refreshCharts() {
-            if (charts.revenueChart) charts.revenueChart.destroy();
-            if (charts.occupancyChart) charts.occupancyChart.destroy();
-            initializeCharts();
-        }
-
-        // Profile modal functions
-        async function openProfileModal() {
-            const modal = document.getElementById('profileModal');
-            const content = document.getElementById('profileContent');
-            
-            // Load profile content
-            content.innerHTML = `
-                <div style="text-align: center; margin-bottom: 30px;">
-                    <div style="position: relative; display: inline-block;">
-                        <div id="profileAvatar" style="width: 120px; height: 120px; border-radius: 50%; background: linear-gradient(135deg, var(--primary-orange), #ff9d00); color: white; display: flex; align-items: center; justify-content: center; font-size: 2.5rem; font-weight: bold; margin: 0 auto 20px; border: 4px solid white; box-shadow: 0 4px 20px rgba(0,0,0,0.1);">
-                            ${currentUser.photoURL ? 
-                                `<img src="${currentUser.photoURL}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">` :
-                                currentUser.name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2)
-                            }
-                        </div>
-                        <button id="changePhotoBtn" style="position: absolute; bottom: 10px; right: 10px; background: var(--primary-green); color: white; border: none; width: 36px; height: 36px; border-radius: 50%; cursor: pointer; box-shadow: 0 2px 10px rgba(0,0,0,0.2);">
-                            <i class="fas fa-camera"></i>
-                        </button>
-                        <input type="file" id="photoUpload" accept="image/*" style="display: none;">
-                    </div>
-                    <h4 style="margin: 10px 0 5px 0; color: var(--primary-green);">${currentUser.name}</h4>
-                    <p style="color: var(--text-light); margin-bottom: 5px;">${currentUser.email}</p>
-                    <span class="role-badge role-${currentUser.role}" style="margin-top: 10px;">
-                        ${currentUser.role === 'system-admin' ? 'System Administrator' : 
-                          currentUser.role === 'general-manager' ? 'General Manager' : 'Staff Member'}
-                    </span>
-                </div>
-                
-                <form id="profileForm">
-                    <div class="form-group">
-                        <label style="display: block; margin-bottom: 8px; color: var(--primary-green); font-weight: 600;">Full Name</label>
-                        <input type="text" id="profileName" value="${currentUser.name}" style="width: 100%; padding: 12px; border: 1px solid var(--gray-border); border-radius: var(--radius); font-size: 1rem;">
-                    </div>
-                    
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: var(--primary-green); font-weight: 600;">Email Address</label>
-                        <input type="email" id="profileEmail" value="${currentUser.email}" disabled style="width: 100%; padding: 12px; border: 1px solid var(--gray-border); border-radius: var(--radius); font-size: 1rem; background-color: var(--gray-bg);">
-                    </div>
-                    
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: var(--primary-green); font-weight: 600;">Phone Number</label>
-                        <input type="tel" id="profilePhone" value="${currentUser.phone || ''}" style="width: 100%; padding: 12px; border: 1px solid var(--gray-border); border-radius: var(--radius); font-size: 1rem;">
-                    </div>
-                    
-                    <div class="form-group" style="margin-top: 20px;">
-                        <label style="display: block; margin-bottom: 8px; color: var(--primary-green); font-weight: 600;">Change Password</label>
-                        <input type="password" id="profilePassword" placeholder="Enter new password" style="width: 100%; padding: 12px; border: 1px solid var(--gray-border); border-radius: var(--radius); font-size: 1rem;">
-                        <input type="password" id="profileConfirmPassword" placeholder="Confirm new password" style="width: 100%; padding: 12px; border: 1px solid var(--gray-border); border-radius: var(--radius); font-size: 1rem; margin-top: 10px;">
-                    </div>
-                    
-                    <div style="margin-top: 30px; display: flex; gap: 15px;">
-                        <button type="button" class="btn btn-primary" style="flex: 1;" onclick="saveProfile()">
-                            <i class="fas fa-save"></i> Save Changes
-                        </button>
-                        <button type="button" class="btn btn-secondary" style="flex: 1;" onclick="closeProfileModal()">
-                            Cancel
-                        </button>
-                    </div>
-                </form>
-            `;
-            
-            modal.style.display = 'flex';
-            
-            // Add photo upload listener
-            document.getElementById('changePhotoBtn').addEventListener('click', () => {
-                document.getElementById('photoUpload').click();
-            });
-            
-            document.getElementById('photoUpload').addEventListener('change', async (e) => {
-                await uploadProfilePhoto(e.target.files[0]);
-            });
-        }
-
-        async function uploadProfilePhoto(file) {
-            if (!file) return;
-            
-            try {
-                showLoading(true, 'Uploading photo...');
-                
-                // Create storage reference
-                const storageRef = ref(storage, `profile-photos/${currentUser.uid}/${file.name}`);
-                
-                // Upload file
-                await uploadBytes(storageRef, file);
-                
-                // Get download URL
-                const downloadURL = await getDownloadURL(storageRef);
-                
-                // Update user profile in Firestore
-                await updateDoc(doc(db, "admins", currentUser.uid), {
-                    photoURL: downloadURL,
-                    updatedAt: serverTimestamp()
-                });
-                
-                // Update local user data
-                currentUser.photoURL = downloadURL;
-                localStorage.setItem('jumuiaAdminUser', JSON.stringify(currentUser));
-                
-                // Update UI
-                document.getElementById('userAvatar').innerHTML = 
-                    `<img src="${downloadURL}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                
-                document.getElementById('profileAvatar').innerHTML = 
-                    `<img src="${downloadURL}" style="width: 100%; height: 100%; border-radius: 50%; object-fit: cover;">`;
-                
-                showAlert('Profile photo updated successfully!', 'success');
-                
-            } catch (error) {
-                console.error('Error uploading photo:', error);
-                showAlert('Failed to upload photo. Please try again.', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        async function saveProfile() {
-            try {
-                showLoading(true, 'Saving profile...');
-                
-                const name = document.getElementById('profileName').value;
-                const phone = document.getElementById('profilePhone').value;
-                const password = document.getElementById('profilePassword').value;
-                const confirmPassword = document.getElementById('profileConfirmPassword').value;
-                
-                // Validate password if provided
-                if (password && password !== confirmPassword) {
-                    throw new Error('Passwords do not match');
-                }
-                
-                // Update user data
-                const updates = {
-                    name: name,
-                    phone: phone,
-                    updatedAt: serverTimestamp()
+            setupDemoUser() {
+                // Demo user data (in real app, this comes from Firebase Auth)
+                this.currentUser = {
+                    name: 'Administrator',
+                    email: 'admin@jumuiaresorts.com',
+                    role: 'system-admin',
+                    avatar: 'A'
                 };
                 
-                // Update Firestore
-                await updateDoc(doc(db, "admins", currentUser.uid), updates);
-                
-                // Update local storage
-                currentUser.name = name;
-                currentUser.phone = phone;
-                localStorage.setItem('jumuiaAdminUser', JSON.stringify(currentUser));
-                
                 // Update UI
-                document.getElementById('userName').textContent = name;
-                document.getElementById('welcomeName').textContent = name;
+                document.getElementById('userName').textContent = this.currentUser.name;
+                document.getElementById('userAvatar').textContent = this.currentUser.avatar;
                 
-                if (!currentUser.photoURL) {
-                    const initials = name.split(' ').map(n => n[0]).join('').toUpperCase().substring(0, 2);
-                    document.getElementById('userAvatar').textContent = initials;
-                }
-                
-                showAlert('Profile updated successfully!', 'success');
-                closeProfileModal();
-                
-            } catch (error) {
-                console.error('Error saving profile:', error);
-                showAlert(error.message || 'Failed to save profile. Please try again.', 'error');
-            } finally {
-                showLoading(false);
-            }
-        }
-
-        function closeProfileModal() {
-            document.getElementById('profileModal').style.display = 'none';
-            document.getElementById('userMenu').classList.remove('show');
-        }
-
-        // Enhanced helper functions
-        function formatCurrency(amount) {
-            return `KES ${amount?.toLocaleString('en-KE') || '0'}`;
-        }
-
-        function getTimeAgo(date) {
-            const seconds = Math.floor((new Date() - date) / 1000);
-            
-            let interval = seconds / 31536000;
-            if (interval > 1) return Math.floor(interval) + " years ago";
-            
-            interval = seconds / 2592000;
-            if (interval > 1) return Math.floor(interval) + " months ago";
-            
-            interval = seconds / 86400;
-            if (interval > 1) return Math.floor(interval) + " days ago";
-            
-            interval = seconds / 3600;
-            if (interval > 1) return Math.floor(interval) + " hours ago";
-            
-            interval = seconds / 60;
-            if (interval > 1) return Math.floor(interval) + " minutes ago";
-            
-            return "Just now";
-        }
-
-        function getActivityIcon(type) {
-            const icons = {
-                'booking': 'fas fa-calendar-check',
-                'checkin': 'fas fa-sign-in-alt',
-                'checkout': 'fas fa-sign-out-alt',
-                'payment': 'fas fa-credit-card',
-                'review': 'fas fa-star',
-                'message': 'fas fa-comment',
-                'user': 'fas fa-user-plus',
-                'system': 'fas fa-cog',
-                'update': 'fas fa-edit',
-                'delete': 'fas fa-trash',
-                'create': 'fas fa-plus-circle'
-            };
-            return icons[type] || 'fas fa-info-circle';
-        }
-
-        function getActivityColor(type) {
-            const colors = {
-                'booking': '#22440f',
-                'checkin': '#1a5c1a',
-                'checkout': '#f3a435',
-                'payment': '#28a745',
-                'review': '#ffc107',
-                'message': '#17a2b8',
-                'user': '#6f42c1',
-                'system': '#6c757d',
-                'update': '#17a2b8',
-                'delete': '#dc3545',
-                'create': '#20c997'
-            };
-            return colors[type] || '#22440f';
-        }
-
-        function lightenColor(color, percent) {
-            const num = parseInt(color.replace('#', ''), 16);
-            const amt = Math.round(2.55 * percent);
-            const R = (num >> 16) + amt;
-            const G = (num >> 8 & 0x00FF) + amt;
-            const B = (num & 0x0000FF) + amt;
-            
-            return '#' + (
-                0x1000000 +
-                (R < 255 ? R < 1 ? 0 : R : 255) * 0x10000 +
-                (G < 255 ? G < 1 ? 0 : G : 255) * 0x100 +
-                (B < 255 ? B < 1 ? 0 : B : 255)
-            ).toString(16).slice(1);
-        }
-
-        function getPropertyName(property) {
-            const names = {
-                'limuru': 'Limuru',
-                'kanamai': 'Kanamai',
-                'kisumu': 'Kisumu'
-            };
-            return names[property] || property;
-        }
-
-        // Enhanced alert system
-        function showAlert(message, type = 'info') {
-            const alertBanner = document.getElementById('alertBanner');
-            const alertTitle = document.getElementById('alertTitle');
-            const alertMessage = document.getElementById('alertMessage');
-            const alertIcon = document.getElementById('alertIcon');
-            
-            // Set content
-            alertTitle.textContent = type.charAt(0).toUpperCase() + type.slice(1) + ':';
-            alertMessage.textContent = message;
-            
-            // Set style based on type
-            const alertContent = alertBanner.querySelector('.alert-content');
-            switch(type) {
-                case 'success':
-                    alertContent.style.backgroundColor = '#d4edda';
-                    alertContent.style.color = '#155724';
-                    alertIcon.className = 'fas fa-check-circle';
-                    break;
-                case 'error':
-                    alertContent.style.backgroundColor = '#f8d7da';
-                    alertContent.style.color = '#721c24';
-                    alertIcon.className = 'fas fa-exclamation-circle';
-                    break;
-                case 'warning':
-                    alertContent.style.backgroundColor = '#fff3cd';
-                    alertContent.style.color = '#856404';
-                    alertIcon.className = 'fas fa-exclamation-triangle';
-                    break;
-                case 'info':
-                    alertContent.style.backgroundColor = '#cce5ff';
-                    alertContent.style.color = '#004085';
-                    alertIcon.className = 'fas fa-info-circle';
-                    break;
+                // Update dashboard title
+                this.updateDashboardTitle();
             }
             
-            alertBanner.style.display = 'block';
-            
-            // Auto-hide after 5 seconds
-            setTimeout(() => {
-                alertBanner.style.display = 'none';
-            }, 5000);
-        }
-
-        async function showConfirmDialog(message, title = 'Confirmation') {
-            return new Promise((resolve) => {
-                const dialog = document.createElement('div');
-                dialog.style.cssText = `
-                    position: fixed;
-                    top: 0;
-                    left: 0;
-                    width: 100%;
-                    height: 100%;
-                    background: rgba(0,0,0,0.5);
-                    display: flex;
-                    align-items: center;
-                    justify-content: center;
-                    z-index: 9998;
-                `;
+            setupEventListeners() {
+                console.log('Setting up event listeners...');
                 
-                dialog.innerHTML = `
-                    <div style="background: white; padding: 30px; border-radius: var(--radius); max-width: 400px; width: 90%; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                        <h3 style="margin-top: 0; color: var(--primary-green);">${title}</h3>
-                        <p>${message}</p>
-                        <div style="display: flex; gap: 15px; margin-top: 25px;">
-                            <button id="confirmCancel" class="btn btn-secondary" style="flex: 1;">Cancel</button>
-                            <button id="confirmOk" class="btn btn-danger" style="flex: 1;">Confirm</button>
-                        </div>
-                    </div>
-                `;
+                // Property switcher
+                const propertyToggle = document.getElementById('propertyToggle');
+                const propertyDropdown = document.getElementById('propertyDropdown');
                 
-                document.body.appendChild(dialog);
-                
-                dialog.querySelector('#confirmOk').addEventListener('click', () => {
-                    document.body.removeChild(dialog);
-                    resolve(true);
-                });
-                
-                dialog.querySelector('#confirmCancel').addEventListener('click', () => {
-                    document.body.removeChild(dialog);
-                    resolve(false);
-                });
-            });
-        }
-
-        function showLoading(show = true, message = 'Loading...') {
-            let overlay = document.getElementById('loadingOverlay');
-            
-            if (show) {
-                if (!overlay) {
-                    overlay = document.createElement('div');
-                    overlay.id = 'loadingOverlay';
-                    overlay.innerHTML = `
-                        <div style="background: white; padding: 40px; border-radius: var(--radius); text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.2);">
-                            <div class="loading" style="width: 40px; height: 40px; border-width: 4px; border-top-color: var(--primary-orange); margin: 0 auto 20px;"></div>
-                            <p>${message}</p>
-                        </div>
-                    `;
+                if (propertyToggle && propertyDropdown) {
+                    propertyToggle.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        propertyDropdown.classList.toggle('show');
+                    });
                     
-                    overlay.style.cssText = `
-                        position: fixed;
-                        top: 0;
-                        left: 0;
-                        width: 100%;
-                        height: 100%;
-                        background: rgba(0,0,0,0.5);
-                        display: flex;
-                        align-items: center;
-                        justify-content: center;
-                        z-index: 9997;
-                    `;
-                    
-                    document.body.appendChild(overlay);
-                }
-            } else {
-                if (overlay && overlay.parentNode) {
-                    overlay.parentNode.removeChild(overlay);
-                }
-            }
-        }
-
-        function updateDashboardTitle() {
-            const title = document.getElementById('dashboardTitle');
-            const subtitle = document.getElementById('dashboardSubtitle');
-            
-            const now = new Date();
-            const hour = now.getHours();
-            let greeting = '';
-            
-            if (hour < 12) greeting = 'Good morning';
-            else if (hour < 18) greeting = 'Good afternoon';
-            else greeting = 'Good evening';
-            
-            title.textContent = `${greeting}, ${currentUser.name.split(' ')[0]}`;
-            
-            const propertyNames = {
-                'limuru': 'Limuru Country Home',
-                'kanamai': 'Kanamai Beach Resort',
-                'kisumu': 'Kisumu Hotel',
-                'all': 'All Properties'
-            };
-            
-            subtitle.textContent = `Managing ${propertyNames[currentProperty] || currentProperty}`;
-        }
-
-        function updateDashboardSubtitle(text) {
-            const subtitle = document.getElementById('dashboardSubtitle');
-            subtitle.textContent = text;
-            subtitle.style.color = '#dc3545';
-            subtitle.style.fontWeight = '600';
-            
-            // Reset after 5 seconds
-            setTimeout(() => {
-                updateDashboardTitle();
-            }, 5000);
-        }
-
-        async function loadDashboardStats() {
-            // Additional dashboard statistics can be loaded here
-            console.log('Loading additional dashboard stats...');
-        }
-
-        function refreshActivity() {
-            loadRecentActivity();
-            showAlert('Activity feed refreshed', 'success');
-        }
-
-        function exportPropertyData() {
-            if (!currentUser.permissions.canExportData) {
-                showAlert('You do not have permission to export data', 'error');
-                return;
-            }
-            
-            const table = document.getElementById('propertyPerformance');
-            const rows = table.querySelectorAll('tr');
-            const data = [];
-            
-            rows.forEach(row => {
-                const cells = row.querySelectorAll('td');
-                if (cells.length > 0) {
-                    data.push({
-                        Property: cells[0].textContent.trim(),
-                        Occupancy: cells[1].querySelector('div').textContent.trim(),
-                        Revenue: cells[2].textContent.trim(),
-                        Bookings: cells[3].textContent.trim(),
-                        Rating: cells[4].textContent.trim(),
-                        Status: cells[5].textContent.trim()
+                    // Property selection
+                    document.querySelectorAll('.property-option').forEach(option => {
+                        option.addEventListener('click', () => {
+                            const property = option.getAttribute('data-property');
+                            this.switchProperty(property);
+                            propertyDropdown.classList.remove('show');
+                        });
                     });
                 }
-            });
-            
-            if (data.length === 0) {
-                showAlert('No data to export', 'warning');
-                return;
+                
+                // User menu
+                const userProfile = document.getElementById('userProfile');
+                const userMenu = document.getElementById('userMenu');
+                
+                if (userProfile && userMenu) {
+                    userProfile.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        userMenu.classList.toggle('show');
+                    });
+                }
+                
+                // Logout button
+                const logoutBtn = document.getElementById('logoutBtn');
+                if (logoutBtn) {
+                    logoutBtn.addEventListener('click', () => {
+                        this.logout();
+                    });
+                }
+                
+                // Navigation links
+                document.querySelectorAll('.nav-link').forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const module = link.getAttribute('data-module');
+                        this.loadModule(module);
+                        
+                        // Update active state
+                        document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+                        link.classList.add('active');
+                        
+                        // Close user menu if open
+                        if (userMenu) userMenu.classList.remove('show');
+                    });
+                });
+                
+                // Quick actions
+                document.querySelectorAll('.quick-action-card').forEach(card => {
+                    card.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const module = card.getAttribute('data-module');
+                        if (module) {
+                            this.loadModule(module);
+                        }
+                    });
+                });
+                
+                // Sidebar collapse
+                const collapseBtn = document.getElementById('collapseBtn');
+                if (collapseBtn) {
+                    collapseBtn.addEventListener('click', function() {
+                        const sidebar = document.getElementById('adminSidebar');
+                        if (sidebar) sidebar.classList.toggle('collapsed');
+                        const icon = this.querySelector('i');
+                        if (icon) {
+                            icon.classList.toggle('fa-chevron-left');
+                            icon.classList.toggle('fa-chevron-right');
+                        }
+                    });
+                }
+                
+                // Close dropdowns when clicking outside
+                document.addEventListener('click', () => {
+                    if (propertyDropdown) propertyDropdown.classList.remove('show');
+                    if (userMenu) userMenu.classList.remove('show');
+                });
             }
             
-            // Convert to CSV
-            const csv = convertToCSV(data);
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a');
+            setupMobileMenu() {
+                // Mobile menu toggle would go here
+                // For now, it's handled by CSS media queries
+            }
             
-            a.href = url;
-            a.download = `property-performance-${new Date().toISOString().split('T')[0]}.csv`;
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            URL.revokeObjectURL(url);
+            setupRealTimeClock() {
+                function updateDateTime() {
+                    const now = new Date();
+                    const time = now.toLocaleTimeString('en-KE', { hour: '2-digit', minute: '2-digit' });
+                    const date = now.toLocaleDateString('en-KE', { 
+                        weekday: 'long', 
+                        year: 'numeric', 
+                        month: 'long', 
+                        day: 'numeric' 
+                    });
+                    
+                    // Update any clock elements if they exist
+                    const timeEl = document.getElementById('currentTime');
+                    const dateEl = document.getElementById('currentDate');
+                    
+                    if (timeEl) timeEl.textContent = time;
+                    if (dateEl) dateEl.textContent = date;
+                }
+                
+                updateDateTime();
+                setInterval(updateDateTime, 1000);
+            }
             
-            showAlert('Data exported successfully', 'success');
-        }
-
-        function convertToCSV(data) {
-            const headers = Object.keys(data[0]);
-            const csv = [
-                headers.join(','),
-                ...data.map(row => 
-                    headers.map(header => 
-                        `"${row[header]}"`
-                    ).join(',')
-                )
-            ].join('\n');
+            switchProperty(property) {
+                if (property === this.currentProperty) return;
+                
+                this.currentProperty = property;
+                
+                // Update UI
+                const propertyText = document.querySelector(`.property-option[data-property="${property}"] span`).textContent;
+                document.getElementById('currentPropertyText').textContent = propertyText;
+                
+                // Update active state
+                document.querySelectorAll('.property-option').forEach(option => {
+                    option.classList.remove('active');
+                    if (option.getAttribute('data-property') === property) {
+                        option.classList.add('active');
+                    }
+                });
+                
+                // Update dashboard title
+                this.updateDashboardTitle();
+                
+                // Refresh data
+                this.refreshDashboardData();
+                
+                this.showAlert(`Switched to ${propertyText}`, 'success');
+            }
             
-            return csv;
-        }
-
-        // Enhanced module loading
-        async function loadModule(moduleName) {
-            try {
-                // Check permissions
-                if (!currentUser.permissions.accessibleModules.includes(moduleName)) {
-                    showAlert(`You don't have permission to access the ${moduleName} module.`, 'error');
+            loadModule(moduleName) {
+                if (!this.isInitialized) {
+                    this.showAlert('Please wait for dashboard to initialize.', 'warning');
                     return;
                 }
                 
-                // Update active navigation
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                document.querySelector(`.nav-link[data-module="${moduleName}"]`)?.classList.add('active');
+                console.log(`Loading module: ${moduleName}`);
                 
-                currentModule = moduleName;
-                
-                // Update URL hash
-                window.location.hash = moduleName;
-                
-                // Close mobile menu if open
-                document.getElementById('adminSidebar').classList.remove('mobile-open');
-                
-                // Show loading state
-                showLoading(true, `Loading ${moduleName} module...`);
-                
-                if (moduleName === 'dashboard') {
-                    // Reload dashboard
+                // For demo purposes, just show a message
+                if (moduleName !== 'dashboard') {
+                    this.showAlert(`${moduleName.charAt(0).toUpperCase() + moduleName.slice(1)} module will be available in the next update.`, 'info');
+                    
+                    // Show loading message
                     const mainContent = document.getElementById('mainContentArea');
-                    mainContent.innerHTML = document.getElementById('dashboardModule').outerHTML;
-                    setupUserInterface();
-                    loadDashboardData();
-                    initializeCharts();
-                    setupEventListenersForLoadedContent();
-                } else {
-                    // Load module from external file
-                    const response = await fetch(`modules/${moduleName}.html`);
-                    
-                    if (!response.ok) {
-                        throw new Error(`Module "${moduleName}" not found`);
+                    if (mainContent) {
+                        mainContent.innerHTML = `
+                            <div style="text-align: center; padding: 100px 20px;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 3rem; color: var(--primary-green); margin-bottom: 20px;"></i>
+                                <h3>Loading ${moduleName} module...</h3>
+                                <p>This module will be available in the next update.</p>
+                                <button onclick="dashboard.loadModule('dashboard')" class="btn btn-primary" style="margin-top: 20px;">
+                                    <i class="fas fa-tachometer-alt"></i> Return to Dashboard
+                                </button>
+                            </div>
+                        `;
                     }
-                    
-                    const html = await response.text();
-                    document.getElementById('mainContentArea').innerHTML = html;
-                    
-                    // Load module JavaScript
-                    try {
-                        const scriptResponse = await fetch(`modules/${moduleName}.js`);
-                        if (scriptResponse.ok) {
-                            const scriptText = await scriptResponse.text();
-                            const script = document.createElement('script');
-                            script.textContent = scriptText;
-                            document.head.appendChild(script);
-                        }
-                    } catch (error) {
-                        console.log(`No JavaScript found for ${moduleName} module`);
-                    }
-                    
-                    // Initialize module
-                    if (typeof window[`init${capitalizeFirstLetter(moduleName)}`] === 'function') {
-                        window[`init${capitalizeFirstLetter(moduleName)}`]();
-                    }
+                    return;
                 }
                 
-            } catch (error) {
-                console.error(`Error loading module ${moduleName}:`, error);
-                
-                const mainContent = document.getElementById('mainContentArea');
-                mainContent.innerHTML = `
-                    <div style="text-align: center; padding: 60px 20px; background: white; border-radius: var(--radius); box-shadow: var(--shadow); margin: 20px;">
-                        <i class="fas fa-exclamation-circle" style="font-size: 3rem; color: #dc3545; margin-bottom: 20px;"></i>
-                        <h3>Failed to load module</h3>
-                        <p>Error: ${error.message}</p>
-                        <button onclick="loadModule('dashboard')" class="btn btn-primary" style="margin-top: 20px;">
-                            <i class="fas fa-tachometer-alt"></i> Return to Dashboard
-                        </button>
-                    </div>
-                `;
-            } finally {
-                showLoading(false);
+                // Reload dashboard
+                window.location.hash = 'dashboard';
+                this.refreshDashboardData();
             }
-        }
-
-        function capitalizeFirstLetter(string) {
-            return string.charAt(0).toUpperCase() + string.slice(1);
-        }
-
-        function setupEventListenersForLoadedContent() {
-            // Re-attach event listeners for newly loaded content
-            document.querySelectorAll('.quick-action-card').forEach(card => {
-                card.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const module = this.getAttribute('data-module');
-                    if (module) {
-                        loadModule(module);
-                    }
-                });
-            });
             
-            if (document.getElementById('refreshActivityBtn')) {
-                document.getElementById('refreshActivityBtn').addEventListener('click', refreshActivity);
-            }
-        }
-
-        // Handle URL hash changes
-        function checkUrlHash() {
-            const hash = window.location.hash.substring(1);
-            if (hash && hash !== 'dashboard') {
-                const navLink = document.querySelector(`.nav-link[data-module="${hash}"]`);
-                if (navLink) {
-                    setTimeout(() => {
-                        loadModule(hash);
-                    }, 100);
+            initializeCharts() {
+                try {
+                    // Revenue chart
+                    const revenueCtx = document.getElementById('revenueChart');
+                    if (revenueCtx) {
+                        this.charts.revenueChart = new Chart(revenueCtx.getContext('2d'), {
+                            type: 'line',
+                            data: {
+                                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun'],
+                                datasets: [{
+                                    label: 'Revenue (KES)',
+                                    data: [1200000, 1900000, 1500000, 1800000, 2200000, 2100000],
+                                    borderColor: 'rgb(34, 68, 15)',
+                                    backgroundColor: 'rgba(34, 68, 15, 0.1)',
+                                    tension: 0.4,
+                                    fill: true
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        display: false
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    
+                    // Occupancy chart
+                    const occupancyCtx = document.getElementById('occupancyChart');
+                    if (occupancyCtx) {
+                        this.charts.occupancyChart = new Chart(occupancyCtx.getContext('2d'), {
+                            type: 'doughnut',
+                            data: {
+                                labels: ['Occupied', 'Available'],
+                                datasets: [{
+                                    data: [65, 35],
+                                    backgroundColor: [
+                                        'rgb(243, 164, 53)',
+                                        'rgb(233, 245, 229)'
+                                    ]
+                                }]
+                            },
+                            options: {
+                                responsive: true,
+                                plugins: {
+                                    legend: {
+                                        position: 'bottom'
+                                    }
+                                }
+                            }
+                        });
+                    }
+                    
+                } catch (error) {
+                    console.error('Error initializing charts:', error);
                 }
             }
+            
+            refreshDashboardData() {
+                // This would normally fetch data from Firebase
+                // For now, we just update with demo data
+                
+                console.log('Refreshing dashboard data...');
+                
+                // Simulate data loading
+                setTimeout(() => {
+                    // Update widget counts based on selected property
+                    const propertyData = {
+                        'all': { occupancy: 78, checkins: 8, revenue: 245800, pending: 3 },
+                        'limuru': { occupancy: 75, checkins: 3, revenue: 125000, pending: 1 },
+                        'kanamai': { occupancy: 65, checkins: 3, revenue: 98000, pending: 1 },
+                        'kisumu': { occupancy: 85, checkins: 2, revenue: 145000, pending: 1 }
+                    };
+                    
+                    const data = propertyData[this.currentProperty] || propertyData.all;
+                    
+                    // Update widgets
+                    document.querySelector('.widget-stat:nth-child(2)').textContent = `${data.occupancy}%`;
+                    document.querySelector('.widget-stat:nth-child(3)').textContent = data.checkins;
+                    document.querySelector('.widget-stat:nth-child(4)').textContent = `KES ${data.revenue.toLocaleString()}`;
+                    document.querySelector('.widget-stat:nth-child(5)').textContent = data.pending;
+                    
+                }, 500);
+            }
+            
+            updateDashboardTitle() {
+                const title = document.querySelector('.page-title h1');
+                const subtitle = document.querySelector('.page-title p');
+                
+                if (!title || !subtitle) return;
+                
+                const now = new Date();
+                const hour = now.getHours();
+                let greeting = '';
+                
+                if (hour < 12) greeting = 'Good morning';
+                else if (hour < 18) greeting = 'Good afternoon';
+                else greeting = 'Good evening';
+                
+                const propertyNames = {
+                    'limuru': 'Limuru Country Home',
+                    'kanamai': 'Kanamai Beach Resort',
+                    'kisumu': 'Kisumu Hotel',
+                    'all': 'All Properties'
+                };
+                
+                title.textContent = `${greeting}, ${this.currentUser.name.split(' ')[0]}!`;
+                subtitle.textContent = `Managing ${propertyNames[this.currentProperty] || this.currentProperty}`;
+            }
+            
+            async logout() {
+                const confirmed = confirm('Are you sure you want to logout?');
+                if (confirmed) {
+                    try {
+                        // Sign out from Firebase
+                        if (this.auth) {
+                            await this.auth.signOut();
+                        }
+                        
+                        // Clear any local storage
+                        localStorage.clear();
+                        sessionStorage.clear();
+                        
+                        // Redirect to login page
+                        window.location.href = 'index.html';
+                        
+                    } catch (error) {
+                        console.error('Logout error:', error);
+                        this.showAlert('Logout failed. Please try again.', 'error');
+                    }
+                }
+            }
+            
+            showAlert(message, type = 'info') {
+                const alertBanner = document.getElementById('alertBanner');
+                const alertMessage = document.getElementById('alertMessage');
+                
+                if (!alertBanner || !alertMessage) return;
+                
+                // Set message
+                alertMessage.textContent = message;
+                
+                // Set type
+                alertBanner.className = `alert alert-${type}`;
+                
+                // Show
+                alertBanner.style.display = 'flex';
+                
+                // Auto-hide after 5 seconds
+                setTimeout(() => {
+                    alertBanner.style.display = 'none';
+                }, 5000);
+            }
+            
+            // Public methods for inline onclick handlers
+            refreshActivity() {
+                this.showAlert('Activity feed refreshed', 'success');
+            }
+            
+            exportPropertyData() {
+                this.showAlert('Export functionality will be available in the next update.', 'info');
+            }
         }
-
-        // Make functions available globally
-        window.loadModule = loadModule;
-        window.showAlert = showAlert;
-        window.refreshActivity = refreshActivity;
-        window.exportPropertyData = exportPropertyData;
-        window.openProfileModal = openProfileModal;
-        window.closeProfileModal = closeProfileModal;
-        window.saveProfile = saveProfile;
-
-        // Initialize
-        checkUrlHash();
-        window.addEventListener('popstate', checkUrlHash);
-
+        
+        // Global dashboard instance
+        let dashboard;
+        
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            dashboard = new DashboardApp();
+            dashboard.init();
+            
+            // Make dashboard available globally for onclick handlers
+            window.dashboard = dashboard;
+        });
     </script>
 </body>
 </html>

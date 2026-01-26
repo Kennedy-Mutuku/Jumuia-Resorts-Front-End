@@ -207,9 +207,9 @@
             color: var(--primary-green);
         }
 
-        /* Page Hero */
+        /* Page Hero - Updated to use your background image */
         .page-hero {
-            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(0, 105, 148, 0.85)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('../../images/resorts/kanamai/background.jpg');
             background-size: cover;
             background-position: center;
             color: var(--primary-white);
@@ -848,13 +848,13 @@
             </div>
             
             <nav class="resort-nav" id="resortNav">
-                <a href="index.html" class="active">Home</a>
+                <a href="index.html">Home</a>
                 <a href="rooms.html">Rooms & Rates</a>
                 <a href="conference.html">Conference</a>
                 <a href="offers.html">Offers</a>
                 <a href="excursions.html">Excursions</a>
                 <a href="feedback.html">Rate us</a>
-                <a href="gallery.html">Gallery</a>
+                <a href="gallery.html" class="active">Gallery</a>
                 <a href="booking.html" class="btn btn-primary">Book Now</a>
             </nav>
         </div>
@@ -909,64 +909,42 @@
             </div>
             
             <div class="gallery-grid">
-                <!-- Beach Views -->
+                <!-- Beach & Ocean Views -->
                 <div class="gallery-item" data-category="beach" data-index="0">
-                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Kanamai Beach Sunset">
+                    <img src="../../images/resorts/kanamai/Ocean Views.jpg" alt="Kanamai Ocean Views">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
-                            <h3>Golden Sunset</h3>
-                            <p>Breathtaking sunset over Kanamai Beach</p>
+                            <h3>Ocean Views</h3>
+                            <p>Breathtaking ocean views from Kanamai Beach</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Ocean Front Room -->
                 <div class="gallery-item" data-category="rooms" data-index="1">
-                    <img src="https://images.unsplash.com/photo-1574643156929-51fa098b0394?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Ocean Front Room">
+                    <img src="../../images/resorts/kanamai/Ocean Front Double.jpg" alt="Ocean Front Double Room">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
                             <h3>Ocean Front Suite</h3>
-                            <p>Luxurious room with panoramic ocean views</p>
+                            <p>Luxurious double room with panoramic ocean views</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Swimming Pool -->
                 <div class="gallery-item" data-category="facilities" data-index="2">
-                    <img src="https://images.unsplash.com/photo-1575429198097-0414ec08e8cd?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Resort Swimming Pool">
+                    <img src="../../images/resorts/kanamai/Kanamai swimming-pool.jpg" alt="Kanamai Swimming Pool">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
                             <h3>Infinity Pool</h3>
-                            <p>Stunning pool overlooking the Indian Ocean</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Beach Walk -->
-                <div class="gallery-item" data-category="activities" data-index="3">
-                    <img src="https://images.unsplash.com/photo-1506929562872-bb421503ef21?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Beach Walk">
-                    <div class="gallery-overlay">
-                        <div class="gallery-info">
-                            <h3>Morning Beach Walk</h3>
-                            <p>Peaceful walks along our pristine private beach</p>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Conference Room -->
-                <div class="gallery-item" data-category="events" data-index="4">
-                    <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Conference Facility">
-                    <div class="gallery-overlay">
-                        <div class="gallery-info">
-                            <h3>Conference Hall</h3>
-                            <p>Modern conference facilities for business events</p>
+                            <p>Beautiful swimming pool overlooking the Indian Ocean</p>
                         </div>
                     </div>
                 </div>
                 
                 <!-- Double Room -->
-                <div class="gallery-item" data-category="rooms" data-index="5">
-                    <img src="https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Double Room">
+                <div class="gallery-item" data-category="rooms" data-index="3">
+                    <img src="../../images/resorts/kanamai/Double Room.jpg" alt="Double Room">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
                             <h3>Double Room</h3>
@@ -975,68 +953,90 @@
                     </div>
                 </div>
                 
-                <!-- Snorkeling -->
+                <!-- Conference Room -->
+                <div class="gallery-item" data-category="events" data-index="4">
+                    <img src="../../images/resorts/kanamai/conferences.jpg" alt="Conference Facility">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Conference Hall</h3>
+                            <p>Modern conference facilities for business events</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Standard Double Room -->
+                <div class="gallery-item" data-category="rooms" data-index="5">
+                    <img src="../../images/resorts/kanamai/standard double.jpg" alt="Standard Double Room">
+                    <div class="gallery-overlay">
+                        <div class="gallery-info">
+                            <h3>Standard Double</h3>
+                            <p>Comfortable standard double accommodation</p>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Excursion -->
                 <div class="gallery-item" data-category="activities" data-index="6">
-                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Snorkeling Activity">
+                    <img src="../../images/resorts/kanamai/execursion.jpg" alt="Excursion Activity">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
-                            <h3>Marine Life</h3>
-                            <p>Snorkeling in crystal clear coastal waters</p>
+                            <h3>Coastal Excursions</h3>
+                            <p>Exploring the beautiful Kenyan coast</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Restaurant -->
+                <!-- Dining -->
                 <div class="gallery-item" data-category="facilities" data-index="7">
-                    <img src="https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Restaurant">
+                    <img src="../../images/resorts/kanamai/dinning.jpg" alt="Restaurant Dining">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
-                            <h3>Beachfront Restaurant</h3>
-                            <p>Fresh seafood and local cuisine with ocean views</p>
+                            <h3>Restaurant Dining</h3>
+                            <p>Fresh seafood and local cuisine</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Water Sports -->
-                <div class="gallery-item" data-category="activities" data-index="8">
-                    <img src="https://images.unsplash.com/photo-1536152470836-b943b246224c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Water Sports">
+                <!-- Single Room -->
+                <div class="gallery-item" data-category="rooms" data-index="8">
+                    <img src="../../images/resorts/kanamai/Single Room.jpg" alt="Single Room">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
-                            <h3>Water Activities</h3>
-                            <p>Boat riding and ocean excursions</p>
+                            <h3>Single Room</h3>
+                            <p>Cozy accommodation for solo travelers</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Standard Room -->
+                <!-- Standard Twin Room -->
                 <div class="gallery-item" data-category="rooms" data-index="9">
-                    <img src="https://images.unsplash.com/photo-1631049307264-da0ec9d70304?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Standard Room">
+                    <img src="../../images/resorts/kanamai/Standard Twin Room.jpg" alt="Standard Twin Room">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
-                            <h3>Standard Twin Room</h3>
-                            <p>Comfortable accommodation for friends or colleagues</p>
+                            <h3>Twin Room</h3>
+                            <p>Comfortable twin beds for friends or colleagues</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Beach Volleyball -->
-                <div class="gallery-item" data-category="activities" data-index="10">
-                    <img src="https://images.unsplash.com/photo-1595435934247-5d33b7f92c70?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Beach Volleyball">
+                <!-- Hostel -->
+                <div class="gallery-item" data-category="rooms" data-index="10">
+                    <img src="../../images/resorts/kanamai/hostel.jpg" alt="Hostel Accommodation">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
-                            <h3>Beach Sports</h3>
-                            <p>Volleyball and other beach activities</p>
+                            <h3>Hostel Beds</h3>
+                            <p>Budget-friendly hostel accommodation</p>
                         </div>
                     </div>
                 </div>
                 
-                <!-- Coastal Garden -->
+                <!-- Resort View -->
                 <div class="gallery-item" data-category="facilities" data-index="11">
-                    <img src="https://images.unsplash.com/photo-1551632811-561732d1e306?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Resort Gardens">
+                    <img src="../../images/resorts/kanamai/resort1.jpg" alt="Resort View">
                     <div class="gallery-overlay">
                         <div class="gallery-info">
-                            <h3>Tropical Gardens</h3>
-                            <p>Beautifully landscaped gardens throughout the resort</p>
+                            <h3>Resort Grounds</h3>
+                            <p>Beautifully maintained resort grounds</p>
                         </div>
                     </div>
                 </div>
@@ -1050,7 +1050,7 @@
         </div>
     </section>
 
-    <!-- Video Section -->
+    <!-- Video Section - Updated to use your local video thumbnail -->
     <section class="video-section">
         <div class="container">
             <div class="section-header">
@@ -1060,19 +1060,24 @@
             
             <div class="video-container">
                 <div class="video-thumbnail" id="videoThumbnail">
-                    <img src="https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Kanamai Beach Video Thumbnail">
+                    <!-- Using your resort image as video thumbnail -->
+                    <img src="../../images/resorts/kanamai/Reception-kanamai.jpg" alt="Kanamai Beach Resort Tour">
                     <div class="video-play-btn">
                         <i class="fas fa-play"></i>
                     </div>
                 </div>
                 <div id="videoPlayer" style="display: none;">
-                    <iframe width="100%" height="500" src="https://www.youtube.com/embed/DPFHXK9xqZk" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen style="border-radius: var(--radius);"></iframe>
+                    <!-- Updated to use your local video file -->
+                    <video width="100%" height="500" controls style="border-radius: var(--radius);">
+                        <source src="../../images/resorts/kanamai/KANAMAI TOUR.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Featured Section -->
+    <!-- Featured Section - Updated with local images -->
     <section class="featured-section">
         <div class="container">
             <div class="section-header">
@@ -1082,7 +1087,8 @@
             
             <div class="featured-grid">
                 <div class="featured-card">
-                    <img src="https://images.unsplash.com/photo-1519046904884-53103b34b206?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Beach Wedding">
+                    <!-- Using a beach image for weddings -->
+                    <img src="../../images/resorts/kanamai/conferences.jpg" alt="Beach Wedding">
                     <div class="featured-content">
                         <h3>Beach Weddings</h3>
                         <p>Create unforgettable memories with your dream beach wedding ceremony overlooking the Indian Ocean.</p>
@@ -1091,7 +1097,8 @@
                 </div>
                 
                 <div class="featured-card">
-                    <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Corporate Retreat">
+                    <!-- Using conference image for corporate retreats -->
+                    <img src="../../images/resorts/kanamai/Watamu Beach.jpg" alt="Corporate Retreat">
                     <div class="featured-content">
                         <h3>Corporate Retreats</h3>
                         <p>Perfect environment for team building, conferences, and corporate events with modern facilities.</p>
@@ -1119,7 +1126,7 @@
                         <img src="https://images.unsplash.com/photo-1494790108755-2616b612b786?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Sarah M." class="author-avatar">
                         <div class="author-info">
                             <h4>Sarah M.</h4>
-                            <p>Family Vacation, December 2023</p>
+                            <p>Family Vacation, December 2025</p>
                         </div>
                     </div>
                 </div>
@@ -1132,7 +1139,7 @@
                         <img src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="David K." class="author-avatar">
                         <div class="author-info">
                             <h4>David K.</h4>
-                            <p>Corporate Conference, February 2024</p>
+                            <p>Corporate Conference, November 2025</p>
                         </div>
                     </div>
                 </div>
@@ -1145,7 +1152,7 @@
                         <img src="https://images.unsplash.com/photo-1438761681033-6461ffad8d80?ixlib=rb-4.0.3&auto=format&fit=crop&w=200&q=80" alt="Lisa W." class="author-avatar">
                         <div class="author-info">
                             <h4>Lisa W.</h4>
-                            <p>Adventure Traveler, March 2024</p>
+                            <p>Adventure Traveler, December 2025</p>
                         </div>
                     </div>
                 </div>
@@ -1221,7 +1228,7 @@
             </div>
             
             <div class="copyright">
-                <p>&copy; 2025 Jumuia Conference & Beach Resort Kanamai. All rights reserved.</p>
+                <p>&copy; 2026 Jumuia Conference & Beach Resort Kanamai. All rights reserved.</p>
                 <p style="margin-top: 10px;">Part of Jumuia Resorts Limited</p>
             </div>
         </div>
@@ -1377,6 +1384,11 @@
         videoThumbnail.addEventListener('click', function() {
             videoThumbnail.style.display = 'none';
             videoPlayer.style.display = 'block';
+            // Auto-play the video
+            const video = videoPlayer.querySelector('video');
+            if (video) {
+                video.play().catch(e => console.log("Autoplay prevented:", e));
+            }
         });
 
         // Testimonial slider
@@ -1409,33 +1421,33 @@
         // Initialize
         showTestimonial(1);
 
-        // Load more photos functionality
+        // Load more photos functionality with additional local images
         const loadMoreBtn = document.getElementById('loadMoreBtn');
         let loadedCount = 12;
-        const allImages = [
+        const additionalImages = [
             {
-                src: 'https://images.unsplash.com/photo-1573843989-c9d4a65d6c8c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                category: 'activities',
-                title: 'Wildlife Tour',
-                description: 'Visiting Haller Park wildlife sanctuary'
-            },
-            {
-                src: 'https://images.unsplash.com/photo-1522543558187-768b6df7c25c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                category: 'activities',
-                title: 'Historical Sites',
-                description: 'Exploring Fort Jesus and local history'
-            },
-            {
-                src: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                src: '../../images/resorts/kanamai/room exe.jpg',
                 category: 'rooms',
-                title: 'Suite Interior',
-                description: 'Luxurious suite accommodation details'
+                title: 'Room Interior',
+                description: 'Detailed view of comfortable room interiors'
             },
             {
-                src: 'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
+                src: '../../images/resorts/kanamai/swimmingp.jpg',
                 category: 'facilities',
-                title: 'Dining Area',
-                description: 'Elegant restaurant setting'
+                title: 'Pool Area',
+                description: 'Beautiful swimming pool facilities'
+            },
+            {
+                src: '../../images/resorts/kanamai/Reception-kanamai.jpg',
+                category: 'facilities',
+                title: 'Reception Area',
+                description: 'Welcome reception at Kanamai Beach Resort'
+            },
+            {
+                src: '../../images/resorts/kanamai/WhatsApp Image 2025-11-19 at 17.11.23_6fbcce4e.jpg',
+                category: 'facilities',
+                title: 'Resort Amenities',
+                description: 'Additional resort facilities and amenities'
             }
         ];
         
@@ -1443,11 +1455,11 @@
             const galleryGrid = document.querySelector('.gallery-grid');
             
             // Add 4 more images
-            for (let i = loadedCount; i < loadedCount + 4 && i < allImages.length + 12; i++) {
+            for (let i = loadedCount; i < loadedCount + 4 && i < additionalImages.length + 12; i++) {
                 const imageIndex = i - 12;
-                if (imageIndex >= allImages.length) break;
+                if (imageIndex >= additionalImages.length) break;
                 
-                const img = allImages[imageIndex];
+                const img = additionalImages[imageIndex];
                 const item = document.createElement('div');
                 item.className = 'gallery-item';
                 item.setAttribute('data-category', img.category);
@@ -1476,13 +1488,14 @@
             loadedCount += 4;
             
             // Hide button if all images loaded
-            if (loadedCount >= allImages.length + 12) {
+            if (loadedCount >= additionalImages.length + 12) {
                 loadMoreBtn.style.display = 'none';
             }
             
             // Re-filter after adding new items
             const activeCategory = document.querySelector('.gallery-category.active').getAttribute('data-category');
-            galleryItems.forEach(item => {
+            const allItems = document.querySelectorAll('.gallery-item');
+            allItems.forEach(item => {
                 const itemCategory = item.getAttribute('data-category');
                 if (activeCategory === 'all' || itemCategory === activeCategory) {
                     item.style.display = 'block';
@@ -1492,6 +1505,6 @@
             });
         });
     </script>
-    <script src="../js/main.js"></script>
+    <script src="../../js/main.js"></script>
 </body>
 </html>

@@ -1,4 +1,3 @@
-<!-- resorts/kanamai/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -539,6 +538,13 @@
             background-color: rgba(243, 164, 53, 0.1);
         }
 
+        .rates-content {
+            display: block;
+        }
+        .rates-content.hidden {
+            display: none;
+        }
+
         .policy-note {
             background-color: var(--light-green);
             padding: 20px;
@@ -1071,6 +1077,184 @@
                 font-size: 1rem;
             }
         }
+        /* Pool Section */
+        .pool-section {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--light-green) 0%, var(--beach-sand) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .pool-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            right: 0;
+            width: 300px;
+            height: 300px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 200"><path fill="%2322440f" fill-opacity="0.05" d="M43.2,-72.9C55.1,-63.2,63.2,-49.5,70.6,-35.8C78,-22.1,84.6,-8.5,85,5.3C85.4,19.1,79.6,32.9,70.7,46.1C61.8,59.4,49.7,72.2,35.8,77.6C21.9,83,6.2,81.1,-7.7,76.4C-21.6,71.8,-33.8,64.5,-47.3,56.4C-60.8,48.3,-75.7,39.4,-81.5,26.6C-87.2,13.9,-83.9,-2.6,-77.6,-16.9C-71.4,-31.2,-62.2,-43.4,-50.3,-53.1C-38.4,-62.8,-23.8,-69.9,-8.3,-71.6C7.3,-73.2,31.3,-82.7,43.2,-72.9Z" transform="translate(100 100)"/></svg>');
+            background-size: contain;
+            background-repeat: no-repeat;
+            opacity: 0.1;
+            z-index: 0;
+        }
+
+        .pool-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 50px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .pool-image {
+            border-radius: var(--radius);
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            transition: transform 0.3s ease;
+            height: 400px;
+        }
+
+        .pool-image:hover {
+            transform: translateY(-5px);
+        }
+
+        .pool-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s ease;
+        }
+
+        .pool-image:hover img {
+            transform: scale(1.05);
+        }
+
+        .pool-info {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+            border: 1px solid rgba(34, 68, 15, 0.1);
+        }
+
+        .pool-info h3 {
+            color: var(--primary-green);
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            position: relative;
+            padding-bottom: 15px;
+        }
+
+        .pool-info h3::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background-color: var(--primary-orange);
+        }
+
+        .pool-info p {
+            color: var(--text-dark);
+            line-height: 1.7;
+            margin-bottom: 25px;
+        }
+
+        .pool-rates {
+            background-color: var(--light-green);
+            border-radius: var(--radius);
+            padding: 25px;
+            margin-top: 30px;
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .pool-rates h4 {
+            color: var(--primary-green);
+            font-size: 1.4rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pool-rates h4::before {
+            content: '💦';
+            font-size: 1.2rem;
+        }
+
+        .pool-rates p {
+            margin-bottom: 10px;
+            color: var(--text-dark);
+        }
+
+        .pool-rates strong {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .pool-rates em {
+            color: var(--text-light);
+            font-size: 0.9rem;
+            display: block;
+            margin-top: 15px;
+            font-style: italic;
+            line-height: 1.5;
+        }
+
+        /* Responsive Design for Pool Section */
+        @media (max-width: 992px) {
+            .pool-container {
+                grid-template-columns: 1fr;
+                gap: 40px;
+            }
+            
+            .pool-image {
+                height: 350px;
+            }
+            
+            .pool-info {
+                padding: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .pool-section {
+                padding: 60px 0;
+            }
+            
+            .pool-info h3 {
+                font-size: 1.6rem;
+            }
+            
+            .pool-rates {
+                padding: 20px;
+            }
+            
+            .pool-rates h4 {
+                font-size: 1.3rem;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .pool-image {
+                height: 250px;
+            }
+            
+            .pool-info {
+                padding: 25px;
+            }
+            
+            .pool-info h3 {
+                font-size: 1.4rem;
+            }
+            
+            .pool-rates h4 {
+                font-size: 1.2rem;
+            }
+        }
     </style>
 </head>
 <body>
@@ -1297,6 +1481,35 @@
             </div>
         </div>
     </section>
+    <!-- Pool Section -->
+    <section class="pool-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>Swimming Pool & Recreation</h2>
+                <p>Relax and refresh at our freshwater swimming pool</p>
+            </div>
+            
+            <div class="pool-container">
+                <div class="pool-image">
+                    <img src="../../images/resorts/kanamai/swimmingp.jpg" alt="Swimming Pool">
+                </div>
+                <div class="pool-info">
+                    <h3>Refresh & Recharge</h3>
+                    <p>Our freshwater swimming pool offers a refreshing escape from the coastal heat. Open daily from 8:00 AM to 6:00 PM, it's the perfect place to relax after a day of business meetings or sightseeing. The pool features a separate children's section and comfortable lounge chairs.</p>
+                    
+                    <div class="pool-rates">
+                        <h4>Pool Rates</h4>
+                        <p><strong>Hotel Guests:</strong> Complimentary</p>
+                        <p><strong>External Visitors:</strong></p>
+                        <p><strong>11 years and above:</strong> KES 500 per person</p>
+                        <p><strong>3 years to 10 years:</strong> KES 350 per child</p>
+                        <p><em>Children under 3 years: Free</em></p>
+                        <p><em>Appropriate swimming costume required. Children must be accompanied by adults. Management reserves the right to admission.</em></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 
     <!-- Beach Facilities Section -->
     <section class="beach-facilities">
@@ -1356,6 +1569,7 @@
                 <div class="rate-tab" data-tab="camping">Camping</div>
             </div>
             
+            <!-- Accommodation Rates Table (Default - Visible) -->
             <div id="accommodationRates" class="rates-content">
                 <div class="rates-table-container">
                     <table class="rates-table">
@@ -1412,6 +1626,119 @@
                     <p>• Day Room charges: 75% of applicable room charge</p>
                 </div>
             </div>
+            
+            <!-- Conference Packages Rates Table (Hidden by Default) -->
+            <div id="conferenceRates" class="rates-content hidden">
+                <div class="rates-table-container">
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>Package Type</th>
+                                <th>Half Day</th>
+                                <th>Full Day</th>
+                                <th>24-Hour Package</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Small Meeting Room (20 pax)</td>
+                                <td>KES 8,000</td>
+                                <td>KES 12,000</td>
+                                <td>KES 18,000</td>
+                                <td>Includes basic AV setup</td>
+                            </tr>
+                            <tr>
+                                <td>Main Conference Hall (100 pax)</td>
+                                <td>KES 15,000</td>
+                                <td>KES 25,000</td>
+                                <td>KES 35,000</td>
+                                <td>Full AV, stage, and lighting</td>
+                            </tr>
+                            <tr>
+                                <td>Grand Hall (500 pax)</td>
+                                <td>KES 30,000</td>
+                                <td>KES 50,000</td>
+                                <td>KES 70,000</td>
+                                <td>Professional sound system, multiple screens</td>
+                            </tr>
+                            <tr>
+                                <td>Team Building Package</td>
+                                <td>KES 4,500/person</td>
+                                <td>KES 7,000/person</td>
+                                <td>KES 9,500/person</td>
+                                <td>Includes activities, meals, and conference space</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="policy-note">
+                    <h4>Conference Package Inclusions:</h4>
+                    <p>• All packages include mineral water, notepads, and pens</p>
+                    <p>• Full Day packages include lunch and two tea breaks</p>
+                    <p>• 24-Hour packages include accommodation, all meals, and conference facilities</p>
+                    <p>• Custom packages available for large groups and events</p>
+                    <p>• Outdoor beach conference setups available at additional cost</p>
+                </div>
+            </div>
+            
+            <!-- Camping & Swimming Pool Rates Table (Hidden by Default) -->
+            <div id="campingRates" class="rates-content hidden">
+                <div class="rates-table-container">
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>Service</th>
+                                <th>Rate</th>
+                                <th>Notes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Camping (per person per night)</td>
+                                <td>KES 1,500</td>
+                                <td>Includes shared bathroom facilities and security</td>
+                            </tr>
+                            <tr>
+                                <td>Tent Rental (2-person)</td>
+                                <td>KES 800/night</td>
+                                <td>Waterproof tents with sleeping mats</td>
+                            </tr>
+                            <tr>
+                                <td>Tent Rental (4-person)</td>
+                                <td>KES 1,200/night</td>
+                                <td>Family-sized tents with ventilation</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Swimming Pool - Adult</strong></td>
+                                <td><strong>KES 500</strong></td>
+                                <td>Full day access to freshwater pool and poolside facilities</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Swimming Pool - Child (4-11 years)</strong></td>
+                                <td><strong>KES 350</strong></td>
+                                <td>Access to children's pool section, must be accompanied by adult</td>
+                            </tr>
+                            <tr>
+                                <td>Camping with meals package</td>
+                                <td>KES 2,800/person/night</td>
+                                <td>Includes camping, breakfast, lunch, and dinner</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="policy-note">
+                    <h4>Camping & Pool Information:</h4>
+                    <p>• Swimming pool hours: 7:00 AM - 7:00 PM daily</p>
+                    <p>• Children under 4 years: Free pool access (with paying adult)</p>
+                    <p>• Camping check-in: 2:00 PM | Camping check-out: 11:00 AM</p>
+                    <p>• Campfires permitted in designated areas only</p>
+                    <p>• Group camping discounts available for 10+ people</p>
+                    <p>• Pool party packages available for birthdays and special events</p>
+                </div>
+            </div>
         </div>
     </section>
 
@@ -1425,7 +1752,8 @@
             
             <div class="excursions-grid">
                 <div class="excursion-card">
-                    <div class="excursion-img" style="background-image: url('https://images.unsplash.com/photo-1585504238213-9c9d0b96d9e6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+                    <!-- Using local image from your folder -->
+                    <div class="excursion-img" style="background-image: url('../../images/resorts/kanamai/Haller Park Wildlife Tour.jpg');"></div>
                     <div class="excursion-content">
                         <h3>Haller Park & Fort Jesus</h3>
                         <p>Half-day trips to Haller Park wildlife sanctuary and historic Fort Jesus in Mombasa.</p>
@@ -1433,7 +1761,8 @@
                 </div>
                 
                 <div class="excursion-card">
-                    <div class="excursion-img" style="background-image: url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+                    <!-- Using local image from your folder -->
+                    <div class="excursion-img" style="background-image: url('../../images/resorts/kanamai/Dhow Sailing at Wasini Island.gif');"></div>
                     <div class="excursion-content">
                         <h3>Dhow Sailing at Wasini</h3>
                         <p>Full-day traditional dhow sailing experience with snorkeling and seafood lunch.</p>
@@ -1441,7 +1770,8 @@
                 </div>
                 
                 <div class="excursion-card">
-                    <div class="excursion-img" style="background-image: url('https://images.unsplash.com/photo-1573843989-c9d7ad0b2c7a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80');"></div>
+                    <!-- Using local image from your folder -->
+                    <div class="excursion-img" style="background-image: url('../../images/resorts/kanamai/Mamba Village Crocodile Farm.jpeg');"></div>
                     <div class="excursion-content">
                         <h3>Mamba Village & Water Park</h3>
                         <p>Crocodile farm tour and water park adventure for family fun.</p>
@@ -1544,7 +1874,7 @@
                         <div class="panorama-view">
                             <div class="video-tour-container">
                                 <video id="virtualTourVideo" class="tour-video" controls autoplay muted loop playsinline>
-                                    <source src="videos/kanamai-beach-tour.mp4" type="video/mp4">
+                                    <source src="../../images/resorts/kanamai/KANAMAI%20TOUR.mp4" type="video/mp4">
                                     Your browser does not support the video tag.
                                 </video>
                             </div>
@@ -1659,7 +1989,7 @@
             </div>
             
             <div class="copyright">
-                <p>&copy; 2025 Jumuia Conference & Beach Resort Kanamai. All rights reserved.</p>
+                <p>&copy; 2026 Jumuia Conference & Beach Resort Kanamai. All rights reserved.</p>
                 <p style="margin-top: 10px;">Part of Jumuia Resorts Limited</p>
             </div>
         </div>
@@ -1678,19 +2008,46 @@
             });
         });
 
-        // Rates tabs functionality - EXACTLY like Limuru
-        document.querySelectorAll('.rate-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Remove active class from all tabs
-                document.querySelectorAll('.rate-tab').forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
-                this.classList.add('active');
+        // ========== RATES TABS FUNCTIONALITY ==========
+        // This is the main fix for your tab system
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = document.querySelectorAll('.rate-tab');
+            const contents = document.querySelectorAll('.rates-content');
+            
+            // Function to switch tabs
+            function switchTab(tabName) {
+                // Hide all content
+                contents.forEach(content => {
+                    content.classList.add('hidden');
+                });
                 
-                // Show corresponding content
-                const tabName = this.getAttribute('data-tab');
-                // Add logic to show/hide content based on tab
+                // Show selected content
+                const selectedContent = document.getElementById(tabName + 'Rates');
+                if (selectedContent) {
+                    selectedContent.classList.remove('hidden');
+                }
+                
+                // Update active tab
+                tabs.forEach(tab => {
+                    tab.classList.remove('active');
+                    if (tab.getAttribute('data-tab') === tabName) {
+                        tab.classList.add('active');
+                    }
+                });
+            }
+            
+            // Add click event to each tab
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function() {
+                    const tabName = this.getAttribute('data-tab');
+                    switchTab(tabName);
+                });
             });
+            
+            // Initialize with accommodation tab active
+            switchTab('accommodation');
         });
+        // ========== END RATES TABS FIX ==========
 
         // Booking form calculation
         document.getElementById('roomType').addEventListener('change', function() {
@@ -1810,6 +2167,6 @@
         });
     </script>
     <!-- Load main.js in all pages -->
-    <script src="../js/main.js"></script>
+    <script src="../../js/main.js"></script>
 </body>
 </html>

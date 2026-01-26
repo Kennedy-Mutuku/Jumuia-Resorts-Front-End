@@ -1,4 +1,3 @@
-<!-- admin/index.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -283,127 +282,120 @@
                 align-items: flex-start;
             }
         }
-        /* Adding new styles for property assignment */
+        
         .property-assignment {
             display: none;
             margin-bottom: 25px;
         }
         
-        .property-options {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
-            gap: 10px;
-        }
-        
-        .property-option {
-            padding: 12px;
+        .property-select {
+            width: 100%;
+            padding: 12px 15px;
             border: 2px solid var(--gray-border);
             border-radius: var(--radius);
-            text-align: center;
+            font-size: 0.95rem;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--primary-white);
             cursor: pointer;
             transition: all 0.3s;
-            background-color: var(--primary-white);
         }
         
-        .property-option:hover {
-            border-color: var(--primary-green);
-        }
-        
-        .property-option.selected {
+        .property-select:focus {
+            outline: none;
             border-color: var(--primary-orange);
-            background-color: rgba(243, 164, 53, 0.1);
+            box-shadow: 0 0 0 3px rgba(243, 164, 53, 0.1);
         }
         
-        .property-option i {
-            font-size: 1.5rem;
+        .property-select option {
+            padding: 10px;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .modal-content {
+            background: var(--primary-white);
+            padding: 30px;
+            border-radius: var(--radius);
+            width: 90%;
+            max-width: 450px;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-header h2 {
             color: var(--primary-green);
-            margin-bottom: 8px;
+            margin: 0;
         }
         
-        .property-option div {
-            font-size: 0.85rem;
-            font-weight: 600;
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-light);
+        }
+        
+        .register-role-selection {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        
+        /* Loading overlay */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+        
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid rgba(255,255,255,0.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-orange);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
     </style>
-    
-    <!-- Firebase SDKs - Updated to v10.7.1 -->
-    <script type="module">
-        // Firebase Core - Using v10.7.1 to match dashboard
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-
-        // Firebase Auth
-        import {
-            getAuth,
-            signInWithEmailAndPassword,
-            onAuthStateChanged,
-            createUserWithEmailAndPassword
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-
-        // Firestore
-        import {
-            getFirestore,
-            collection,
-            doc,
-            setDoc,
-            getDoc,
-            addDoc,
-            serverTimestamp
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
-            authDomain: "jumuia-resort-limited.firebaseapp.com",
-            projectId: "jumuia-resort-limited",
-            storageBucket: "jumuia-resort-limited.firebasestorage.app",
-            messagingSenderId: "152170552230",
-            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
-            measurementId: "G-Q7BWHJ9C3M"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-
-        // Auth
-        const auth = getAuth(app);
-        window.firebaseAuth = auth;
-        window.signInWithEmailAndPassword = signInWithEmailAndPassword;
-        window.createUserWithEmailAndPassword = createUserWithEmailAndPassword;
-
-        // Firestore
-        const db = getFirestore(app);
-
-        // Make Firestore globally accessible
-        window.db = db;
-        window.collection = collection;
-        window.doc = doc;
-        window.setDoc = setDoc;
-        window.getDoc = getDoc;
-        window.addDoc = addDoc;
-        window.serverTimestamp = serverTimestamp;
-
-        // Redirect if already logged in
-        onAuthStateChanged(auth, async (user) => {
-            if (user) {
-                // Check if user has admin profile
-                try {
-                    const userDoc = await getDoc(doc(db, "admins", user.uid));
-                    if (userDoc.exists()) {
-                        // User is admin, redirect to dashboard
-                        window.location.href = "dashboard.html";
-                    } else {
-                        // User exists in auth but not in admins collection
-                        await auth.signOut();
-                        localStorage.removeItem('jumuiaAdminUser');
-                    }
-                } catch (error) {
-                    console.error("Error checking admin status:", error);
-                }
-            }
-        });
-    </script>
 </head>
 <body>
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-spinner"></div>
+    </div>
+
     <div class="login-container">
         <div class="login-card">
             <div class="login-header">
@@ -431,41 +423,33 @@
                 <span id="successMessage">Login successful! Redirecting...</span>
             </div>
 
+            <!-- Role Selection for Login -->
+            <div class="role-selection" id="roleSelection">
+                <div class="role-option active" data-role="system-admin">
+                    <i class="fas fa-user-shield"></i>
+                    <div>System Admin</div>
+                </div>
+                <div class="role-option" data-role="general-manager">
+                    <i class="fas fa-user-tie"></i>
+                    <div>General Manager</div>
+                </div>
+                <div class="role-option" data-role="staff">
+                    <i class="fas fa-user"></i>
+                    <div>Staff</div>
+                </div>
+            </div>
+
+            <!-- Property Selection for Staff Login -->
+            <div class="property-assignment" id="propertyAssignment">
+                <label class="form-label">Select Your Property</label>
+                <select class="property-select" id="propertySelect">
+                    <option value="limuru">Limuru Country Home</option>
+                    <option value="kanamai">Kanamai Beach Resort</option>
+                    <option value="kisumu">Kisumu Hotel</option>
+                </select>
+            </div>
+
             <form id="loginForm">
-                <div class="role-selection">
-                    <div class="role-option active" data-role="system-admin">
-                        <i class="fas fa-user-shield"></i>
-                        <div>System Admin</div>
-                    </div>
-                    <div class="role-option" data-role="general-manager">
-                        <i class="fas fa-user-tie"></i>
-                        <div>General Manager</div>
-                    </div>
-                    <div class="role-option" data-role="staff">
-                        <i class="fas fa-user"></i>
-                        <div>Staff</div>
-                    </div>
-                </div>
-
-                <!-- Property Assignment (shown only for staff role) -->
-                <div class="property-assignment" id="propertyAssignment">
-                    <label class="form-label">Select Property</label>
-                    <div class="property-options">
-                        <div class="property-option selected" data-property="kisumu">
-                            <i class="fas fa-hotel"></i>
-                            <div>Kisumu Hotel</div>
-                        </div>
-                        <div class="property-option" data-property="limuru">
-                            <i class="fas fa-mountain"></i>
-                            <div>Limuru Country Home</div>
-                        </div>
-                        <div class="property-option" data-property="kanamai">
-                            <i class="fas fa-umbrella-beach"></i>
-                            <div>Kanamai Beach Resort</div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="form-group">
                     <label class="form-label">Email Address</label>
                     <div class="input-with-icon">
@@ -496,8 +480,8 @@
                 </button>
 
                 <div style="display: flex; gap: 10px; margin-top: 15px;">
-                    <button type="button" class="btn btn-secondary" onclick="openRegister()" style="flex: 1;">
-                        <i class="fas fa-user-plus"></i> Register
+                    <button type="button" class="btn btn-secondary" onclick="openRegisterModal()" style="flex: 1;">
+                        <i class="fas fa-user-plus"></i> Register Admin
                     </button>
                     <button type="button" class="btn btn-secondary" onclick="window.location.href='../index.html'" style="flex: 1;">
                         <i class="fas fa-arrow-left"></i> Main Website
@@ -512,135 +496,316 @@
     </div>
 
     <!-- Registration Modal -->
-    <div id="registerModal" class="modal-overlay">
+    <div class="modal-overlay" id="registerModal">
         <div class="modal-content">
-            <h2 style="color:#22440f; margin-bottom:20px; text-align:center;">Create Admin Account</h2>
-
-            <div class="form-group">
-                <label class="form-label">Full Name</label>
-                <input type="text" id="regName" class="form-control" placeholder="John Doe">
+            <div class="modal-header">
+                <h2>Register New Admin</h2>
+                <button class="close-modal" onclick="closeRegisterModal()">&times;</button>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Email Address</label>
-                <input type="email" id="regEmail" class="form-control" placeholder="newadmin@resortjumuia.com">
+            <div class="alert alert-error" id="registerErrorAlert" style="display: none;">
+                <i class="fas fa-exclamation-circle"></i>
+                <span id="registerErrorMessage"></span>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Password</label>
-                <input type="password" id="regPassword" class="form-control" placeholder="Create password (min. 6 characters)">
+            <div class="alert alert-success" id="registerSuccessAlert" style="display: none;">
+                <i class="fas fa-check-circle"></i>
+                <span id="registerSuccessMessage"></span>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Select Role</label>
-                <select id="regRole" class="form-control">
-                    <option value="system-admin">System Admin (Full Access)</option>
-                    <option value="general-manager">General Manager (Full Access)</option>
-                    <option value="staff">Staff (Property Specific)</option>
-                </select>
-            </div>
-
-            <div class="form-group" id="regPropertyGroup" style="display: none;">
-                <label class="form-label">Assign Property</label>
-                <div class="property-options">
-                    <div class="property-option selected" data-property="kisumu">
-                        <i class="fas fa-hotel"></i>
-                        <div>Kisumu Hotel</div>
-                    </div>
-                    <div class="property-option" data-property="limuru">
-                        <i class="fas fa-mountain"></i>
-                        <div>Limuru Country Home</div>
-                    </div>
-                    <div class="property-option" data-property="kanamai">
-                        <i class="fas fa-umbrella-beach"></i>
-                        <div>Kanamai Beach Resort</div>
+            <form id="registerForm">
+                <div class="form-group">
+                    <label class="form-label">Full Name</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user"></i>
+                        <input type="text" id="regName" class="form-control" placeholder="Enter full name" required>
                     </div>
                 </div>
-            </div>
 
-            <button id="registerSubmit" class="btn btn-primary" style="margin-top:15px; width: 100%;">
-                <i class="fas fa-user-plus"></i> Create Account
-            </button>
+                <div class="form-group">
+                    <label class="form-label">Email Address</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-envelope"></i>
+                        <input type="email" id="regEmail" class="form-control" placeholder="email@resortjumuia.com" required>
+                    </div>
+                </div>
 
-            <button onclick="closeRegister()" class="btn btn-secondary" style="margin-top:10px; width: 100%;">
-                Cancel
-            </button>
+                <div class="form-group">
+                    <label class="form-label">Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="regPassword" class="form-control" placeholder="Minimum 6 characters" required minlength="6">
+                    </div>
+                </div>
 
-            <p id="registerMsg" style="margin-top:15px; text-align:center; color:red; display:none;"></p>
+                <div class="form-group">
+                    <label class="form-label">Confirm Password</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock"></i>
+                        <input type="password" id="regConfirmPassword" class="form-control" placeholder="Confirm your password" required minlength="6">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Select Role</label>
+                    <div class="register-role-selection" id="registerRoleSelection">
+                        <div class="role-option active" data-role="system-admin">
+                            <i class="fas fa-user-shield"></i>
+                            <div>System Admin</div>
+                            <small style="font-size: 0.7rem; color: var(--text-light);">Full Access</small>
+                        </div>
+                        <div class="role-option" data-role="general-manager">
+                            <i class="fas fa-user-tie"></i>
+                            <div>General Manager</div>
+                            <small style="font-size: 0.7rem; color: var(--text-light);">All Properties</small>
+                        </div>
+                        <div class="role-option" data-role="staff">
+                            <i class="fas fa-user"></i>
+                            <div>Staff</div>
+                            <small style="font-size: 0.7rem; color: var(--text-light);">Single Property</small>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Property Assignment for Staff Registration -->
+                <div class="property-assignment" id="registerPropertyAssignment">
+                    <label class="form-label">Assign Property</label>
+                    <select class="property-select" id="registerPropertySelect">
+                        <option value="limuru">Limuru Country Home</option>
+                        <option value="kanamai">Kanamai Beach Resort</option>
+                        <option value="kisumu">Kisumu Hotel</option>
+                    </select>
+                </div>
+
+                <button type="submit" class="btn btn-primary" id="registerBtn">
+                    <i class="fas fa-user-plus"></i>
+                    <span>Create Admin Account</span>
+                </button>
+
+                <button type="button" class="btn btn-secondary" onclick="closeRegisterModal()" style="margin-top: 15px;">
+                    Cancel
+                </button>
+            </form>
         </div>
     </div>
 
-    <style>
-        .modal-overlay {
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%;
-            background: rgba(0,0,0,0.6); 
-            display: none; 
-            align-items: center;
-            justify-content: center; 
-            z-index: 9999;
+    <script type="module">
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
+            authDomain: "jumuia-resort-limited.firebaseapp.com",
+            projectId: "jumuia-resort-limited",
+            storageBucket: "jumuia-resort-limited.firebasestorage.app",
+            messagingSenderId: "152170552230",
+            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
+            measurementId: "G-Q7BWHJ9C3M"
+        };
+
+        // Import Firebase modules
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            createUserWithEmailAndPassword, 
+            signInWithEmailAndPassword,
+            onAuthStateChanged,
+            signOut 
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        
+        import { 
+            getFirestore,
+            doc,
+            setDoc,
+            getDoc,
+            serverTimestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Global variables
+        let app, auth, db;
+
+        // Main login logic
+        document.addEventListener('DOMContentLoaded', async function() {
+            try {
+                showLoading(true);
+                
+                // Initialize Firebase directly (simpler approach)
+                app = initializeApp(firebaseConfig);
+                auth = getAuth(app);
+                db = getFirestore(app);
+                
+                console.log('Firebase initialized successfully');
+                
+                // Check if already logged in
+                const session = getSession();
+                if (session && isValidSession(session)) {
+                    // Check Firebase authentication state
+                    onAuthStateChanged(auth, async (user) => {
+                        if (user) {
+                            try {
+                                const adminData = await getAdminData(user.uid);
+                                // Valid session and admin access, redirect to dashboard
+                                window.location.href = "dashboard.html";
+                            } catch (error) {
+                                // User not an admin, clear session
+                                clearSession();
+                            }
+                        }
+                    });
+                }
+                
+                // Setup event listeners
+                setupEventListeners();
+                
+            } catch (error) {
+                console.error('Firebase initialization error:', error);
+                showError('Failed to initialize system. Please refresh the page.');
+            } finally {
+                showLoading(false);
+            }
+        });
+        
+        // Session management functions
+        function saveSession(userData) {
+            localStorage.setItem('jumuiaAdminUser', JSON.stringify(userData));
+        }
+
+        function getSession() {
+            const session = localStorage.getItem('jumuiaAdminUser');
+            return session ? JSON.parse(session) : null;
+        }
+
+        function clearSession() {
+            localStorage.removeItem('jumuiaAdminUser');
+        }
+
+        function isValidSession(session) {
+            if (!session) return false;
+            
+            // Check if session is less than 24 hours old
+            const loginTime = new Date(session.loginTime);
+            const currentTime = new Date();
+            const hoursDiff = (currentTime - loginTime) / (1000 * 60 * 60);
+            
+            return hoursDiff < 24;
         }
         
-        .modal-content {
-            background: var(--primary-white); 
-            padding: 30px; 
-            border-radius: var(--radius); 
-            width: 90%; 
-            max-width: 450px;
-            max-height: 90vh;
-            overflow-y: auto;
-        }
-    </style>
-
-    <script>
-        // Role selection with property assignment logic
-        document.querySelectorAll('.role-option').forEach(option => {
-            option.addEventListener('click', function() {
-                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('active'));
-                this.classList.add('active');
-                
-                // Show/hide property assignment based on role
-                const role = this.getAttribute('data-role');
-                const propertyAssignment = document.getElementById('propertyAssignment');
-                
-                if (role === 'staff') {
-                    propertyAssignment.style.display = 'block';
+        // Setup all event listeners
+        function setupEventListeners() {
+            console.log('Setting up event listeners...');
+            
+            // Role selection for login
+            document.querySelectorAll('#roleSelection .role-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('#roleSelection .role-option').forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show/hide property assignment based on role
+                    const role = this.getAttribute('data-role');
+                    const propertyAssignment = document.getElementById('propertyAssignment');
+                    
+                    if (role === 'staff') {
+                        propertyAssignment.style.display = 'block';
+                    } else {
+                        propertyAssignment.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Role selection for registration
+            document.querySelectorAll('#registerRoleSelection .role-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    document.querySelectorAll('#registerRoleSelection .role-option').forEach(opt => opt.classList.remove('active'));
+                    this.classList.add('active');
+                    
+                    // Show/hide property assignment based on role
+                    const role = this.getAttribute('data-role');
+                    const propertyAssignment = document.getElementById('registerPropertyAssignment');
+                    
+                    if (role === 'staff') {
+                        propertyAssignment.style.display = 'block';
+                    } else {
+                        propertyAssignment.style.display = 'none';
+                    }
+                });
+            });
+            
+            // Handle login form submission
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Handle registration form submission
+            document.getElementById('registerForm').addEventListener('submit', handleRegister);
+            
+            // Remember me functionality
+            const rememberedEmail = localStorage.getItem('rememberedEmail');
+            if (rememberedEmail) {
+                document.getElementById('email').value = rememberedEmail;
+                document.getElementById('rememberMe').checked = true;
+            }
+            
+            document.getElementById('rememberMe').addEventListener('change', function() {
+                const email = document.getElementById('email').value;
+                if (this.checked && email) {
+                    localStorage.setItem('rememberedEmail', email);
                 } else {
-                    propertyAssignment.style.display = 'none';
+                    localStorage.removeItem('rememberedEmail');
                 }
             });
-        });
-
-        // Property selection for login
-        document.querySelectorAll('.property-option').forEach(option => {
-            option.addEventListener('click', function() {
-                if (!this.closest('#propertyAssignment') && !this.closest('#regPropertyGroup')) return;
-                
-                const parent = this.closest('.property-options');
-                parent.querySelectorAll('.property-option').forEach(opt => opt.classList.remove('selected'));
-                this.classList.add('selected');
+            
+            // Close modal when clicking outside
+            document.getElementById('registerModal').addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeRegisterModal();
+                }
             });
-        });
-
-        // Form submission - SIMPLIFIED VERSION
-        document.getElementById('loginForm').addEventListener('submit', async function(e) {
+            
+            console.log('Event listeners setup complete');
+        }
+        
+        // Open registration modal
+        function openRegisterModal() {
+            // Reset form
+            document.getElementById('registerForm').reset();
+            document.getElementById('registerErrorAlert').style.display = 'none';
+            document.getElementById('registerSuccessAlert').style.display = 'none';
+            
+            // Reset role selection to system-admin
+            document.querySelectorAll('#registerRoleSelection .role-option').forEach(opt => opt.classList.remove('active'));
+            document.querySelector('#registerRoleSelection .role-option[data-role="system-admin"]').classList.add('active');
+            
+            // Hide property assignment by default
+            document.getElementById('registerPropertyAssignment').style.display = 'none';
+            
+            // Show modal
+            document.getElementById('registerModal').style.display = 'flex';
+        }
+        
+        // Close registration modal
+        function closeRegisterModal() {
+            document.getElementById('registerModal').style.display = 'none';
+        }
+        
+        // Handle login
+        async function handleLogin(e) {
             e.preventDefault();
             
             const email = document.getElementById('email').value;
             const password = document.getElementById('password').value;
-            const selectedRole = document.querySelector('.role-option.active').getAttribute('data-role');
             const loginBtn = document.getElementById('loginBtn');
+            
+            // Get selected role for login
+            const selectedRole = document.querySelector('#roleSelection .role-option.active').getAttribute('data-role');
             
             // Get selected property for staff
             let selectedProperty = 'all';
             if (selectedRole === 'staff') {
-                const selectedPropertyOption = document.querySelector('#propertyAssignment .property-option.selected');
-                selectedProperty = selectedPropertyOption ? selectedPropertyOption.getAttribute('data-property') : 'kisumu';
-            } else if (selectedRole === 'system-admin' || selectedRole === 'general-manager') {
+                selectedProperty = document.getElementById('propertySelect').value;
+            } else if (selectedRole === 'general-manager' || selectedRole === 'system-admin') {
                 selectedProperty = 'all';
+            }
+            
+            // Validate inputs
+            if (!email || !password) {
+                showError('Please enter both email and password');
+                return;
             }
             
             // Show loading state
@@ -648,25 +813,32 @@
             loginBtn.disabled = true;
             
             // Hide previous alerts
-            document.getElementById('errorAlert').style.display = 'none';
-            document.getElementById('successAlert').style.display = 'none';
+            hideAlerts();
             
             try {
-                // Firebase authentication
-                const auth = window.firebaseAuth;
-                const userCredential = await window.signInWithEmailAndPassword(auth, email, password);
+                console.log('Attempting login for:', email);
+                
+                // Sign in with email and password
+                const userCredential = await signInWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-
-                // Check if user exists in admins collection
-                const adminDoc = await window.getDoc(window.doc(db, "admins", user.uid));
                 
-                if (!adminDoc.exists()) {
-                    throw new Error("You do not have admin access. Please contact system administrator.");
+                console.log('Firebase auth successful, user ID:', user.uid);
+                
+                // Verify user is an admin and has the correct role/property
+                const adminData = await getAdminData(user.uid);
+                console.log('Admin data retrieved:', adminData);
+                
+                // Check if user has permission for selected role
+                if (selectedRole !== adminData.role) {
+                    throw new Error(`You are registered as ${getRoleName(adminData.role)}, not ${getRoleName(selectedRole)}. Please select the correct role.`);
                 }
-
-                const adminData = adminDoc.data();
                 
-                // Store session data
+                // Check property access for staff
+                if (selectedRole === 'staff' && adminData.property !== selectedProperty) {
+                    throw new Error(`You are assigned to ${getPropertyName(adminData.property)}, not ${getPropertyName(selectedProperty)}. Please select the correct property.`);
+                }
+                
+                // Create session data
                 const sessionData = {
                     uid: user.uid,
                     email: user.email,
@@ -674,187 +846,275 @@
                     role: adminData.role,
                     property: adminData.property || 'all',
                     loginTime: new Date().toISOString(),
-                    permissions: getPermissions(adminData.role)
+                    permissions: getPermissions(adminData.role, adminData.property)
                 };
                 
-                localStorage.setItem('jumuiaAdminUser', JSON.stringify(sessionData));
+                console.log('Creating session:', sessionData);
                 
-                // Show success message and redirect
-                document.getElementById('successAlert').style.display = 'block';
-                document.getElementById('successMessage').textContent = 'Login successful! Redirecting...';
+                // Save session
+                saveSession(sessionData);
                 
-                // Redirect after short delay
+                // Remember email if checked
+                if (document.getElementById('rememberMe').checked) {
+                    localStorage.setItem('rememberedEmail', email);
+                }
+                
+                // Show success and redirect
+                showSuccess('Login successful! Redirecting to dashboard...');
+                
                 setTimeout(() => {
                     window.location.href = "dashboard.html";
-                }, 1000);
+                }, 1500);
                 
             } catch (error) {
-                // Show error message
-                document.getElementById('errorAlert').style.display = 'block';
+                console.error('Login error:', error);
                 
-                let errorMessage = "Login failed. Please check your credentials.";
+                let errorMessage = 'Login failed. Please check your credentials.';
                 
                 // Handle specific Firebase errors
                 if (error.code) {
                     switch (error.code) {
                         case 'auth/invalid-email':
-                            errorMessage = "Invalid email address format.";
+                            errorMessage = 'Invalid email address format.';
                             break;
                         case 'auth/user-disabled':
-                            errorMessage = "This account has been disabled.";
+                            errorMessage = 'This account has been disabled.';
                             break;
                         case 'auth/user-not-found':
-                            errorMessage = "No account found with this email.";
+                            errorMessage = 'No account found with this email.';
                             break;
                         case 'auth/wrong-password':
-                            errorMessage = "Incorrect password.";
+                            errorMessage = 'Incorrect password.';
                             break;
                         case 'auth/too-many-requests':
-                            errorMessage = "Too many failed attempts. Please try again later.";
+                            errorMessage = 'Too many failed attempts. Please try again later.';
                             break;
                         case 'auth/network-request-failed':
-                            errorMessage = "Network error. Please check your connection.";
+                            errorMessage = 'Network error. Please check your connection.';
                             break;
-                        default:
-                            if (error.message.includes("admin access")) {
-                                errorMessage = "You do not have admin access. Please contact system administrator.";
-                            } else {
-                                errorMessage = error.message || "Login failed. Please try again.";
-                            }
                     }
-                } else if (error.message.includes("admin access")) {
-                    errorMessage = "You do not have admin access. Please contact system administrator.";
+                } else if (error.message.includes('registered as')) {
+                    errorMessage = error.message;
+                } else if (error.message.includes('assigned to')) {
+                    errorMessage = error.message;
+                } else if (error.message.includes('Admin not found')) {
+                    errorMessage = 'You do not have admin access. Please contact system administrator.';
+                } else if (error.message.includes('permission-denied')) {
+                    errorMessage = 'Access denied. You do not have permission to access this resource.';
                 }
                 
-                document.getElementById('errorMessage').textContent = errorMessage;
-                
-                // Reset button
+                showError(errorMessage);
                 loginBtn.innerHTML = '<i class="fas fa-sign-in-alt"></i> Login to Dashboard';
                 loginBtn.disabled = false;
             }
-        });
-
-        // Registration role change
-        document.getElementById('regRole').addEventListener('change', function() {
-            const propertyGroup = document.getElementById('regPropertyGroup');
-            if (this.value === 'staff') {
-                propertyGroup.style.display = 'block';
-            } else {
-                propertyGroup.style.display = 'none';
-            }
-        });
-
-        // Registration function
-        window.openRegister = () => {
-            document.getElementById("registerModal").style.display = "flex";
-        };
-
-        window.closeRegister = () => {
-            document.getElementById("registerModal").style.display = "none";
-            document.getElementById('registerMsg').style.display = 'none';
-            document.getElementById('registerMsg').textContent = '';
+        }
+        
+        // Handle registration
+        async function handleRegister(e) {
+            e.preventDefault();
             
-            // Clear form
-            document.getElementById("regName").value = '';
-            document.getElementById("regEmail").value = '';
-            document.getElementById("regPassword").value = '';
-            document.getElementById("regRole").value = 'system-admin';
-            document.getElementById('regPropertyGroup').style.display = 'none';
-        };
-
-        // Register new user
-        document.getElementById("registerSubmit").addEventListener("click", async () => {
-            const name = document.getElementById("regName").value;
-            const email = document.getElementById("regEmail").value;
-            const password = document.getElementById("regPassword").value;
-            const role = document.getElementById("regRole").value;
-            const msg = document.getElementById("registerMsg");
+            const name = document.getElementById('regName').value;
+            const email = document.getElementById('regEmail').value;
+            const password = document.getElementById('regPassword').value;
+            const confirmPassword = document.getElementById('regConfirmPassword').value;
+            const registerBtn = document.getElementById('registerBtn');
+            
+            // Get selected role
+            const selectedRole = document.querySelector('#registerRoleSelection .role-option.active').getAttribute('data-role');
             
             // Get selected property for staff
-            let property = 'all';
-            if (role === 'staff') {
-                const selectedProperty = document.querySelector('#regPropertyGroup .property-option.selected');
-                property = selectedProperty ? selectedProperty.getAttribute('data-property') : 'kisumu';
+            let selectedProperty = 'all';
+            if (selectedRole === 'staff') {
+                selectedProperty = document.getElementById('registerPropertySelect').value;
+            } else if (selectedRole === 'general-manager' || selectedRole === 'system-admin') {
+                selectedProperty = 'all';
             }
-
-            msg.style.display = "none";
-
-            if (!name || !email || !password) {
-                msg.innerText = "All fields are required.";
-                msg.style.display = "block";
+            
+            // Validate inputs
+            if (!name || !email || !password || !confirmPassword) {
+                showRegisterError('Please fill in all fields.');
                 return;
             }
-
+            
+            if (password !== confirmPassword) {
+                showRegisterError('Passwords do not match.');
+                return;
+            }
+            
             if (password.length < 6) {
-                msg.innerText = "Password must be at least 6 characters.";
-                msg.style.display = "block";
+                showRegisterError('Password must be at least 6 characters long.');
                 return;
             }
-
+            
+            // Show loading state
+            registerBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Creating Account...';
+            registerBtn.disabled = true;
+            
+            // Hide previous alerts
+            hideRegisterAlerts();
+            
             try {
-                const auth = window.firebaseAuth;
-                const db = window.db;
+                console.log('Starting registration for:', email);
                 
-                // Create auth user
-                const userCredential = await window.createUserWithEmailAndPassword(auth, email, password);
+                // Create user in Firebase Authentication
+                const userCredential = await createUserWithEmailAndPassword(auth, email, password);
                 const user = userCredential.user;
-
-                // Create admin document
-                await window.setDoc(window.doc(db, "admins", user.uid), {
+                
+                console.log('User created in Firebase Auth, UID:', user.uid);
+                
+                // IMPORTANT: Set custom claims for the user BEFORE creating admin document
+                // Note: Custom claims require Cloud Functions. For now, we'll store role in database.
+                
+                // Create admin document in Firestore
+                const adminData = {
                     name: name,
                     email: email,
-                    role: role,
-                    property: property,
+                    role: selectedRole,
+                    property: selectedProperty,
                     createdAt: new Date().toISOString(),
-                    createdBy: auth.currentUser ? auth.currentUser.uid : 'system',
                     status: 'active',
-                    permissions: getPermissions(role)
-                });
-
-                // Add to activity log
-                await window.addDoc(window.collection(db, "activities"), {
-                    type: "user-registration",
-                    description: `New ${role} account created for ${name}`,
-                    user: auth.currentUser ? auth.currentUser.email : 'system',
-                    timestamp: window.serverTimestamp(),
-                    metadata: { email: email, role: role, property: property }
-                });
-
-                msg.style.color = "green";
-                msg.innerText = "✓ Registration successful!";
-                msg.style.display = "block";
-
-                setTimeout(() => {
-                    closeRegister();
-                    
-                    // Show success in login form
-                    document.getElementById('successAlert').style.display = 'block';
-                    document.getElementById('successMessage').textContent = 'Account created successfully! You can now login.';
-                    
-                    // Pre-fill email field
-                    document.getElementById('email').value = email;
-                }, 1500);
-
-            } catch (error) {
-                let errorMsg = error.message;
+                    permissions: getPermissions(selectedRole, selectedProperty),
+                    lastLogin: null,
+                    updatedAt: new Date().toISOString(),
+                    // Add these fields for better tracking
+                    createdBy: 'self-registration',
+                    isVerified: false, // Set to true after email verification if needed
+                    phone: '',
+                    department: '',
+                    notes: ''
+                };
                 
-                // Handle specific Firebase errors
-                if (error.code === 'auth/email-already-in-use') {
-                    errorMsg = "This email is already registered.";
-                } else if (error.code === 'auth/invalid-email') {
-                    errorMsg = "Invalid email address format.";
-                } else if (error.code === 'auth/weak-password') {
-                    errorMsg = "Password is too weak. Use at least 6 characters.";
+                console.log('Saving admin data to Firestore:', adminData);
+                
+                // Save to Firestore - This should now work with updated security rules
+                await setDoc(doc(db, "admins", user.uid), adminData);
+                
+                console.log('Admin document saved successfully');
+                
+                // Create an activity log for the registration
+                try {
+                    await setDoc(doc(db, "activities", `reg-${Date.now()}`), {
+                        type: "user-registration",
+                        description: `New ${selectedRole} account created for ${name}`,
+                        user: email,
+                        userId: user.uid,
+                        role: selectedRole,
+                        property: selectedProperty,
+                        timestamp: new Date().toISOString(),
+                        metadata: { 
+                            registrationType: 'admin-portal',
+                            ip: 'self-registration' 
+                        }
+                    });
+                } catch (activityError) {
+                    console.warn('Could not create activity log:', activityError);
+                    // Continue even if activity log fails
                 }
                 
-                msg.innerText = errorMsg;
-                msg.style.display = "block";
-                console.error("Registration error:", error);
+                // Send welcome email or notification (placeholder for future implementation)
+                sendWelcomeNotification(email, name, selectedRole);
+                
+                // Show success message
+                showRegisterSuccess(`Account created successfully! ${name} is now registered as ${getRoleName(selectedRole)}. You can now login.`);
+                
+                // Pre-fill login form with new credentials
+                document.getElementById('email').value = email;
+                localStorage.setItem('rememberedEmail', email);
+                
+                // Reset registration form
+                document.getElementById('registerForm').reset();
+                
+                // Auto-close modal after 3 seconds
+                setTimeout(() => {
+                    closeRegisterModal();
+                }, 3000);
+                
+            } catch (error) {
+                console.error('Registration error:', error);
+                
+                let errorMessage = 'Registration failed. Please try again.';
+                
+                // Handle specific Firebase errors
+                if (error.code) {
+                    switch (error.code) {
+                        case 'auth/email-already-in-use':
+                            errorMessage = 'This email is already registered. Please use a different email.';
+                            break;
+                        case 'auth/invalid-email':
+                            errorMessage = 'Invalid email address format.';
+                            break;
+                        case 'auth/weak-password':
+                            errorMessage = 'Password is too weak. Please use at least 6 characters with a mix of letters and numbers.';
+                            break;
+                        case 'auth/operation-not-allowed':
+                            errorMessage = 'Email/password accounts are not enabled. Please contact administrator.';
+                            break;
+                        case 'permission-denied':
+                            errorMessage = 'Permission denied. The security rules may need updating. Please contact system administrator.';
+                            break;
+                        case 'auth/network-request-failed':
+                            errorMessage = 'Network error. Please check your internet connection.';
+                            break;
+                    }
+                }
+                
+                showRegisterError(errorMessage);
+            } finally {
+                registerBtn.innerHTML = '<i class="fas fa-user-plus"></i> Create Admin Account';
+                registerBtn.disabled = false;
             }
-        });
+        }
 
-        // Helper function to get permissions based on role
-        function getPermissions(role) {
+        // Helper function for welcome notification (placeholder)
+        function sendWelcomeNotification(email, name, role) {
+            console.log(`Welcome notification would be sent to: ${email}`);
+            console.log(`Welcome ${name}! You have been registered as ${role}.`);
+            // In production, implement email sending here
+        }
+        
+        // Helper function to get admin data from Firestore
+        async function getAdminData(userId) {
+            try {
+                console.log('Fetching admin data for user:', userId);
+                const adminDoc = await getDoc(doc(db, "admins", userId));
+                
+                if (!adminDoc.exists()) {
+                    console.log('Admin document not found for user:', userId);
+                    throw new Error('Admin not found in database');
+                }
+                
+                const data = adminDoc.data();
+                console.log('Admin data found:', data);
+                return data;
+            } catch (error) {
+                console.error('Error getting admin data:', error);
+                throw error;
+            }
+        }
+        
+        // Helper function to get role name
+        function getRoleName(role) {
+            const roleNames = {
+                'system-admin': 'System Administrator',
+                'general-manager': 'General Manager',
+                'staff': 'Staff Member'
+            };
+            return roleNames[role] || role;
+        }
+        
+        // Helper function to get property name
+        function getPropertyName(property) {
+            const propertyNames = {
+                'limuru': 'Limuru Country Home',
+                'kanamai': 'Kanamai Beach Resort',
+                'kisumu': 'Kisumu Hotel',
+                'all': 'All Properties'
+            };
+            return propertyNames[property] || property;
+        }
+        
+        // Get permissions based on role
+        function getPermissions(role, property = 'all') {
             const permissions = {
                 'system-admin': {
                     canViewAll: true,
@@ -862,7 +1122,10 @@
                     canDelete: true,
                     canManageUsers: true,
                     canManageSettings: true,
-                    properties: ['limuru', 'kanamai', 'kisumu', 'all']
+                    canUploadMedia: true,
+                    canExportData: true,
+                    properties: ['limuru', 'kanamai', 'kisumu', 'all'],
+                    accessibleModules: ['dashboard', 'bookings', 'calendar', 'offers', 'content', 'messages', 'feedback', 'users', 'reports', 'settings']
                 },
                 'general-manager': {
                     canViewAll: true,
@@ -870,7 +1133,10 @@
                     canDelete: true,
                     canManageUsers: false,
                     canManageSettings: false,
-                    properties: ['limuru', 'kanamai', 'kisumu', 'all']
+                    canUploadMedia: true,
+                    canExportData: true,
+                    properties: ['limuru', 'kanamai', 'kisumu', 'all'],
+                    accessibleModules: ['dashboard', 'bookings', 'calendar', 'offers', 'content', 'messages', 'feedback', 'reports']
                 },
                 'staff': {
                     canViewAll: false,
@@ -878,48 +1144,73 @@
                     canDelete: false,
                     canManageUsers: false,
                     canManageSettings: false,
-                    properties: [] // Will be set based on assigned property
+                    canUploadMedia: false,
+                    canExportData: false,
+                    properties: [property],
+                    accessibleModules: ['dashboard', 'bookings', 'calendar', 'messages', 'feedback']
                 }
             };
             
             return permissions[role] || permissions['staff'];
         }
-
-        // Remember me functionality
-        window.addEventListener('load', function() {
-            const rememberedEmail = localStorage.getItem('rememberedEmail');
-            if (rememberedEmail) {
-                document.getElementById('email').value = rememberedEmail;
-                document.getElementById('rememberMe').checked = true;
-            }
-        });
-
-        document.getElementById('rememberMe').addEventListener('change', function() {
-            const email = document.getElementById('email').value;
-            if (this.checked && email) {
-                localStorage.setItem('rememberedEmail', email);
-            } else {
-                localStorage.removeItem('rememberedEmail');
-            }
-        });
-
-        // Close modal when clicking outside
-        document.addEventListener('click', function(event) {
-            const modal = document.getElementById('registerModal');
-            if (event.target === modal) {
-                closeRegister();
-            }
-        });
-
-        // Prevent form submission on Enter key in registration modal
-        document.querySelectorAll('#registerModal input').forEach(input => {
-            input.addEventListener('keypress', function(e) {
-                if (e.key === 'Enter') {
-                    e.preventDefault();
-                    document.getElementById('registerSubmit').click();
-                }
-            });
-        });
+        
+        // Alert functions
+        function showError(message) {
+            const errorAlert = document.getElementById('errorAlert');
+            const errorMessage = document.getElementById('errorMessage');
+            
+            errorMessage.textContent = message;
+            errorAlert.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                errorAlert.style.display = 'none';
+            }, 5000);
+        }
+        
+        function showSuccess(message) {
+            const successAlert = document.getElementById('successAlert');
+            const successMessage = document.getElementById('successMessage');
+            
+            successMessage.textContent = message;
+            successAlert.style.display = 'block';
+        }
+        
+        function showRegisterError(message) {
+            const errorAlert = document.getElementById('registerErrorAlert');
+            const errorMessage = document.getElementById('registerErrorMessage');
+            
+            errorMessage.textContent = message;
+            errorAlert.style.display = 'block';
+        }
+        
+        function showRegisterSuccess(message) {
+            const successAlert = document.getElementById('registerSuccessAlert');
+            const successMessage = document.getElementById('registerSuccessMessage');
+            
+            successMessage.textContent = message;
+            successAlert.style.display = 'block';
+        }
+        
+        function hideAlerts() {
+            document.getElementById('errorAlert').style.display = 'none';
+            document.getElementById('successAlert').style.display = 'none';
+        }
+        
+        function hideRegisterAlerts() {
+            document.getElementById('registerErrorAlert').style.display = 'none';
+            document.getElementById('registerSuccessAlert').style.display = 'none';
+        }
+        
+        function showLoading(show) {
+            document.getElementById('loadingOverlay').style.display = show ? 'flex' : 'none';
+        }
+        
+        // Make functions available globally
+        window.openRegisterModal = openRegisterModal;
+        window.closeRegisterModal = closeRegisterModal;
+        
+        console.log('Login page JavaScript loaded successfully');
     </script>
 </body>
 </html>

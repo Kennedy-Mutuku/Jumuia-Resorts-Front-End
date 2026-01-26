@@ -1,4 +1,5 @@
-// js/firebase-config.js
+// js/firebase-config.js - Centralized Firebase Initialization
+// This file ensures Firebase is initialized only once and accessible globally
 
 // Firebase configuration
 const firebaseConfig = {
@@ -11,314 +12,377 @@ const firebaseConfig = {
     measurementId: "G-Q7BWHJ9C3M"
 };
 
-// Check if Firebase is already initialized globally
-let app, auth, db, storage, analytics;
+// Global Firebase instances - will be set after initialization
+let firebaseApp = null;
+let firebaseAuth = null;
+let firebaseDb = null;
+let firebaseStorage = null;
+let firebaseAnalytics = null;
+let isInitializing = false;
+let initPromise = null;
 
-// Create a service object without initializing Firebase
-const FirebaseService = {
-    // App & Analytics
-    get app() {
-        return window.firebaseApp || app;
-    },
-    get analytics() {
-        return window.firebaseAnalytics || analytics;
-    },
+// Check if Firebase is already initialized
+function isFirebaseInitialized() {
+    return firebaseDb !== null && typeof firebase !== 'undefined';
+}
+
+// Initialize Firebase with modular SDK
+async function initializeFirebase() {
+    if (isInitializing) {
+        return initPromise;
+    }
     
-    // Auth
-    get auth() {
-        return window.firebaseAuth || auth;
-    },
+    if (isFirebaseInitialized()) {
+        console.log('Firebase already initialized');
+        return getFirebaseServices();
+    }
     
-    // Firestore
-    get db() {
-        return window.firebaseDb || db;
-    },
-    
-    // Storage
-    get storage() {
-        return window.firebaseStorage || storage;
-    },
-    
-    // Auth methods
-    authMethods: {
-        signInWithEmailAndPassword: (email, password) => {
-            const authInstance = window.firebaseAuth || auth;
-            return authInstance ? authInstance.signInWithEmailAndPassword(email, password) : null;
-        },
-        createUserWithEmailAndPassword: (email, password) => {
-            const authInstance = window.firebaseAuth || auth;
-            return authInstance ? authInstance.createUserWithEmailAndPassword(email, password) : null;
-        },
-        onAuthStateChanged: (callback) => {
-            const authInstance = window.firebaseAuth || auth;
-            return authInstance ? authInstance.onAuthStateChanged(callback) : null;
-        },
-        signOut: () => {
-            const authInstance = window.firebaseAuth || auth;
-            return authInstance ? authInstance.signOut() : null;
-        },
-        currentUser: () => {
-            const authInstance = window.firebaseAuth || auth;
-            return authInstance ? authInstance.currentUser : null;
-        }
-    },
-    
-    // Firestore methods
-    firestore: {
-        collection: (path) => {
-            const dbInstance = window.firebaseDb || db;
-            return dbInstance ? dbInstance.collection(path) : null;
-        },
-        doc: (path) => {
-            const dbInstance = window.firebaseDb || db;
-            return dbInstance ? dbInstance.doc(path) : null;
-        },
-        serverTimestamp: () => {
-            return window.firebase && window.firebase.firestore ? 
-                window.firebase.firestore.FieldValue.serverTimestamp() : null;
-        }
-    },
-    
-    // Storage methods
-    storageMethods: {
-        ref: (path) => {
-            const storageInstance = window.firebaseStorage || storage;
-            return storageInstance ? storageInstance.ref(path) : null;
-        }
-    },
-    
-    // Helper functions for booking system
-    saveBooking: async function(bookingData) {
+    isInitializing = true;
+    initPromise = (async () => {
         try {
-            const dbInstance = this.db || window.firebaseDb;
-            if (!dbInstance) {
-                throw new Error('Firebase not initialized');
+            // Check if Firebase is already loaded globally (from main.js)
+            if (typeof firebase !== 'undefined' && firebase.apps.length > 0) {
+                console.log('Firebase already loaded globally');
+                firebaseApp = firebase.app();
+                firebaseAuth = firebase.auth();
+                firebaseDb = firebase.firestore();
+                firebaseStorage = firebase.storage();
+                
+                if (firebase.analytics) {
+                    firebaseAnalytics = firebase.analytics();
+                }
+                
+                isInitializing = false;
+                return getFirebaseServices();
             }
             
-            // Generate booking ID
-            const bookingId = 'JUM-' + Date.now().toString().slice(-6) + Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-            bookingData.bookingId = bookingId;
-            bookingData.createdAt = new Date().toISOString();
-            bookingData.status = 'pending';
-            
-            // Save to Firestore
-            const bookingRef = await dbInstance.collection('bookings').add(bookingData);
-            console.log('Booking saved with ID:', bookingRef.id);
-            
-            return {
-                success: true,
-                bookingId: bookingId,
-                firestoreId: bookingRef.id,
-                data: bookingData
-            };
-        } catch (error) {
-            console.error('Error saving booking:', error);
-            return {
-                success: false,
-                error: error.message
-            };
-        }
-    },
-    
-    getBookingsByResort: async function(resortCode) {
-        try {
-            const dbInstance = this.db || window.firebaseDb;
-            if (!dbInstance) {
-                throw new Error('Firebase not initialized');
+            // Dynamically load Firebase scripts if not already loaded
+            if (typeof firebase === 'undefined') {
+                console.log('Loading Firebase scripts dynamically...');
+                await loadFirebaseScriptsDynamically();
             }
             
-            const querySnapshot = await dbInstance.collection('bookings')
-                .where('resort', '==', resortCode)
-                .orderBy('createdAt', 'desc')
-                .get();
+            // Initialize Firebase
+            firebaseApp = firebase.initializeApp(firebaseConfig);
+            firebaseAuth = firebase.auth();
+            firebaseDb = firebase.firestore();
+            firebaseStorage = firebase.storage();
             
-            const bookings = [];
-            querySnapshot.forEach((doc) => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data()
-                });
+            // Initialize analytics if available
+            if (firebase.analytics) {
+                firebaseAnalytics = firebase.analytics();
+            }
+            
+            // Configure Firestore
+            firebaseDb.settings({
+                timestampsInSnapshots: true
             });
             
-            return bookings;
+            // Enable offline persistence
+            firebaseDb.enablePersistence()
+                .catch((err) => {
+                    if (err.code == 'failed-precondition') {
+                        console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
+                    } else if (err.code == 'unimplemented') {
+                        console.warn('The current browser doesn\'t support persistence.');
+                    }
+                });
+            
+            console.log('Firebase initialized successfully via config module');
+            
+            // Store references globally
+            window.firebaseApp = firebaseApp;
+            window.firebaseAuth = firebaseAuth;
+            window.firebaseDb = firebaseDb;
+            
+            return getFirebaseServices();
+            
         } catch (error) {
-            console.error('Error getting bookings:', error);
-            return [];
-        }
-    },
-    
-    updateBookingStatus: async function(bookingId, status, paymentStatus = null) {
-        try {
-            const dbInstance = this.db || window.firebaseDb;
-            if (!dbInstance) {
-                throw new Error('Firebase not initialized');
+            console.error('Error initializing Firebase:', error);
+            
+            // If Firebase already initialized, use existing instance
+            if (error.code === 'app/duplicate-app') {
+                console.log('Firebase app already exists, using existing instance');
+                firebaseApp = firebase.app();
+                firebaseAuth = firebase.auth();
+                firebaseDb = firebase.firestore();
+                firebaseStorage = firebase.storage();
+                
+                if (firebase.analytics) {
+                    firebaseAnalytics = firebase.analytics();
+                }
+                
+                isInitializing = false;
+                return getFirebaseServices();
             }
             
-            const updateData = { 
-                status: status,
-                updatedAt: new Date().toISOString()
+            isInitializing = false;
+            initPromise = null;
+            throw error;
+        }
+    })();
+    
+    return initPromise;
+}
+
+// Load Firebase scripts dynamically
+async function loadFirebaseScriptsDynamically() {
+    return new Promise((resolve, reject) => {
+        const scripts = [
+            'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js',
+            'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js',
+            'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js',
+            'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js'
+        ];
+        
+        let loadedCount = 0;
+        
+        function loadScript(index) {
+            if (index >= scripts.length) {
+                console.log('All Firebase scripts loaded');
+                resolve();
+                return;
+            }
+            
+            const script = document.createElement('script');
+            script.src = scripts[index];
+            script.async = true;
+            
+            script.onload = () => {
+                loadedCount++;
+                console.log(`Loaded: ${scripts[index]}`);
+                loadScript(index + 1);
             };
             
-            if (paymentStatus) {
-                updateData.paymentStatus = paymentStatus;
+            script.onerror = (error) => {
+                console.error(`Failed to load: ${scripts[index]}`, error);
+                // Continue loading other scripts
+                loadedCount++;
+                loadScript(index + 1);
+            };
+            
+            document.head.appendChild(script);
+        }
+        
+        loadScript(0);
+        
+        // Timeout after 10 seconds
+        setTimeout(() => {
+            if (loadedCount < scripts.length) {
+                console.warn('Firebase scripts loading timeout');
+                resolve(); // Resolve anyway to prevent hanging
+            }
+        }, 10000);
+    });
+}
+
+// Get initialized Firebase services
+function getFirebaseServices() {
+    if (!firebaseDb) {
+        console.warn('Firebase not initialized yet');
+        return null;
+    }
+    
+    return {
+        app: firebaseApp,
+        auth: firebaseAuth,
+        db: firebaseDb,
+        storage: firebaseStorage,
+        analytics: firebaseAnalytics,
+        config: firebaseConfig,
+        isInitialized: true
+    };
+}
+
+// Authentication helper functions
+const AuthService = {
+    async getCurrentUser() {
+        if (!firebaseAuth) {
+            await initializeFirebase();
+        }
+        return firebaseAuth.currentUser;
+    },
+
+    async requireAuth(redirectUrl = '../index.html') {
+        const user = await this.getCurrentUser();
+        if (!user) {
+            window.location.href = redirectUrl;
+            return null;
+        }
+        return user;
+    },
+
+    async signOut(redirectUrl = '../index.html') {
+        try {
+            if (firebaseAuth) {
+                await firebaseAuth.signOut();
+            }
+            localStorage.removeItem('jumuiaAdminUser');
+            sessionStorage.removeItem('jumuiaAdminSession');
+            
+            if (redirectUrl) {
+                setTimeout(() => {
+                    window.location.href = redirectUrl;
+                }, 1000);
             }
             
-            await dbInstance.collection('bookings').doc(bookingId).update(updateData);
             return { success: true };
         } catch (error) {
-            console.error('Error updating booking:', error);
+            console.error('Error signing out:', error);
             return { success: false, error: error.message };
         }
     }
 };
 
-// Initialize function - only call this if Firebase isn't already initialized
-const initializeFirebase = async function() {
-    return new Promise((resolve, reject) => {
+// Database helper functions
+const DatabaseService = {
+    async getAdminData(userId) {
+        if (!firebaseDb) {
+            await initializeFirebase();
+        }
+        
         try {
-            // Check if Firebase is already initialized
-            if (typeof firebase === 'undefined') {
-                console.warn('Firebase SDK not loaded');
-                reject(new Error('Firebase SDK not loaded'));
-                return;
+            const adminDoc = await firebaseDb.collection("admins").doc(userId).get();
+            
+            if (!adminDoc.exists) {
+                throw new Error('Admin not found in database');
             }
             
-            // Check if Firebase is already initialized by main.js
-            if (firebase.apps.length > 0) {
-                console.log('Firebase already initialized by another script');
-                
-                // Use the existing instance
-                app = firebase.app();
-                auth = firebase.auth();
-                db = firebase.firestore();
-                storage = firebase.storage();
-                analytics = firebase.analytics();
-                
-                // Update service object
-                FirebaseService.app = app;
-                FirebaseService.auth = auth;
-                FirebaseService.db = db;
-                FirebaseService.storage = storage;
-                FirebaseService.analytics = analytics;
-                
-                resolve(FirebaseService);
-                return;
+            return adminDoc.data();
+        } catch (error) {
+            console.error('Error getting admin data:', error);
+            throw error;
+        }
+    },
+    
+    async saveDocument(collection, data, id = null) {
+        if (!firebaseDb) {
+            await initializeFirebase();
+        }
+        
+        try {
+            if (id) {
+                await firebaseDb.collection(collection).doc(id).set(data, { merge: true });
+                return { success: true, id: id };
+            } else {
+                const docRef = await firebaseDb.collection(collection).add(data);
+                return { success: true, id: docRef.id };
+            }
+        } catch (error) {
+            console.error('Error saving document:', error);
+            return { success: false, error: error.message };
+        }
+    },
+    
+    async getDocuments(collection, conditions = null, limit = 100) {
+        if (!firebaseDb) {
+            await initializeFirebase();
+        }
+        
+        try {
+            let query = firebaseDb.collection(collection);
+            
+            if (conditions) {
+                conditions.forEach(condition => {
+                    query = query.where(condition.field, condition.operator, condition.value);
+                });
             }
             
-            // Initialize Firebase
-            app = firebase.initializeApp(firebaseConfig);
-            auth = firebase.auth();
-            db = firebase.firestore();
-            storage = firebase.storage();
-            analytics = firebase.analytics();
+            query = query.limit(limit);
+            const snapshot = await query.get();
             
-            // Enable offline persistence
-            db.enablePersistence().catch((err) => {
-                console.warn('Persistence error:', err);
+            const documents = [];
+            snapshot.forEach(doc => {
+                documents.push({
+                    id: doc.id,
+                    ...doc.data()
+                });
             });
             
-            // Update service object
-            FirebaseService.app = app;
-            FirebaseService.auth = auth;
-            FirebaseService.db = db;
-            FirebaseService.storage = storage;
-            FirebaseService.analytics = analytics;
-            
-            console.log('Firebase initialized by firebase-config.js');
-            resolve(FirebaseService);
-            
+            return { success: true, documents: documents };
         } catch (error) {
-            console.error('Error in initializeFirebase:', error);
-            reject(error);
+            console.error('Error getting documents:', error);
+            return { success: false, error: error.message, documents: [] };
         }
-    });
+    }
 };
 
-// Simple version for direct HTML inclusion
-const initializeFirebaseSimple = function() {
-    // This function will be called from your booking pages
-    if (typeof firebase === 'undefined') {
-        console.error('Firebase not loaded. Make sure firebase scripts are included before this file.');
-        return null;
-    }
-    
-    try {
-        // Initialize Firebase if not already initialized
-        if (!firebase.apps.length) {
-            app = firebase.initializeApp(firebaseConfig);
-            auth = firebase.auth();
-            db = firebase.firestore();
-            storage = firebase.storage();
-            
-            console.log('Firebase initialized by initializeFirebaseSimple');
-        } else {
-            app = firebase.app();
-            auth = firebase.auth();
-            db = firebase.firestore();
-            storage = firebase.storage();
-        }
-        
-        // Create simplified service object for booking
-        const BookingService = {
-            saveBooking: async function(bookingData) {
-                try {
-                    // Add metadata
-                    bookingData.createdAt = new Date().toISOString();
-                    bookingData.status = 'pending';
-                    
-                    // Generate booking ID
-                    const timestamp = Date.now().toString().slice(-6);
-                    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-                    bookingData.bookingId = `JUM-${bookingData.resort.toUpperCase().slice(0, 3)}-${timestamp}${random}`;
-                    
-                    // Save to Firestore
-                    const docRef = await db.collection('bookings').add(bookingData);
-                    console.log('Booking saved with ID:', docRef.id);
-                    
-                    return {
-                        success: true,
-                        bookingId: bookingData.bookingId,
-                        firestoreId: docRef.id
-                    };
-                } catch (error) {
-                    console.error('Error saving booking:', error);
-                    return {
-                        success: false,
-                        error: error.message
-                    };
-                }
-            }
+// Session management
+const SessionService = {
+    saveSession(userData) {
+        const sessionData = {
+            ...userData,
+            loginTime: new Date().toISOString(),
+            expiryTime: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString() // 24 hours
         };
+        localStorage.setItem('jumuiaAdminUser', JSON.stringify(sessionData));
+        sessionStorage.setItem('jumuiaAdminSession', 'active');
+    },
+
+    getSession() {
+        const session = localStorage.getItem('jumuiaAdminUser');
+        return session ? JSON.parse(session) : null;
+    },
+
+    clearSession() {
+        localStorage.removeItem('jumuiaAdminUser');
+        sessionStorage.removeItem('jumuiaAdminSession');
+    },
+
+    isValidSession() {
+        const session = this.getSession();
+        if (!session || !session.loginTime || !session.expiryTime) return false;
         
-        // Make available globally
-        window.BookingService = BookingService;
-        window.firebaseDb = db;
-        window.firebaseAuth = auth;
+        const expiryTime = new Date(session.expiryTime);
+        const currentTime = new Date();
         
-        return BookingService;
-    } catch (error) {
-        console.error('Firebase initialization error:', error);
-        return null;
+        return currentTime < expiryTime;
+    },
+    
+    getSessionUser() {
+        const session = this.getSession();
+        return session ? {
+            email: session.email,
+            name: session.name,
+            role: session.role
+        } : null;
     }
 };
 
-// Only initialize if we're in a browser and Firebase is loaded
-if (typeof window !== 'undefined') {
-    // Expose globally
-    window.FirebaseService = FirebaseService;
-    window.initializeFirebase = initializeFirebase;
-    window.initializeFirebaseSimple = initializeFirebaseSimple;
-    
-    // Wait for DOM to be ready and Firebase to load
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', function() {
-            // Don't auto-initialize - let main.js handle it
-            console.log('firebase-config.js: DOM loaded, waiting for main.js to initialize Firebase');
-        });
-    }
+// Global exports - check if already exists to prevent re-declaration
+if (!window.FirebaseService) {
+    window.FirebaseService = {
+        initialize: initializeFirebase,
+        getServices: getFirebaseServices,
+        isInitialized: isFirebaseInitialized,
+        config: firebaseConfig,
+        auth: AuthService,
+        db: DatabaseService,
+        session: SessionService
+    };
 }
 
-// Export for use
+// Export functions for modular use
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { FirebaseService, initializeFirebase, firebaseConfig };
+    module.exports = {
+        initializeFirebase,
+        getFirebaseServices,
+        isFirebaseInitialized,
+        AuthService,
+        DatabaseService,
+        SessionService,
+        firebaseConfig
+    };
+}
+
+console.log('Firebase configuration module loaded');
+
+// Auto-initialize if on admin pages
+if (window.location.pathname.includes('/admin/')) {
+    console.log('Auto-initializing Firebase for admin pages');
+    initializeFirebase().then(() => {
+        console.log('Firebase auto-initialized for admin');
+    }).catch(error => {
+        console.error('Auto-initialization failed:', error);
+    });
 }

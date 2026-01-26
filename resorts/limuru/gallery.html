@@ -1,4 +1,4 @@
-<!-- D:\jumuiarestorts web\resorts\limuru\gallery.html -->
+<!-- resorts/limuru/gallery.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -219,7 +219,7 @@
 
         /* Page Hero */
         .page-hero {
-            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('../../images/resorts/limuru/main-hall.jpg');
             background-size: cover;
             background-position: center;
             color: var(--primary-white);
@@ -275,10 +275,10 @@
             overflow: hidden;
         }
 
-        .tour-video iframe {
+        .tour-video video {
             width: 100%;
             height: 100%;
-            border: none;
+            object-fit: cover;
         }
 
         .tour-description {
@@ -315,10 +315,11 @@
             margin-bottom: 40px;
             border-bottom: 1px solid var(--gray-border);
             flex-wrap: wrap;
+            gap: 5px;
         }
 
         .category-tab {
-            padding: 15px 30px;
+            padding: 12px 25px;
             font-weight: 600;
             cursor: pointer;
             color: var(--text-light);
@@ -327,15 +328,18 @@
             display: flex;
             align-items: center;
             gap: 10px;
+            border-radius: var(--radius) var(--radius) 0 0;
         }
 
         .category-tab:hover {
             color: var(--primary-green);
+            background-color: var(--light-green);
         }
 
         .category-tab.active {
             color: var(--primary-orange);
             border-bottom-color: var(--primary-orange);
+            background-color: var(--light-green);
         }
 
         /* Gallery Grid */
@@ -358,6 +362,7 @@
             cursor: pointer;
             height: 250px;
             transition: transform 0.3s;
+            box-shadow: var(--shadow);
         }
 
         .gallery-item:hover {
@@ -863,9 +868,9 @@
                     <span>Back to Jumuia Resorts Home</span>
                 </a>
                 <div class="header-actions">
-                    <a href="tel:+254759423589" class="home-link">
+                    <a href="tel:+254741574828" class="home-link">
                         <i class="fas fa-phone"></i>
-                        <span>0759 423 589</span>
+                        <span>0741 574 828</span>
                     </a>
                 </div>
             </div>
@@ -892,13 +897,13 @@
             </div>
             
             <nav class="resort-nav" id="resortNav">
-                <a href="index.html" class="active">Home</a>
+                <a href="index.html">Home</a>
                 <a href="rooms.html">Rooms & Rates</a>
                 <a href="conference.html">Conference</a>
                 <a href="excursions.html">Excursions</a>
-                <a href="feedback.html" class="active">Feedback</a>
-                <a href="offers.html" class="active">Offers</a>
-                <a href="gallery.html">Gallery</a>
+                <a href="feedback.html">Feedback</a>
+                <a href="offers.html">Offers</a>
+                <a href="gallery.html" class="active">Gallery</a>
                 <a href="booking.html" class="btn btn-primary">Book Now</a>
             </nav>
         </div>
@@ -918,17 +923,18 @@
             <div class="tour-container">
                 <div class="tour-header">
                     <h2>Virtual Tour</h2>
-                    <p>Take a 360° tour of our beautiful resort</p>
+                    <p>Take a tour of our beautiful Limuru resort</p>
                 </div>
                 
                 <div class="tour-video">
-                    <!-- Replace with your actual virtual tour video -->
-                    <iframe src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="Virtual Tour" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+                    <video controls autoplay muted loop playsinline>
+                        <source src="../../images/resorts/limuru/videos/VID-20240219-WA0003.mp4" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
                 </div>
                 
                 <div class="tour-description">
-                    <p>Experience our resort from the comfort of your home. This virtual tour shows our facilities, rooms, conference halls, and scenic surroundings.</p>
-                    <p style="margin-top: 10px;"><small>Note: Replace this video with your actual virtual tour video</small></p>
+                    <p>Experience our resort from the comfort of your home. This video shows our facilities, rooms, conference halls, and scenic surroundings.</p>
                 </div>
             </div>
         </div>
@@ -963,9 +969,9 @@
                     <i class="fas fa-mountain"></i>
                     <span>Scenic Views</span>
                 </div>
-                <div class="category-tab" data-category="events">
-                    <i class="fas fa-calendar-alt"></i>
-                    <span>Events</span>
+                <div class="category-tab" data-category="excursions">
+                    <i class="fas fa-hiking"></i>
+                    <span>Excursions</span>
                 </div>
                 <div class="category-tab" data-category="guest">
                     <i class="fas fa-camera"></i>
@@ -979,8 +985,208 @@
     <section class="gallery-section">
         <div class="container">
             <div id="galleryContainer">
-                <!-- Gallery items will be loaded dynamically from Firebase -->
-                <div class="spinner" id="loadingSpinner"></div>
+                <!-- Gallery items will be loaded dynamically -->
+                <div class="gallery-grid" id="galleryGrid">
+                    <!-- Rooms & Suites -->
+                    <div class="gallery-item" data-category="rooms">
+                        <img src="../../images/resorts/limuru/standard-room.jpg" alt="Standard Room" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Standard Room</div>
+                            <div class="gallery-date">Comfortable and cozy accommodation</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="rooms">
+                        <img src="../../images/resorts/limuru/executive-suite.jpg" alt="Executive Suite" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Executive Suite</div>
+                            <div class="gallery-date">Spacious suite with premium amenities</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="rooms">
+                        <img src="../../images/resorts/limuru/deluxe-room.jpg" alt="Deluxe Room" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Deluxe Room</div>
+                            <div class="gallery-date">Luxurious accommodation option</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="rooms">
+                        <img src="../../images/resorts/limuru/hostel.jpg" alt="Hostel Accommodation" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Hostel Accommodation</div>
+                            <div class="gallery-date">Budget-friendly group accommodation</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Conference Facilities -->
+                    <div class="gallery-item" data-category="conference">
+                        <img src="../../images/resorts/limuru/main-hall.jpg" alt="Main Conference Hall" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Main Conference Hall</div>
+                            <div class="gallery-date">Capacity for up to 400 people</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="conference">
+                        <img src="../../images/resorts/limuru/boardroom.jpg" alt="Boardroom" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Executive Boardroom</div>
+                            <div class="gallery-date">Perfect for meetings up to 30 people</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Facilities -->
+                    <div class="gallery-item" data-category="facilities">
+                        <img src="../../images/resorts/limuru/main-restaurant.jpg" alt="Main Restaurant" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Main Restaurant</div>
+                            <div class="gallery-date">24-hour dining with scenic views</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="facilities">
+                        <img src="../../images/resorts/limuru/fireside-lounge.jpg" alt="Fireside Lounge" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Fireside Lounge</div>
+                            <div class="gallery-date">Cozy relaxation area</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Scenic Views -->
+                    <div class="gallery-item" data-category="views">
+                        <img src="../../images/resorts/limuru/view-point.jpeg" alt="Great Rift Valley Viewpoint" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Great Rift Valley Viewpoint</div>
+                            <div class="gallery-date">Breathtaking panoramic views</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="views">
+                        <img src="../../images/resorts/limuru/limuru grounds.jpeg" alt="Limuru Grounds" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Limuru Grounds</div>
+                            <div class="gallery-date">Beautifully landscaped gardens</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="views">
+                        <img src="../../images/resorts/limuru/limuru-front.jpeg" alt="Resort Front View" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Resort Entrance</div>
+                            <div class="gallery-date">Welcoming front view</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Excursions -->
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/tea farm.jpg" alt="Tea Farm Tour" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Tea Farm Tour</div>
+                            <div class="gallery-date">Explore local tea plantations</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/flower farm.jpg" alt="Flower Farm" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Flower Farm</div>
+                            <div class="gallery-date">Visit local flower farms</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/bird watching.jpeg" alt="Bird Watching" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Bird Watching</div>
+                            <div class="gallery-date">Guided nature trails</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/hills hiking.webp" alt="Hills Hiking" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Hills Hiking</div>
+                            <div class="gallery-date">Scenic hiking trails</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/hike.webp" alt="Nature Hikes" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Nature Hikes</div>
+                            <div class="gallery-date">Explore the surrounding hills</div>
+                        </div>
+                    </div>
+                    
+                    <!-- More Images -->
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/1-Day-Trip-To-Hells-Gate-Lake-Naivasha.jpg" alt="Hell's Gate & Lake Naivasha" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Hell's Gate & Lake Naivasha</div>
+                            <div class="gallery-date">Day trip excursion</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/Best-of-Nairobi-City-Tour.jpg" alt="Nairobi City Tour" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Nairobi City Tour</div>
+                            <div class="gallery-date">Explore Kenya's capital</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/zipline.jpg" alt="Zipline Adventure" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Zipline Adventure</div>
+                            <div class="gallery-date">Thrilling outdoor activity</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/golf-limuru-country.jpg" alt="Limuru Golf Course" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Limuru Golf Course</div>
+                            <div class="gallery-date">Golfing experience</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="excursions">
+                        <img src="../../images/resorts/limuru/Historical & Cultural Sites.jpg" alt="Historical Sites" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Historical & Cultural Sites</div>
+                            <div class="gallery-date">Explore local heritage</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="facilities">
+                        <img src="../../images/resorts/limuru/offers.jpg" alt="Special Offers" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Special Offers</div>
+                            <div class="gallery-date">Check our latest promotions</div>
+                        </div>
+                    </div>
+                    
+                    <div class="gallery-item" data-category="facilities">
+                        <img src="../../images/resorts/limuru/resort1.jpg" alt="Resort Overview" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Resort Overview</div>
+                            <div class="gallery-date">Beautiful resort setting</div>
+                        </div>
+                    </div>
+                    
+                    <!-- Guest Photos (Using some images as placeholders) -->
+                    <div class="gallery-item" data-category="guest">
+                        <img src="../../images/resorts/IMG-20251128-WA0007.jpg" alt="Guest Photo 1" class="gallery-image">
+                        <div class="gallery-overlay">
+                            <div class="gallery-caption">Guest Experience</div>
+                            <div class="gallery-date">Shared by our guests</div>
+                            <div style="font-size: 0.8rem; margin-top: 5px;"><i class="fas fa-user"></i> Guest Photo</div>
+                        </div>
+                    </div>
+                </div>
             </div>
             
             <div class="gallery-actions">
@@ -1027,7 +1233,7 @@
                             <option value="conference">Conference Facilities</option>
                             <option value="facilities">Facilities</option>
                             <option value="views">Scenic Views</option>
-                            <option value="events">Events</option>
+                            <option value="excursions">Excursions</option>
                             <option value="guest">Guest Photos</option>
                         </select>
                     </div>
@@ -1146,7 +1352,7 @@
                 <div class="footer-column">
                     <h3>Contact Info</h3>
                     <div style="color: rgba(255,255,255,0.8);">
-                        <p><i class="fas fa-phone"></i> 0759 423 589</p>
+                        <p><i class="fas fa-phone"></i> 0741 574 828</p>
                         <p><i class="fas fa-envelope"></i> reservations.limuru@resortjumuia.com</p>
                         <p><i class="fas fa-map-marker-alt"></i> Limuru, Kenya</p>
                     </div>
@@ -1154,7 +1360,7 @@
             </div>
             
             <div class="copyright">
-                <p>&copy; 2025 Jumuia Conference & Country Home Limuru. All rights reserved.</p>
+                <p>&copy; 2026 Jumuia Conference & Country Home Limuru. All rights reserved.</p>
                 <p style="margin-top: 10px;">Part of Jumuia Resorts Limited</p>
             </div>
         </div>
@@ -1163,74 +1369,16 @@
     <script>
         // Firebase Collections
         const GALLERY_COLLECTION = 'limuru_gallery';
-        const DEFAULT_IMAGES = [
-            {
-                id: '1',
-                title: 'Beautiful Limuru Highlands View',
-                category: 'views',
-                description: 'Panoramic view of the tea plantations from our resort',
-                imageUrl: 'https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                date: '2024-03-15',
-                type: 'official'
-            },
-            {
-                id: '2',
-                title: 'Executive Suite',
-                category: 'rooms',
-                description: 'Spacious executive suite with tea plantation views',
-                imageUrl: 'https://images.unsplash.com/photo-1611892440504-42a792e24d32?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                date: '2024-03-14',
-                type: 'official'
-            },
-            {
-                id: '3',
-                title: 'Main Conference Hall',
-                category: 'conference',
-                description: 'Our largest conference facility for up to 500 people',
-                imageUrl: 'https://images.unsplash.com/photo-1511578314322-379afb476865?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                date: '2024-03-13',
-                type: 'official'
-            },
-            {
-                id: '4',
-                title: 'Restaurant Dining Area',
-                category: 'facilities',
-                description: '24-hour restaurant with scenic valley views',
-                imageUrl: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                date: '2024-03-12',
-                type: 'official'
-            },
-            {
-                id: '5',
-                title: 'Church Event',
-                category: 'events',
-                description: 'Sunday service at our outdoor chapel',
-                imageUrl: 'https://images.unsplash.com/photo-1544441893-675973e31985?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                date: '2024-03-11',
-                type: 'official'
-            },
-            {
-                id: '6',
-                title: 'Nature Walk Trail',
-                category: 'views',
-                description: 'Guided nature walk through tea plantations',
-                imageUrl: 'https://images.unsplash.com/photo-1551085254-e96b210db58a?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-                date: '2024-03-10',
-                type: 'official'
-            }
-        ];
-
+        
         // Global variables
-        let galleryImages = [];
+        let galleryItems = [];
         let currentCategory = 'all';
         let currentImageIndex = 0;
-        let lastVisibleDoc = null;
-        const imagesPerLoad = 6;
         let isAdmin = false;
 
         // DOM Elements
         const galleryContainer = document.getElementById('galleryContainer');
-        const loadingSpinner = document.getElementById('loadingSpinner');
+        const galleryGrid = document.getElementById('galleryGrid');
         const loadMoreBtn = document.getElementById('loadMoreBtn');
         const uploadSection = document.getElementById('uploadSection');
         const uploadForm = document.getElementById('uploadForm');
@@ -1253,6 +1401,34 @@
         const adminControls = document.getElementById('adminControls');
         const adminToggle = document.getElementById('adminToggle');
 
+        // Initialize gallery items from HTML
+        function initGallery() {
+            const items = galleryGrid.querySelectorAll('.gallery-item');
+            galleryItems = Array.from(items).map((item, index) => {
+                const img = item.querySelector('img');
+                const caption = item.querySelector('.gallery-caption');
+                const date = item.querySelector('.gallery-date');
+                const category = item.getAttribute('data-category');
+                
+                return {
+                    element: item,
+                    imageUrl: img.src,
+                    caption: caption.textContent,
+                    description: date.textContent,
+                    category: category,
+                    index: index
+                };
+            });
+            
+            // Add click event to all gallery items
+            items.forEach((item, index) => {
+                item.addEventListener('click', () => openModal(index));
+            });
+            
+            // Set up category filtering
+            setupCategoryFiltering();
+        }
+
         // Mobile menu toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function() {
             document.getElementById('resortNav').classList.toggle('active');
@@ -1266,19 +1442,30 @@
         });
 
         // Category tabs functionality
-        document.querySelectorAll('.category-tab').forEach(tab => {
-            tab.addEventListener('click', function() {
-                // Remove active class from all tabs
-                document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
-                // Add active class to clicked tab
-                this.classList.add('active');
-                
-                currentCategory = this.getAttribute('data-category');
-                lastVisibleDoc = null;
-                loadMoreBtn.style.display = 'none';
-                loadGallery();
+        function setupCategoryFiltering() {
+            document.querySelectorAll('.category-tab').forEach(tab => {
+                tab.addEventListener('click', function() {
+                    // Remove active class from all tabs
+                    document.querySelectorAll('.category-tab').forEach(t => t.classList.remove('active'));
+                    // Add active class to clicked tab
+                    this.classList.add('active');
+                    
+                    currentCategory = this.getAttribute('data-category');
+                    filterGallery();
+                });
             });
-        });
+        }
+
+        // Filter gallery by category
+        function filterGallery() {
+            galleryItems.forEach(item => {
+                if (currentCategory === 'all' || item.category === currentCategory) {
+                    item.element.style.display = 'block';
+                } else {
+                    item.element.style.display = 'none';
+                }
+            });
+        }
 
         // File upload preview
         fileUploadArea.addEventListener('click', () => {
@@ -1403,10 +1590,9 @@
                     // Hide upload section
                     uploadSection.style.display = 'none';
                     
-                    // Reload gallery if admin
+                    // Load from Firebase if admin
                     if (isAdmin) {
-                        lastVisibleDoc = null;
-                        loadGallery();
+                        loadFromFirebase();
                     }
                     
                 }).catch((error) => {
@@ -1437,137 +1623,43 @@
             uploadSection.scrollIntoView({ behavior: 'smooth' });
         });
 
-        // Load gallery from Firebase
-        async function loadGallery(loadMore = false) {
-            if (!loadMore) {
-                galleryContainer.innerHTML = '<div class="spinner" id="loadingSpinner"></div>';
-                loadingSpinner.style.display = 'block';
-                galleryImages = [];
-            }
-            
+        // Load gallery from Firebase (for dynamic content)
+        async function loadFromFirebase() {
             try {
-                let galleryQuery;
-                const galleryRef = window.firebase.collection(window.firebase.db, GALLERY_COLLECTION);
-                
-                if (currentCategory === 'all') {
-                    galleryQuery = window.firebase.query(
-                        galleryRef,
-                        window.firebase.orderBy('uploadedAt', 'desc')
-                    );
-                } else {
-                    galleryQuery = window.firebase.query(
-                        galleryRef,
-                        window.firebase.orderBy('uploadedAt', 'desc')
-                    );
-                }
+                const galleryQuery = window.firebase.query(
+                    window.firebase.collection(window.firebase.db, GALLERY_COLLECTION),
+                    window.firebase.orderBy('uploadedAt', 'desc')
+                );
                 
                 const querySnapshot = await window.firebase.getDocs(galleryQuery);
                 
-                if (querySnapshot.empty && !loadMore) {
-                    // If no data in Firebase, use default images
-                    galleryImages = DEFAULT_IMAGES;
-                    renderGallery();
-                    checkIfAdmin();
-                    return;
-                }
-                
-                const newImages = [];
-                querySnapshot.forEach((doc) => {
-                    const data = doc.data();
-                    // Only show approved images or images uploaded by admin
-                    if (data.approved !== false || isAdmin) {
-                        newImages.push({
-                            id: doc.id,
-                            ...data
-                        });
-                    }
-                });
-                
-                if (loadMore) {
-                    galleryImages = [...galleryImages, ...newImages];
-                } else {
-                    galleryImages = newImages;
-                }
-                
-                renderGallery();
-                checkIfAdmin();
+                // Note: This would add Firebase images to the gallery
+                // For now, we're using static images
                 
             } catch (error) {
-                console.error('Error loading gallery:', error);
-                // Fallback to default images if Firebase fails
-                if (!loadMore) {
-                    galleryImages = DEFAULT_IMAGES;
-                    renderGallery();
-                }
-            }
-        }
-
-        // Render gallery images
-        function renderGallery() {
-            loadingSpinner.style.display = 'none';
-            
-            // Filter by category
-            let filteredImages = galleryImages;
-            if (currentCategory !== 'all') {
-                filteredImages = galleryImages.filter(img => img.category === currentCategory);
-            }
-            
-            if (!filteredImages.length) {
-                galleryContainer.innerHTML = `
-                    <div style="text-align: center; padding: 40px; color: var(--text-light);">
-                        <i class="fas fa-images" style="font-size: 3rem; margin-bottom: 20px; opacity: 0.5;"></i>
-                        <h3>No photos found</h3>
-                        <p>No photos available for this category yet.</p>
-                        ${isAdmin ? '<button onclick="showUploadSection()" class="btn btn-primary" style="margin-top: 20px;"><i class="fas fa-plus"></i> Add Photos</button>' : ''}
-                    </div>
-                `;
-                loadMoreBtn.style.display = 'none';
-                return;
-            }
-            
-            // Clear container if not loading more
-            if (!lastVisibleDoc) {
-                galleryContainer.innerHTML = '';
-            }
-            
-            // Create gallery items
-            filteredImages.forEach((image, index) => {
-                const galleryItem = document.createElement('div');
-                galleryItem.className = 'gallery-item';
-                galleryItem.setAttribute('data-index', index);
-                galleryItem.setAttribute('data-category', image.category);
-                
-                galleryItem.innerHTML = `
-                    <img src="${image.imageUrl}" alt="${image.title}" class="gallery-image" loading="lazy">
-                    <div class="gallery-overlay">
-                        <div class="gallery-caption">${image.title}</div>
-                        <div class="gallery-date">${formatDate(image.date)}</div>
-                        ${image.type === 'guest' ? '<div style="font-size: 0.8rem; margin-top: 5px;"><i class="fas fa-user"></i> Guest Photo</div>' : ''}
-                    </div>
-                `;
-                
-                galleryItem.addEventListener('click', () => openModal(index, filteredImages));
-                galleryContainer.appendChild(galleryItem);
-            });
-            
-            // Show load more button if there are more images
-            if (filteredImages.length >= imagesPerLoad) {
-                loadMoreBtn.style.display = 'block';
-            } else {
-                loadMoreBtn.style.display = 'none';
+                console.error('Error loading from Firebase:', error);
             }
         }
 
         // Open modal with image
-        function openModal(index, images) {
-            const image = images[index];
-            currentImageIndex = index;
+        function openModal(index) {
+            const filteredItems = galleryItems.filter(item => 
+                currentCategory === 'all' || item.category === currentCategory
+            );
             
-            modalImage.src = image.imageUrl;
-            modalCaption.textContent = image.title;
-            modalDate.textContent = `Uploaded: ${formatDate(image.date)}`;
-            modalDescription.textContent = image.description || '';
-            modalAuthor.textContent = image.guestName ? `By: ${image.guestName}` : '';
+            // Find the item in filtered items
+            const galleryItem = galleryItems[index];
+            const filteredIndex = filteredItems.findIndex(item => item.index === index);
+            
+            if (!galleryItem) return;
+            
+            currentImageIndex = filteredIndex !== -1 ? filteredIndex : 0;
+            
+            modalImage.src = galleryItem.imageUrl;
+            modalCaption.textContent = galleryItem.caption;
+            modalDate.textContent = galleryItem.description;
+            modalDescription.textContent = '';
+            modalAuthor.textContent = '';
             
             galleryModal.style.display = 'flex';
             document.body.style.overflow = 'hidden';
@@ -1580,24 +1672,21 @@
         }
 
         // Navigation in modal
-        function navigateModal(direction, images) {
-            const filteredImages = currentCategory === 'all' 
-                ? galleryImages 
-                : galleryImages.filter(img => img.category === currentCategory);
+        function navigateModal(direction) {
+            const filteredItems = galleryItems.filter(item => 
+                currentCategory === 'all' || item.category === currentCategory
+            );
             
             if (direction === 'prev') {
-                currentImageIndex = currentImageIndex > 0 ? currentImageIndex - 1 : filteredImages.length - 1;
+                currentImageIndex = currentImageIndex > 0 ? currentImageIndex - 1 : filteredItems.length - 1;
             } else {
-                currentImageIndex = currentImageIndex < filteredImages.length - 1 ? currentImageIndex + 1 : 0;
+                currentImageIndex = currentImageIndex < filteredItems.length - 1 ? currentImageIndex + 1 : 0;
             }
             
-            openModal(currentImageIndex, filteredImages);
-        }
-
-        // Format date
-        function formatDate(dateString) {
-            const options = { year: 'numeric', month: 'long', day: 'numeric' };
-            return new Date(dateString).toLocaleDateString('en-US', options);
+            const galleryItem = filteredItems[currentImageIndex];
+            if (galleryItem) {
+                openModal(galleryItem.index);
+            }
         }
 
         // Check if user is admin (simplified - in production, use proper auth)
@@ -1615,31 +1704,15 @@
             }
         }
 
-        // Show upload section
-        function showUploadSection() {
-            uploadSection.style.display = 'block';
-            uploadSection.scrollIntoView({ behavior: 'smooth' });
-        }
-
-        // Event Listeners
-        loadMoreBtn.addEventListener('click', () => {
-            loadGallery(true);
-        });
-
+        // Event Listeners for modal
         closeModalBtn.addEventListener('click', closeModal);
 
         prevBtn.addEventListener('click', () => {
-            const filteredImages = currentCategory === 'all' 
-                ? galleryImages 
-                : galleryImages.filter(img => img.category === currentCategory);
-            navigateModal('prev', filteredImages);
+            navigateModal('prev');
         });
 
         nextBtn.addEventListener('click', () => {
-            const filteredImages = currentCategory === 'all' 
-                ? galleryImages 
-                : galleryImages.filter(img => img.category === currentCategory);
-            navigateModal('next', filteredImages);
+            navigateModal('next');
         });
 
         galleryModal.addEventListener('click', (e) => {
@@ -1664,11 +1737,12 @@
 
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
-            loadGallery();
+            initGallery();
+            checkIfAdmin();
+            
+            // Load from Firebase if needed
+            // loadFromFirebase();
         });
-
-        // Make functions available globally for inline event handlers
-        window.showUploadSection = showUploadSection;
     </script>
     <script src="../js/main.js"></script>
 </body>

@@ -994,7 +994,8 @@
                                 <option value="standard_double">Standard Double/Twin</option>
                                 <option value="junior_suite_single">Junior Suite Single</option>
                                 <option value="junior_suite_double">Junior Suite Double</option>
-                                <option value="hostel">Hostel Bed</option>
+                                <option value="hostel_bed">Hostel Bed (4-Sharing)</option>
+                                <option value="student_hostel">Student Hostel (Monthly)</option>
                             </select>
                         </div>
                         <div class="form-group">
@@ -1011,14 +1012,33 @@
                     
                     <!-- Conference Package Options -->
                     <div id="conferenceOptions" class="form-group full-width" style="display: none;">
-                        <label for="conferencePackage" class="required">Conference Package Type</label>
+                        <label for="conferencePackage" class="required">Conference Hall Selection</label>
                         <select id="conferencePackage" name="conferencePackage" class="form-control">
-                            <option value="">Select Conference Package</option>
-                            <option value="jumuia_corporate">Jumuia Corporate (KSh 7,900/USD 86)</option>
-                            <option value="jumuia_executive">Jumuia Executive (KSh 8,515/USD 108)</option>
-                            <option value="full_day">Full Day Conference (KSh 2,500/USD 33)</option>
-                            <option value="half_day">Half Day Conference (KSh 2,000/USD 27)</option>
+                            <option value="">Select Conference Hall</option>
+                            <option value="lake_victoria_hall">Lake Victoria Hall (50-250 pax) - KES 70,000 per day</option>
+                            <option value="lake_natron_room">Lake Natron Room (20-50 pax) - KES 35,000 per day</option>
+                            <option value="lake_kyoga_room">Lake Kyoga Room (20-50 pax) - KES 35,000 per day</option>
+                            <option value="lake_nakuru_room">Lake Nakuru Room (10-25 pax) - KES 20,000 per day</option>
+                            <option value="syndicate_room">Syndicate Room (10-25 pax) - KES 10,000 per day</option>
+                            <option value="business_center">Business Center (5-10 pax) - KES 5,000 per day</option>
                         </select>
+                        
+                        <div style="margin-top: 15px; padding: 15px; background-color: var(--light-green); border-radius: var(--radius);">
+                            <h4 style="color: var(--primary-green); margin-bottom: 10px; font-size: 1rem;">
+                                <i class="fas fa-info-circle"></i> Conference Package Inclusions:
+                            </h4>
+                            <ul style="list-style: none; padding-left: 0; margin: 0; font-size: 0.9rem;">
+                                <li><i class="fas fa-check" style="color: var(--primary-orange); margin-right: 8px;"></i> Full day conference room hire (8:00 AM - 5:00 PM)</li>
+                                <li><i class="fas fa-check" style="color: var(--primary-orange); margin-right: 8px;"></i> Basic AV equipment (projector, screen, whiteboard)</li>
+                                <li><i class="fas fa-check" style="color: var(--primary-orange); margin-right: 8px;"></i> Conference materials (notepads, pens)</li>
+                                <li><i class="fas fa-check" style="color: var(--primary-orange); margin-right: 8px;"></i> Mineral water and mints</li>
+                                <li><i class="fas fa-check" style="color: var(--primary-orange); margin-right: 8px;"></i> High-speed Wi-Fi access</li>
+                                <li><i class="fas fa-check" style="color: var(--primary-orange); margin-right: 8px;"></i> Air conditioning</li>
+                            </ul>
+                            <p style="margin-top: 10px; font-size: 0.85rem; color: var(--text-light);">
+                                <strong>Additional services available at extra cost:</strong> Catering packages, specialized AV equipment, flip charts, custom furniture setup, technical support staff.
+                            </p>
+                        </div>
                     </div>
                     
                     <!-- Special Requests -->
@@ -1097,8 +1117,12 @@
                     <div class="spinner"></div>
                     <p>Processing your booking...</p>
                 </div>
+                
+                <!-- Error/Success Message Container -->
+                <div id="messageContainer"></div>
             </form>
         </div>
+
 
         <!-- Booking Summary -->
         <div class="booking-summary">
@@ -1242,7 +1266,7 @@
             </div>
             
             <div class="copyright">
-                <p>&copy; 2025 Jumuia Hotel Kisumu. All rights reserved.</p>
+                <p>&copy; 2026 Jumuia Hotel Kisumu. All rights reserved.</p>
                 <p style="margin-top: 10px;">Part of Jumuia Resorts Limited</p>
             </div>
         </div>
@@ -1250,10 +1274,11 @@
 
     <!-- EmailJS SDK -->
     <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-    
+    <script src="../js/main.js"></script>
+
     <!-- Main Script -->
     <script>
-        // Initialize EmailJS
+        // Initialize EmailJS with correct Service ID
         emailjs.init("QABuHzAPilhRW0PTT");
 
         // Mobile menu toggle
@@ -1268,7 +1293,7 @@
             });
         });
 
-        // Firebase Configuration
+        // Firebase Configuration - Fixed version
         const firebaseConfig = {
             apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
             authDomain: "jumuia-resort-limited.firebaseapp.com",
@@ -1279,27 +1304,42 @@
             measurementId: "G-Q7BWHJ9C3M"
         };
 
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // Initialize Firebase with error handling
+        let db;
+        try {
+            // Check if Firebase is already initialized
+            if (!firebase.apps.length) {
+                firebase.initializeApp(firebaseConfig);
+            }
+            db = firebase.firestore();
+            console.log("Firebase initialized successfully");
+        } catch (error) {
+            console.error("Firebase initialization error:", error);
+            showMessage("error", "Database connection error. Please try again or contact us directly.");
+        }
 
-        // Payment method selection
+        // FIXED: Payment method selection
         document.querySelectorAll('.payment-method').forEach(method => {
             method.addEventListener('click', function() {
+                // Remove active class from all methods
                 document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+                // Add active class to clicked method
                 this.classList.add('active');
                 
-                const paymentMethod = this.dataset.method;
+                // Get payment method from data attribute
+                const paymentMethod = this.getAttribute('data-method');
                 document.getElementById('paymentMethod').value = paymentMethod;
                 
                 // Show/hide M-Pesa instructions
                 const mpesaInstructions = document.getElementById('mpesaInstructions');
+                const mpesaNumberInput = document.getElementById('mpesaNumber');
+                
                 if (paymentMethod === 'mpesa') {
                     mpesaInstructions.classList.add('active');
-                    document.getElementById('mpesaNumber').required = true;
+                    mpesaNumberInput.required = true;
                 } else {
                     mpesaInstructions.classList.remove('active');
-                    document.getElementById('mpesaNumber').required = false;
+                    mpesaNumberInput.required = false;
                 }
             });
         });
@@ -1322,13 +1362,21 @@
         // Show/hide conference options
         document.getElementById('packageType').addEventListener('change', function() {
             const conferenceOptions = document.getElementById('conferenceOptions');
+            const conferencePackageSelect = document.getElementById('conferencePackage');
+            
             if (this.value === 'conference') {
                 conferenceOptions.style.display = 'block';
-                conferenceOptions.querySelector('select').required = true;
+                conferencePackageSelect.required = true;
             } else {
                 conferenceOptions.style.display = 'none';
-                conferenceOptions.querySelector('select').required = false;
+                conferencePackageSelect.required = false;
+                conferencePackageSelect.value = '';
             }
+            updateBookingSummary();
+        });
+
+        // Also listen to conference package changes for summary updates
+        document.getElementById('conferencePackage')?.addEventListener('change', function() {
             updateBookingSummary();
         });
 
@@ -1336,35 +1384,43 @@
         function updateBookingSummary() {
             const checkIn = new Date(checkInInput.value);
             const checkOut = new Date(checkOutInput.value);
-            const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
             
+            // Ensure valid dates
+            if (isNaN(checkIn) || isNaN(checkOut)) return;
+            
+            const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
             const adults = parseInt(document.getElementById('adults').value) || 0;
             const children = parseInt(document.getElementById('children').value) || 0;
             const roomType = document.getElementById('roomType').value;
             const packageType = document.getElementById('packageType').value;
+            const conferencePackage = document.getElementById('conferencePackage').value;
             
             // Update summary display
             document.getElementById('summaryCheckIn').textContent = formatDate(checkInInput.value);
             document.getElementById('summaryCheckOut').textContent = formatDate(checkOutInput.value);
-            document.getElementById('summaryNights').textContent = nights;
+            document.getElementById('summaryNights').textContent = nights > 0 ? nights : 0;
             document.getElementById('summaryGuests').textContent = `${adults} Adult${adults !== 1 ? 's' : ''}${children > 0 ? `, ${children} Child${children !== 1 ? 'ren' : ''}` : ''}`;
             
             // Get rate based on selection
-            const rate = calculateRate(roomType, packageType, nights, adults, children);
+            const rate = calculateRate(roomType, packageType, nights, adults, children, conferencePackage);
             updateTotalAmount(rate);
         }
         
         function formatDate(dateString) {
-            const date = new Date(dateString);
-            return date.toLocaleDateString('en-KE', {
-                day: 'numeric',
-                month: 'short',
-                year: 'numeric'
-            });
+            try {
+                const date = new Date(dateString);
+                return date.toLocaleDateString('en-KE', {
+                    day: 'numeric',
+                    month: 'short',
+                    year: 'numeric'
+                });
+            } catch (e) {
+                return '-';
+            }
         }
         
         // Calculate rates based on KISUMU pricing
-        function calculateRate(roomType, packageType, nights, adults, children) {
+        function calculateRate(roomType, packageType, nights, adults, children, conferencePackage = '') {
             // Kisumu rates from your data
             const rates = {
                 'standard_single': {
@@ -1391,41 +1447,62 @@
                     'fb': 11000,
                     'conference': 9000
                 },
-                'hostel': {
+                'hostel_bed': {
                     'bnb': 2000,
                     'hb': 3000,
                     'fb': 2500,
                     'conference': 2000
+                },
+                'student_hostel': {
+                    'bnb': 6500, // per month
+                    'hb': 0,
+                    'fb': 0,
+                    'conference': 0
                 }
             };
             
-            let baseRate = rates[roomType]?.[packageType] || 0;
+            // Conference hall rates
+            const conferenceHallRates = {
+                'lake_victoria_hall': 70000,
+                'lake_natron_room': 35000,
+                'lake_kyoga_room': 35000,
+                'lake_nakuru_room': 20000,
+                'syndicate_room': 10000,
+                'business_center': 5000
+            };
+            
+            let baseRate;
+            
+            // For conference packages, check if a conference hall is selected
+            if (packageType === 'conference' && conferencePackage) {
+                baseRate = conferenceHallRates[conferencePackage] || rates[roomType]?.[packageType] || 0;
+            } else {
+                baseRate = rates[roomType]?.[packageType] || 0;
+            }
             
             // Calculate total for adults
-            let total = baseRate * adults * nights;
+            let total = baseRate * adults * (nights || 1);
             
-            // Child policy calculations:
-            // Children below 3 years: Free (sharing)
-            // Children 3-12 years sharing with 1-2 adults: 50% of room rate
-            // Children 3-12 years in own room: 75% of room rate
+            // Child policy calculations
             if (children > 0) {
                 // For simplicity, assuming children are sharing (most common)
                 // Check if children exceed max of 2
                 const effectiveChildren = Math.min(children, 2);
-                const childRate = baseRate * 0.5 * effectiveChildren * nights;
+                const childRate = baseRate * 0.5 * effectiveChildren * (nights || 1);
                 total += childRate;
             }
             
             // Add extra person charges if more than room capacity
-            if (adults > 2 && roomType !== 'hostel') {
+            // Note: Conference halls have their own capacity limits, so we only apply this to regular rooms
+            if (adults > 2 && roomType !== 'hostel_bed' && roomType !== 'student_hostel' && packageType !== 'conference') {
                 const extraAdults = adults - 2;
-                total += extraAdults * 2000 * nights; // KSh 2,000 per extra person
+                total += extraAdults * 2000 * (nights || 1); // KSh 2,000 per extra person
             }
             
             // Add food supplement if more than room capacity
             if (adults > 2 && (packageType === 'hb' || packageType === 'fb')) {
                 const extraAdults = adults - 2;
-                total += extraAdults * 1000 * nights; // KSh 1,000 food supplement
+                total += extraAdults * 1000 * (nights || 1); // KSh 1,000 food supplement
             }
             
             // Add taxes (16% VAT)
@@ -1437,7 +1514,7 @@
                 total: total,
                 tax: tax,
                 grandTotal: grandTotal,
-                nights: nights,
+                nights: nights || 1,
                 adults: adults,
                 children: children
             };
@@ -1459,7 +1536,8 @@
                 'standard_double': 'Standard Double/Twin',
                 'junior_suite_single': 'Junior Suite Single',
                 'junior_suite_double': 'Junior Suite Double',
-                'hostel': 'Hostel Bed'
+                'hostel_bed': 'Hostel Bed (4-Sharing)',
+                'student_hostel': 'Student Hostel (Monthly)'
             };
             
             const packageText = {
@@ -1474,16 +1552,23 @@
         }
         
         // Listen for changes
-        ['checkIn', 'checkOut', 'adults', 'children', 'roomType', 'packageType'].forEach(id => {
-            document.getElementById(id).addEventListener('change', updateBookingSummary);
+        ['checkIn', 'checkOut', 'adults', 'children', 'roomType', 'packageType', 'conferencePackage'].forEach(id => {
+            const element = document.getElementById(id);
+            if (element) {
+                element.addEventListener('change', updateBookingSummary);
+            }
         });
         
         // Initial calculation
         updateBookingSummary();
 
-        // Booking Form Submission
+        // Booking Form Submission - FIXED VERSION
         document.getElementById('bookingForm').addEventListener('submit', async function(e) {
             e.preventDefault();
+            e.stopPropagation();
+            
+            // Clear any existing messages
+            clearMessages();
             
             // Validate form
             if (!validateForm()) {
@@ -1496,75 +1581,94 @@
             
             try {
                 // Collect form data
-                const formData = new FormData(this);
-                const bookingData = {
+                const formData = {
                     // Guest Information
-                    firstName: formData.get('firstName'),
-                    lastName: formData.get('lastName'),
-                    email: formData.get('email'),
-                    phone: formData.get('phone'),
-                    nationality: formData.get('nationality'),
-                    idNumber: formData.get('idNumber'),
+                    firstName: document.getElementById('firstName').value.trim(),
+                    lastName: document.getElementById('lastName').value.trim(),
+                    email: document.getElementById('email').value.trim(),
+                    phone: document.getElementById('phone').value.trim(),
+                    nationality: document.getElementById('nationality').value,
+                    idNumber: document.getElementById('idNumber').value.trim(),
                     
                     // Stay Information
                     resort: 'kisumu',
-                    checkIn: formData.get('checkIn'),
-                    checkOut: formData.get('checkOut'),
-                    adults: parseInt(formData.get('adults')),
-                    children: parseInt(formData.get('children')) || 0,
-                    nights: calculateNights(formData.get('checkIn'), formData.get('checkOut')),
+                    checkIn: document.getElementById('checkIn').value,
+                    checkOut: document.getElementById('checkOut').value,
+                    adults: parseInt(document.getElementById('adults').value),
+                    children: parseInt(document.getElementById('children').value) || 0,
                     
                     // Room Information
-                    roomType: formData.get('roomType'),
-                    roomTypeDisplay: getRoomTypeDisplay(formData.get('roomType')),
-                    packageType: formData.get('packageType'),
-                    packageTypeDisplay: getPackageDisplay(formData.get('packageType')),
-                    specialRequests: formData.get('specialRequests'),
+                    roomType: document.getElementById('roomType').value,
+                    packageType: document.getElementById('packageType').value,
+                    specialRequests: document.getElementById('specialRequests').value.trim(),
                     
                     // Payment Information
-                    paymentMethod: formData.get('paymentMethod'),
-                    paymentMethodDisplay: getPaymentMethodDisplay(formData.get('paymentMethod')),
-                    mpesaNumber: formData.get('mpesaNumber'),
+                    paymentMethod: document.getElementById('paymentMethod').value,
+                    mpesaNumber: document.getElementById('mpesaNumber').value.trim(),
                     
                     // Conference Package
-                    conferencePackage: formData.get('conferencePackage'),
-                    conferencePackageDisplay: getConferencePackageDisplay(formData.get('conferencePackage')),
+                    conferencePackage: document.getElementById('conferencePackage').value || '',
                     
-                    // System Information
-                    bookingId: generateBookingId(),
-                    status: 'pending',
-                    paymentStatus: formData.get('paymentMethod') === 'cash' ? 'pending' : 'awaiting_payment',
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    source: 'website'
+                    // Terms
+                    termsAccepted: document.getElementById('terms').checked,
+                    newsletter: document.getElementById('newsletter').checked
                 };
+                
+                // Calculate nights
+                formData.nights = calculateNights(formData.checkIn, formData.checkOut);
+                
+                // Get display names
+                formData.roomTypeDisplay = getRoomTypeDisplay(formData.roomType);
+                formData.packageTypeDisplay = getPackageDisplay(formData.packageType);
+                formData.paymentMethodDisplay = getPaymentMethodDisplay(formData.paymentMethod);
+                formData.conferencePackageDisplay = getConferencePackageDisplay(formData.conferencePackage);
+                
+                // Generate booking ID
+                formData.bookingId = generateBookingId();
+                formData.status = 'pending';
+                formData.paymentStatus = formData.paymentMethod === 'cash' ? 'pending' : 'awaiting_payment';
+                formData.createdAt = new Date().toISOString();
+                formData.updatedAt = new Date().toISOString();
+                formData.source = 'website';
                 
                 // Calculate total amount
                 const rate = calculateRate(
-                    bookingData.roomType,
-                    bookingData.packageType,
-                    bookingData.nights,
-                    bookingData.adults,
-                    bookingData.children
+                    formData.roomType,
+                    formData.packageType,
+                    formData.nights,
+                    formData.adults,
+                    formData.children,
+                    formData.conferencePackage
                 );
                 
-                bookingData.totalAmount = rate.grandTotal;
-                bookingData.breakdown = {
+                formData.totalAmount = rate.grandTotal;
+                formData.breakdown = {
                     roomRate: rate.total,
                     tax: rate.tax,
                     subtotal: rate.total,
                     childrenCharges: rate.children > 0 ? rate.baseRate * 0.5 * Math.min(rate.children, 2) * rate.nights : 0
                 };
                 
+                console.log('Booking data to save:', formData);
+                
                 // Save to Firebase
-                const bookingRef = await db.collection('bookings').add(bookingData);
+                if (!db) {
+                    throw new Error('Database not initialized');
+                }
+                
+                const bookingRef = await db.collection('bookings').add(formData);
                 console.log('Booking saved with ID:', bookingRef.id);
                 
                 // Send email notifications
-                await sendEmailNotifications(bookingData);
+                try {
+                    await sendEmailNotifications(formData);
+                } catch (emailError) {
+                    console.warn('Email sending failed:', emailError);
+                    // Don't fail the booking if emails fail
+                }
                 
                 // Show success modal
-                document.getElementById('modalBookingId').textContent = bookingData.bookingId;
+                document.getElementById('modalBookingId').textContent = formData.bookingId;
                 document.getElementById('successModal').classList.add('active');
                 
                 // Reset form after successful submission
@@ -1576,13 +1680,20 @@
                 
                 // Reset package type
                 document.getElementById('conferenceOptions').style.display = 'none';
-                document.getElementById('conferenceOptions').querySelector('select').required = false;
+                document.getElementById('conferencePackage').required = false;
+                document.getElementById('conferencePackage').value = '';
+                
+                // Reset payment method
+                document.querySelectorAll('.payment-method').forEach(m => m.classList.remove('active'));
+                document.querySelector('.payment-method.mpesa').classList.add('active');
+                document.getElementById('paymentMethod').value = 'mpesa';
+                document.getElementById('mpesaInstructions').classList.add('active');
                 
                 updateBookingSummary();
                 
             } catch (error) {
                 console.error('Booking error:', error);
-                showError('There was an error processing your booking. Please try again or contact us directly at +254 713 576969.');
+                showMessage('error', `There was an error processing your booking: ${error.message}. Please try again or contact us directly at +254 713 576969.`);
             } finally {
                 // Hide loading state
                 document.getElementById('loading').classList.remove('active');
@@ -1591,38 +1702,87 @@
         });
         
         function validateForm() {
-            const phone = document.getElementById('phone').value;
-            const email = document.getElementById('email').value;
+            clearMessages();
+            
+            const phone = document.getElementById('phone').value.trim();
+            const email = document.getElementById('email').value.trim();
             const checkIn = document.getElementById('checkIn').value;
             const checkOut = document.getElementById('checkOut').value;
+            const firstName = document.getElementById('firstName').value.trim();
+            const lastName = document.getElementById('lastName').value.trim();
+            const roomType = document.getElementById('roomType').value;
+            const packageType = document.getElementById('packageType').value;
+            const paymentMethod = document.getElementById('paymentMethod').value;
+            const terms = document.getElementById('terms').checked;
+            const conferencePackage = document.getElementById('conferencePackage').value;
+            
+            // Basic validation
+            if (!firstName) {
+                showMessage('error', 'Please enter your first name');
+                return false;
+            }
+            
+            if (!lastName) {
+                showMessage('error', 'Please enter your last name');
+                return false;
+            }
             
             // Phone validation
-            if (!/^[0-9]{10}$/.test(phone.replace(/\s+/g, ''))) {
-                showError('Please enter a valid 10-digit Kenyan phone number (e.g., 0712345678)');
+            const phoneRegex = /^[0-9]{10}$/;
+            if (!phoneRegex.test(phone.replace(/\s+/g, ''))) {
+                showMessage('error', 'Please enter a valid 10-digit Kenyan phone number (e.g., 0712345678)');
                 return false;
             }
             
             // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(email)) {
-                showError('Please enter a valid email address');
+                showMessage('error', 'Please enter a valid email address');
                 return false;
             }
             
             // Date validation
+            if (!checkIn || !checkOut) {
+                showMessage('error', 'Please select both check-in and check-out dates');
+                return false;
+            }
+            
             if (new Date(checkOut) <= new Date(checkIn)) {
-                showError('Check-out date must be after check-in date');
+                showMessage('error', 'Check-out date must be after check-in date');
+                return false;
+            }
+            
+            // Room type validation
+            if (!roomType) {
+                showMessage('error', 'Please select a room type');
+                return false;
+            }
+            
+            // Package type validation
+            if (!packageType) {
+                showMessage('error', 'Please select a package type');
+                return false;
+            }
+            
+            // Conference package validation if conference is selected
+            if (packageType === 'conference' && !conferencePackage) {
+                showMessage('error', 'Please select a conference hall');
                 return false;
             }
             
             // M-Pesa number validation if M-Pesa is selected
-            const paymentMethod = document.getElementById('paymentMethod').value;
             if (paymentMethod === 'mpesa') {
-                const mpesaNumber = document.getElementById('mpesaNumber').value;
-                if (!mpesaNumber || !/^[0-9]{10}$/.test(mpesaNumber.replace(/\s+/g, ''))) {
-                    showError('Please enter a valid 10-digit M-Pesa number');
+                const mpesaNumber = document.getElementById('mpesaNumber').value.trim();
+                if (!mpesaNumber || !phoneRegex.test(mpesaNumber.replace(/\s+/g, ''))) {
+                    showMessage('error', 'Please enter a valid 10-digit M-Pesa number');
                     return false;
                 }
+            }
+            
+            // Terms validation
+            if (!terms) {
+                showMessage('error', 'You must agree to the Terms & Conditions');
+                return false;
             }
             
             return true;
@@ -1646,7 +1806,8 @@
                 'standard_double': 'Standard Double/Twin Room',
                 'junior_suite_single': 'Junior Suite Single',
                 'junior_suite_double': 'Junior Suite Double',
-                'hostel': 'Hostel Bed'
+                'hostel_bed': 'Hostel Bed (4-Sharing)',
+                'student_hostel': 'Student Hostel (Monthly)'
             };
             return types[roomType] || roomType;
         }
@@ -1663,10 +1824,12 @@
         
         function getConferencePackageDisplay(conferencePackage) {
             const packages = {
-                'jumuia_corporate': 'Jumuia Corporate (KSh 7,900/USD 86)',
-                'jumuia_executive': 'Jumuia Executive (KSh 8,515/USD 108)',
-                'full_day': 'Full Day Conference (KSh 2,500/USD 33)',
-                'half_day': 'Half Day Conference (KSh 2,000/USD 27)'
+                'lake_victoria_hall': 'Lake Victoria Hall (50-250 pax) - KES 70,000 per day',
+                'lake_natron_room': 'Lake Natron Room (20-50 pax) - KES 35,000 per day',
+                'lake_kyoga_room': 'Lake Kyoga Room (20-50 pax) - KES 35,000 per day',
+                'lake_nakuru_room': 'Lake Nakuru Room (10-25 pax) - KES 20,000 per day',
+                'syndicate_room': 'Syndicate Room (10-25 pax) - KES 10,000 per day',
+                'business_center': 'Business Center (5-10 pax) - KES 5,000 per day'
             };
             return packages[conferencePackage] || conferencePackage;
         }
@@ -1688,7 +1851,7 @@
                 const resortName = 'Jumuia Hotel Kisumu';
                 
                 // Send to resort
-                await emailjs.send('service_9yusqtl', 'booking_notification_resort', {
+                const resortTemplateParams = {
                     to_email: resortEmail,
                     booking_id: bookingData.bookingId,
                     guest_name: `${bookingData.firstName} ${bookingData.lastName}`,
@@ -1702,16 +1865,18 @@
                     children: bookingData.children || 0,
                     room_type: bookingData.roomTypeDisplay,
                     package_type: bookingData.packageTypeDisplay,
+                    conference_package: bookingData.conferencePackageDisplay || 'Not selected',
                     total_amount: `KSh ${bookingData.totalAmount.toLocaleString()}`,
                     payment_method: bookingData.paymentMethodDisplay,
                     special_requests: bookingData.specialRequests || 'None',
                     booking_date: new Date().toLocaleDateString('en-KE')
-                });
+                };
                 
-                console.log('Resort email sent to:', resortEmail);
+                await emailjs.send('service_9yusqtl', 'template_booking_notification', resortTemplateParams);
+                console.log('Resort email sent');
                 
                 // Send to guest
-                await emailjs.send('service_9yusqtl', 'booking_confirmation_guest', {
+                const guestTemplateParams = {
                     to_email: bookingData.email,
                     booking_id: bookingData.bookingId,
                     guest_name: `${bookingData.firstName} ${bookingData.lastName}`,
@@ -1723,80 +1888,48 @@
                     nights: bookingData.nights,
                     room_type: bookingData.roomTypeDisplay,
                     package_type: bookingData.packageTypeDisplay,
+                    conference_package: bookingData.conferencePackageDisplay || '',
                     total_amount: `KSh ${bookingData.totalAmount.toLocaleString()}`,
                     payment_status: bookingData.paymentMethod === 'cash' ? 'Pay on Arrival' : 'Awaiting Payment',
                     booking_date: new Date().toLocaleDateString('en-KE'),
-                    special_requests: bookingData.specialRequests || 'None',
-                    child_policy: 'Children below 3 years: Free sharing | 3-12 years: 50% sharing, 75% own room',
-                    pool_rates: 'Hotel guests: Free | External: Adults KSh 500, Children KSh 300',
-                    extra_charges: 'Extra person: KSh 2,000 | Food supplement: KSh 1,000'
-                });
+                    special_requests: bookingData.specialRequests || 'None'
+                };
                 
-                console.log('Guest email sent to:', bookingData.email);
-                
-                // Send to admin
-                await emailjs.send('service_9yusqtl', 'booking_notification_admin', {
-                    to_email: 'admin@resortjumuia.com',
-                    booking_id: bookingData.bookingId,
-                    guest_name: `${bookingData.firstName} ${bookingData.lastName}`,
-                    resort_name: resortName,
-                    check_in: formatDate(bookingData.checkIn),
-                    check_out: formatDate(bookingData.checkOut),
-                    total_amount: `KSh ${bookingData.totalAmount.toLocaleString()}`,
-                    payment_method: bookingData.paymentMethodDisplay
-                });
-                
-                console.log('Admin email sent');
+                await emailjs.send('service_9yusqtl', 'template_booking_confirmation', guestTemplateParams);
+                console.log('Guest email sent');
                 
             } catch (error) {
                 console.error('Email sending failed:', error);
-                // Don't fail the booking if emails fail
-                showSuccess('Booking was saved but email notifications failed. Please check your email for confirmation.');
+                throw error;
             }
         }
         
-        function showError(message) {
-            // Remove any existing error messages
-            document.querySelectorAll('.error-message').forEach(el => el.remove());
+        function showMessage(type, message) {
+            clearMessages();
             
-            const errorDiv = document.createElement('div');
-            errorDiv.className = 'error-message';
-            errorDiv.innerHTML = `
-                <i class="fas fa-exclamation-circle"></i>
+            const messageContainer = document.getElementById('messageContainer');
+            const messageDiv = document.createElement('div');
+            messageDiv.className = type === 'error' ? 'error-message' : 'success-message';
+            
+            messageDiv.innerHTML = `
+                <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'check-circle'}"></i>
                 <span>${message}</span>
                 <button onclick="this.parentElement.remove()">&times;</button>
             `;
             
-            document.querySelector('.booking-form').prepend(errorDiv);
+            messageContainer.appendChild(messageDiv);
             
-            // Auto remove after 5 seconds
+            // Auto remove after 10 seconds
             setTimeout(() => {
-                if (errorDiv.parentElement) {
-                    errorDiv.remove();
+                if (messageDiv.parentElement) {
+                    messageDiv.remove();
                 }
-            }, 5000);
+            }, 10000);
         }
         
-        function showSuccess(message) {
-            // Remove any existing success messages
-            document.querySelectorAll('.success-message').forEach(el => el.remove());
-            
-            const successDiv = document.createElement('div');
-            successDiv.className = 'success-message';
-            successDiv.innerHTML = `
-                <i class="fas fa-check-circle"></i>
-                <span>${message}</span>
-                <button onclick="this.parentElement.remove()">&times;</button>
-            `;
-            
-            document.querySelector('.booking-form').prepend(successDiv);
-            
-            // Auto remove after 5 seconds
-            setTimeout(() => {
-                if (successDiv.parentElement) {
-                    successDiv.remove();
-                }
-            }, 5000);
+        function clearMessages() {
+            const messageContainer = document.getElementById('messageContainer');
+            messageContainer.innerHTML = '';
         }
         
         function closeModal() {
@@ -1805,7 +1938,7 @@
         
         function printBooking() {
             const bookingId = document.getElementById('modalBookingId').textContent;
-            const guestName = document.getElementById('firstName').value + ' ' + document.getElementById('lastName').value;
+            const guestName = `${document.getElementById('firstName').value || ''} ${document.getElementById('lastName').value || ''}`.trim();
             const checkIn = document.getElementById('summaryCheckIn').textContent;
             const checkOut = document.getElementById('summaryCheckOut').textContent;
             const totalAmount = document.getElementById('totalAmount').textContent;
@@ -1823,7 +1956,10 @@
                         .footer { margin-top: 30px; font-size: 12px; color: #666; text-align: center; }
                         .highlight { background-color: #e9f5e5; padding: 10px; border-radius: 5px; }
                         .note { background-color: #e6f7ff; padding: 10px; border-radius: 5px; margin: 10px 0; border-left: 3px solid #1a5276; }
-                        @media print { body { font-size: 12pt; } }
+                        @media print { 
+                            body { font-size: 12pt; margin: 0; padding: 10px; }
+                            .no-print { display: none; }
+                        }
                     </style>
                 </head>
                 <body>
@@ -1870,6 +2006,11 @@
                         <p>Contact: +254 713 576969 / +254 115 994486</p>
                         <p>reservations.kisumu@resortjumuia.com | www.resortjumuia.com</p>
                     </div>
+                    <div class="no-print" style="margin-top: 20px; text-align: center;">
+                        <button onclick="window.close()" style="padding: 10px 20px; background: #22440f; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                            Close Window
+                        </button>
+                    </div>
                 </body>
                 </html>
             `;
@@ -1877,13 +2018,29 @@
             const printWindow = window.open('', '_blank');
             printWindow.document.write(printContent);
             printWindow.document.close();
-            printWindow.print();
+            printWindow.focus();
+            
+            // Wait a moment before printing to ensure content is loaded
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
         }
         
         // Make functions available globally for onclick handlers
         window.closeModal = closeModal;
         window.printBooking = printBooking;
+        
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('Booking page loaded');
+            // Test Firebase connection
+            if (db) {
+                console.log('Firebase Firestore is ready');
+            } else {
+                console.error('Firebase Firestore not initialized');
+                showMessage('error', 'Database connection issue. Some features may not work.');
+            }
+        });
     </script>
-    <script src="../js/main.js"></script>
 </body>
 </html>
