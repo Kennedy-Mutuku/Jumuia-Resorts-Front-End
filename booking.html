@@ -327,58 +327,182 @@
 
         /* ===== HERO SECTION ===== */
         .booking-hero {
-            background: linear-gradient(rgba(34, 68, 15, 0.9), rgba(34, 68, 15, 0.9)), 
-                        url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            /* Background with improved gradient */
+            background:linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('/images/resorts/kanamai/Double\ Room.jpg');
             background-size: cover;
             background-position: center;
-            background-attachment: fixed;
+            background-repeat: no-repeat;
             color: var(--primary-white);
             padding: 180px 0 100px;
-            margin-top: 90px;
+            margin-top:10px;
             text-align: center;
             position: relative;
             overflow: hidden;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
         }
 
+        /* Fade-out gradient at bottom */
         .booking-hero::before {
             content: '';
             position: absolute;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 100px;
-            background: linear-gradient(to bottom, transparent, var(--gray-bg));
+            height: 150px;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(34, 68, 15, 0.3) 50%,
+                var(--gray-bg) 100%
+            );
+            z-index: 1;
         }
 
+        /* Container for content */
+        .booking-hero .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Main heading */
         .booking-hero h1 {
-            font-size: 3.5rem;
+            font-size: clamp(2.5rem, 5vw, 3.5rem); /* Responsive font size */
             color: var(--primary-white);
-            margin-bottom: var(--space-lg);
-            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-            animation: fadeInUp 0.8s ease;
+            margin-bottom: 1.5rem;
+            text-shadow: 
+                0 2px 15px rgba(0, 0, 0, 0.7),
+                0 4px 30px rgba(0, 0, 0, 0.4);
+            animation: fadeInUp 0.8s ease 0.1s both;
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: -0.5px;
         }
 
+        /* Paragraph text */
         .booking-hero p {
-            font-size: 1.3rem;
-            opacity: 0.95;
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.95);
             max-width: 800px;
-            margin: 0 auto var(--space-xl);
+            margin: 0 auto 2.5rem;
             line-height: 1.8;
-            animation: fadeInUp 1s ease;
+            animation: fadeInUp 1s ease 0.3s both;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+            font-weight: 400;
         }
 
+        /* Button styling */
         .booking-hero .btn {
-            animation: fadeInUp 1.2s ease;
+            animation: fadeInUp 1.2s ease 0.5s both;
+            padding: 16px 45px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: var(--radius);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 20px rgba(243, 164, 53, 0.3),
+                0 8px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+            border: 2px solid transparent;
         }
 
+        /* Button hover effects */
+        .booking-hero .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 30px rgba(243, 164, 53, 0.4),
+                0 12px 40px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Background overlay for better text contrast */
+        .booking-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at center,
+                transparent 0%,
+                rgba(34, 68, 15, 0.4) 100%
+            );
+            z-index: 1;
+        }
+
+        /* Fade-in animation */
         @keyframes fadeInUp {
             from {
                 opacity: 0;
-                transform: translateY(30px);
+                transform: translateY(40px);
             }
             to {
                 opacity: 1;
                 transform: translateY(0);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .booking-hero {
+                padding: 140px 0 80px;
+                margin-top: 70px;
+                min-height: 500px;
+                background-attachment: scroll; /* Better performance on mobile */
+            }
+            
+            .booking-hero h1 {
+                margin-bottom: 1.2rem;
+                font-size: 2.2rem;
+            }
+            
+            .booking-hero p {
+                margin-bottom: 2rem;
+                font-size: 1.1rem;
+                line-height: 1.7;
+            }
+            
+            .booking-hero::before {
+                height: 100px;
+            }
+            
+            .booking-hero .btn {
+                padding: 14px 35px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .booking-hero {
+                padding: 120px 0 60px;
+                min-height: 450px;
+            }
+            
+            .booking-hero h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+            
+            .booking-hero p {
+                font-size: 1rem;
+                margin-bottom: 1.8rem;
+                line-height: 1.6;
+            }
+            
+            .booking-hero .btn {
+                padding: 12px 30px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Fallback for older browsers */
+        @supports not (background-attachment: fixed) {
+            .booking-hero {
+                background-attachment: scroll;
             }
         }
 
@@ -1422,7 +1546,7 @@
                 </svg>
                 <div class="logo-text">
                     <h1>Jumuia Resorts</h1>
-                    <p>Luxury Hotels & Conference Centers</p>
+                    <p>Christian Hospitality & Conference Centres</p>
                 </div>
             </a>
             
@@ -1815,7 +1939,7 @@
                     <div class="contact-info">
                         <div class="contact-item">
                             <i class="fas fa-phone"></i>
-                            <span>Main Office: +254 20 2048881</span>
+                            <span>Main Office: +254759423589</span>
                         </div>
                         <div class="contact-item">
                             <i class="fas fa-envelope"></i>
@@ -1830,7 +1954,7 @@
             </div>
             
             <div class="copyright">
-                <p>&copy; 2025 Jumuia Resorts Limited. All rights reserved.</p>
+                <p>&copy; 2026 Jumuia Resorts Limited. All rights reserved.</p>
             </div>
         </div>
     </footer>
@@ -1870,7 +1994,7 @@
     <!-- Main JavaScript -->
     <script src="js/main.js"></script>
     <script src="js/booking.js"></script>
-    
+    <script src="js/firebase-config.js"></script>
     <script>
         // Initialize booking functionality
         document.addEventListener('DOMContentLoaded', function() {
@@ -2083,10 +2207,6 @@
         window.closeModal = closeModal;
         window.formatDate = formatDate;
     </script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-
     <!-- Add this script at the END of body, before closing </body> tag -->
     <script src="js/booking.js"></script>
 </body>

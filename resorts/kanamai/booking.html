@@ -14,1675 +14,822 @@
     
 
     <style>
-        /* EXACT SAME COLOR CODES as Kanamai home page */
-        :root {
-            --primary-green: #22440f;
-            --primary-orange: #f3a435;
-            --primary-white: #ffffff;
-            --secondary-green: #024423;
-            --dark-green: #153800;
-            --light-green: #e9f5e5;
-            --gray-bg: #f8f9fa;
-            --gray-border: #e0e0e0;
-            --text-dark: #333333;
-            --text-light: #666666;
-            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-            --radius: 8px;
-        }
+    /* EXACT SAME COLOR CODES as Kanamai home page */
+    :root {
+        --primary-green: #22440f;
+        --primary-orange: #f3a435;
+        --primary-white: #ffffff;
+        --secondary-green: #024423;
+        --dark-green: #153800;
+        --light-green: #e9f5e5;
+        --gray-bg: #f8f9fa;
+        --gray-border: #e0e0e0;
+        --text-dark: #333333;
+        --text-light: #666666;
+        --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        --radius: 8px;
+    }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-        body {
-            font-family: 'Montserrat', sans-serif;
-            color: var(--text-dark);
-            line-height: 1.6;
-            background-color: var(--gray-bg);
-        }
+    body {
+        font-family: 'Montserrat', sans-serif;
+        color: var(--text-dark);
+        line-height: 1.6;
+        background-color: var(--gray-bg);
+    }
 
-        h1, h2, h3, h4 {
-            font-family: 'Playfair Display', serif;
-            font-weight: 600;
-            color: var(--primary-green);
-        }
+    h1, h2, h3, h4 {
+        font-family: 'Playfair Display', serif;
+        font-weight: 600;
+        color: var(--primary-green);
+    }
 
-        .container {
-            width: 100%;
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
+    .container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 20px;
+    }
 
-        /* Resort Header - EXACTLY like Kanamai Home Page */
-        .resort-header {
-            background-color: var(--primary-white);
-            box-shadow: var(--shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
+    /* Resort Header - EXACTLY like Kanamai Home Page */
+    .resort-header {
+        background-color: var(--primary-white);
+        box-shadow: var(--shadow);
+        position: fixed;
+        width: 100%;
+        top: 0;
+        z-index: 1000;
+    }
 
-        .header-top {
-            background-color: var(--primary-green);
-            color: var(--primary-white);
-            padding: 10px 0;
-        }
+    .header-top {
+        background-color: var(--primary-green);
+        color: var(--primary-white);
+        padding: 10px 0;
+    }
 
-        .header-top-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
+    .header-top-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-        .home-link {
-            color: var(--primary-white);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
+    .home-link {
+        color: var(--primary-white);
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
 
-        .home-link:hover {
-            color: var(--primary-orange);
-        }
+    .home-link:hover {
+        color: var(--primary-orange);
+    }
 
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
+    .header-actions {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
 
-        .resort-header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
+    .resort-header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 0;
+    }
 
-        .resort-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
+    .resort-logo {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-        .logo-img {
-            width: 50px;
-            height: 50px;
-        }
+    .logo-img {
+        width: 50px;
+        height: 50px;
+    }
 
-        .resort-logo h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-            color: var(--primary-green);
-        }
+    .resort-logo h1 {
+        font-size: 1.5rem;
+        margin-bottom: 5px;
+        color: var(--primary-green);
+    }
 
-        .resort-location {
-            font-size: 0.9rem;
-            color: var(--primary-orange);
-            font-weight: 500;
-        }
+    .resort-location {
+        font-size: 0.9rem;
+        color: var(--primary-orange);
+        font-weight: 500;
+    }
 
-        .resort-nav {
-            display: flex;
-            gap: 25px;
-        }
+    .resort-nav {
+        display: flex;
+        gap: 25px;
+    }
 
-        .resort-nav a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            font-size: 1rem;
-            transition: color 0.3s;
-            position: relative;
-        }
+    .resort-nav a {
+        text-decoration: none;
+        color: var(--text-dark);
+        font-weight: 500;
+        font-size: 1rem;
+        transition: color 0.3s;
+        position: relative;
+    }
 
-        .resort-nav a:hover {
-            color: var(--primary-orange);
-        }
+    .resort-nav a:hover {
+        color: var(--primary-orange);
+    }
 
-        .resort-nav a.active {
-            color: var(--primary-green);
-            font-weight: 600;
-        }
+    .resort-nav a.active {
+        color: var(--primary-green);
+        font-weight: 600;
+    }
 
-        .resort-nav a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--primary-orange);
-        }
+    .resort-nav a.active::after {
+        content: '';
+        position: absolute;
+        bottom: -5px;
+        left: 0;
+        width: 100%;
+        height: 2px;
+        background-color: var(--primary-orange);
+    }
 
-        .mobile-menu-btn {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--primary-green);
-        }
+    .mobile-menu-btn {
+        display: none;
+        font-size: 1.5rem;
+        cursor: pointer;
+        color: var(--primary-green);
+    }
 
-        /* Booking Hero - Using Kanamai color scheme */
-        .booking-hero {
-            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            color: var(--primary-white);
-            padding: 180px 0 80px;
-            margin-top: 120px;
-            text-align: center;
-            position: relative;
-        }
+    /* Booking Hero - Using Kanamai color scheme */
+    .booking-hero {
+        background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('../../images/resorts/kanamai/front kanamai.jpg');
+        background-size: cover;
+        background-position: center;
+        color: var(--primary-white);
+        padding: 180px 0 80px;
+        margin-top: 120px;
+        text-align: center;
+        position: relative;
+    }
 
-        .booking-hero h1 {
-            font-size: 3rem;
-            color: var(--primary-white);
-            margin-bottom: 20px;
-        }
+    .booking-hero h1 {
+        font-size: 3rem;
+        color: var(--primary-white);
+        margin-bottom: 20px;
+    }
 
-        .booking-hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto 30px;
-        }
+    .booking-hero p {
+        font-size: 1.2rem;
+        opacity: 0.9;
+        max-width: 700px;
+        margin: 0 auto 30px;
+    }
 
-        .resort-indicator {
-            background: rgba(243, 164, 53, 0.2);
-            border: 1px solid var(--primary-orange);
-            border-radius: var(--radius);
-            padding: 12px 25px;
-            display: inline-block;
-            margin-bottom: 30px;
-            font-weight: 500;
-        }
+    .resort-indicator {
+        background: rgba(243, 164, 53, 0.2);
+        border: 1px solid var(--primary-orange);
+        border-radius: var(--radius);
+        padding: 12px 25px;
+        display: inline-block;
+        margin-bottom: 30px;
+        font-weight: 500;
+    }
 
-        .resort-indicator i {
-            color: var(--primary-orange);
-            margin-right: 10px;
-        }
+    .resort-indicator i {
+        color: var(--primary-orange);
+        margin-right: 10px;
+    }
 
-        /* Beach Wave Decoration using our color scheme */
-        .wave-decoration {
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
-        }
+    /* Beach Wave Decoration using our color scheme */
+    .wave-decoration {
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 100%;
+        overflow: hidden;
+        line-height: 0;
+    }
 
-        .wave-decoration svg {
-            position: relative;
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 50px;
-        }
+    .wave-decoration svg {
+        position: relative;
+        display: block;
+        width: calc(100% + 1.3px);
+        height: 50px;
+    }
 
-        .wave-decoration .shape-fill {
-            fill: var(--gray-bg);
-        }
+    .wave-decoration .shape-fill {
+        fill: var(--gray-bg);
+    }
 
-        /* Booking Container */
+    /* Booking Container */
+    .booking-container {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 40px;
+        padding: 60px 0;
+    }
+
+    /* Booking Form */
+    .booking-form {
+        background: var(--primary-white);
+        border-radius: var(--radius);
+        padding: 40px;
+        box-shadow: var(--shadow);
+    }
+
+    .form-section {
+        margin-bottom: 40px;
+        padding-bottom: 30px;
+        border-bottom: 1px solid var(--gray-border);
+    }
+
+    .form-section:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .form-section h3 {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        margin-bottom: 25px;
+        font-size: 1.4rem;
+    }
+
+    .form-section h3 i {
+        color: var(--primary-orange);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group.full-width {
+        grid-column: span 2;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 500;
+        color: var(--text-dark);
+    }
+
+    .form-group label.required::after {
+        content: ' *';
+        color: #dc3545;
+    }
+
+    .form-control {
+        width: 100%;
+        padding: 12px 15px;
+        border: 1px solid var(--gray-border);
+        border-radius: var(--radius);
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1rem;
+        transition: border-color 0.3s;
+    }
+
+    .form-control:focus {
+        outline: none;
+        border-color: var(--primary-orange);
+        box-shadow: 0 0 0 3px rgba(243, 164, 53, 0.1);
+    }
+
+    select.form-control {
+        cursor: pointer;
+        background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322440f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+        background-repeat: no-repeat;
+        background-position: right 10px center;
+        background-size: 1em;
+        padding-right: 35px;
+    }
+
+    textarea.form-control {
+        min-height: 100px;
+        resize: vertical;
+    }
+
+    .radio-group, .checkbox-group {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 15px;
+        margin-top: 10px;
+    }
+
+    .radio-option, .checkbox-option {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        cursor: pointer;
+    }
+
+    .radio-option input, .checkbox-option input {
+        cursor: pointer;
+    }
+
+    /* Payment Methods */
+    .payment-methods {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+        margin-top: 15px;
+    }
+
+    .payment-method {
+        border: 2px solid var(--gray-border);
+        border-radius: var(--radius);
+        padding: 15px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    .payment-method:hover {
+        border-color: var(--primary-orange);
+        background-color: rgba(243, 164, 53, 0.05);
+    }
+
+    .payment-method.active {
+        border-color: var(--primary-green);
+        background-color: var(--light-green);
+    }
+
+    .payment-method i {
+        font-size: 2rem;
+        margin-bottom: 10px;
+        display: block;
+    }
+
+    .payment-method.mpesa i {
+        color: #007c00;
+    }
+
+    .payment-method.card i {
+        color: var(--primary-green);
+    }
+
+    .payment-method.bank i {
+        color: #0047ab;
+    }
+
+    .payment-method.cash i {
+        color: var(--text-light);
+    }
+
+    /* M-Pesa Payment */
+    .mpesa-payment {
+        background: var(--light-green);
+        border-radius: var(--radius);
+        padding: 20px;
+        margin-top: 20px;
+        display: none;
+    }
+
+    .mpesa-payment.active {
+        display: block;
+        animation: slideDown 0.3s ease;
+    }
+
+    @keyframes slideDown {
+        from { opacity: 0; transform: translateY(-10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+
+    .mpesa-steps {
+        margin: 20px 0;
+        padding-left: 20px;
+    }
+
+    .mpesa-steps li {
+        margin-bottom: 10px;
+        line-height: 1.5;
+    }
+
+    /* Booking Summary */
+    .booking-summary {
+        background: var(--primary-white);
+        border-radius: var(--radius);
+        padding: 30px;
+        box-shadow: var(--shadow);
+        position: sticky;
+        top: 140px;
+        height: fit-content;
+    }
+
+    .summary-header {
+        text-align: center;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 1px solid var(--gray-border);
+    }
+
+    .summary-header h3 {
+        color: var(--primary-green);
+        margin-bottom: 10px;
+    }
+
+    .summary-resort {
+        color: var(--primary-orange);
+        font-weight: 500;
+    }
+
+    .summary-details {
+        margin-bottom: 30px;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 15px;
+        padding-bottom: 15px;
+        border-bottom: 1px solid var(--gray-border);
+    }
+
+    .summary-item:last-child {
+        border-bottom: none;
+        margin-bottom: 0;
+        padding-bottom: 0;
+    }
+
+    .summary-total {
+        background: var(--light-green);
+        padding: 20px;
+        border-radius: var(--radius);
+        margin: 30px 0;
+        text-align: center;
+    }
+
+    .summary-total h3 {
+        color: var(--primary-green);
+        margin-bottom: 10px;
+    }
+
+    .total-amount {
+        font-size: 2rem;
+        font-weight: 700;
+        color: var(--primary-green);
+    }
+
+    /* Buttons - Using Kanamai color scheme */
+    .btn {
+        padding: 12px 30px;
+        border-radius: var(--radius);
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s;
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1rem;
+        text-decoration: none;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+
+    .btn-primary {
+        background-color: var(--primary-orange);
+        color: var(--primary-white);
+        width: 100%;
+        padding: 15px;
+        font-size: 1.1rem;
+    }
+
+    .btn-primary:hover {
+        background-color: #e5941f;
+        transform: translateY(-2px);
+        box-shadow: 0 6px 15px rgba(243, 164, 53, 0.2);
+    }
+
+    .btn-secondary {
+        background-color: transparent;
+        color: var(--primary-green);
+        border: 2px solid var(--primary-green);
+    }
+
+    .btn-secondary:hover {
+        background-color: var(--primary-green);
+        color: var(--primary-white);
+    }
+
+    /* Loading States */
+    .loading {
+        display: none;
+        text-align: center;
+        padding: 20px;
+    }
+
+    .loading.active {
+        display: block;
+    }
+
+    .spinner {
+        border: 3px solid var(--light-green);
+        border-top: 3px solid var(--primary-orange);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        animation: spin 1s linear infinite;
+        margin: 0 auto 15px;
+    }
+
+    @keyframes spin {
+        0% { transform: rotate(0deg); }
+        100% { transform: rotate(360deg); }
+    }
+
+    /* Success Modal - Using Kanamai colors */
+    .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 2000;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .modal.active {
+        display: flex;
+        animation: fadeIn 0.3s ease;
+    }
+
+    @keyframes fadeIn {
+        from { opacity: 0; }
+        to { opacity: 1; }
+    }
+
+    .modal-content {
+        background: var(--primary-white);
+        border-radius: var(--radius);
+        padding: 40px;
+        max-width: 500px;
+        width: 90%;
+        text-align: center;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+    }
+
+    .modal-icon {
+        width: 80px;
+        height: 80px;
+        background: var(--secondary-green);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 25px;
+    }
+
+    .modal-icon i {
+        font-size: 2.5rem;
+        color: var(--primary-white);
+    }
+
+    .modal-content h2 {
+        color: var(--primary-green);
+        margin-bottom: 15px;
+    }
+
+    .booking-id {
+        background: var(--light-green);
+        padding: 15px;
+        border-radius: var(--radius);
+        margin: 20px 0;
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: var(--primary-green);
+    }
+
+    /* Error and Success Messages using existing colors */
+    .error-message {
+        background-color: rgba(220, 53, 69, 0.1);
+        color: #721c24;
+        padding: 15px;
+        border-radius: var(--radius);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-left: 4px solid #dc3545;
+    }
+    
+    .error-message i {
+        font-size: 1.2rem;
+    }
+    
+    .error-message button {
+        margin-left: auto;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #721c24;
+    }
+    
+    .success-message {
+        background-color: rgba(40, 167, 69, 0.1);
+        color: #155724;
+        padding: 15px;
+        border-radius: var(--radius);
+        margin-bottom: 20px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        border-left: 4px solid #28a745;
+    }
+    
+    .success-message i {
+        font-size: 1.2rem;
+    }
+    
+    .success-message button {
+        margin-left: auto;
+        background: none;
+        border: none;
+        font-size: 1.2rem;
+        cursor: pointer;
+        color: #155724;
+    }
+
+    /* Footer - EXACTLY like Kanamai Home Page */
+    .resort-footer {
+        background-color: var(--dark-green);
+        color: var(--primary-white);
+        padding: 70px 0 30px;
+    }
+
+    .footer-container {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 40px;
+        margin-bottom: 40px;
+    }
+
+    .footer-column h3 {
+        color: var(--primary-white);
+        font-size: 1.5rem;
+        margin-bottom: 25px;
+        position: relative;
+    }
+
+    .footer-column h3::after {
+        content: '';
+        position: absolute;
+        bottom: -10px;
+        left: 0;
+        width: 50px;
+        height: 2px;
+        background-color: var(--primary-orange);
+    }
+
+    .footer-links {
+        list-style: none;
+    }
+
+    .footer-links li {
+        margin-bottom: 12px;
+    }
+
+    .footer-links a {
+        color: rgba(255, 255, 255, 0.8);
+        text-decoration: none;
+        transition: color 0.3s;
+    }
+
+    .footer-links a:hover {
+        color: var(--primary-orange);
+    }
+
+    .social-links {
+        display: flex;
+        gap: 15px;
+        margin-top: 20px;
+    }
+
+    .social-links a {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 40px;
+        height: 40px;
+        background-color: rgba(255, 255, 255, 0.1);
+        border-radius: 50%;
+        color: var(--primary-white);
+        transition: all 0.3s;
+    }
+
+    .social-links a:hover {
+        background-color: var(--primary-orange);
+        transform: translateY(-3px);
+    }
+
+    .copyright {
+        text-align: center;
+        padding-top: 30px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        color: rgba(255, 255, 255, 0.7);
+        font-size: 0.9rem;
+    }
+
+    /* Responsive Design - EXACTLY like Kanamai Home Page */
+    @media (max-width: 992px) {
         .booking-container {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 40px;
-            padding: 60px 0;
+            grid-template-columns: 1fr;
         }
-
-        /* Booking Form */
-        .booking-form {
-            background: var(--primary-white);
-            border-radius: var(--radius);
-            padding: 40px;
-            box-shadow: var(--shadow);
-        }
-
-        .form-section {
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid var(--gray-border);
-        }
-
-        .form-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .form-section h3 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            font-size: 1.4rem;
-        }
-
-        .form-section h3 i {
-            color: var(--primary-orange);
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-        }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
-        .form-group.full-width {
-            grid-column: span 2;
-        }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-
-        .form-group label.required::after {
-            content: ' *';
-            color: #dc3545;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--gray-border);
-            border-radius: var(--radius);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-orange);
-            box-shadow: 0 0 0 3px rgba(243, 164, 53, 0.1);
-        }
-
-        select.form-control {
-            cursor: pointer;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322440f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 1em;
-            padding-right: 35px;
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .radio-group, .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .radio-option, .checkbox-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .radio-option input, .checkbox-option input {
-            cursor: pointer;
-        }
-
-        /* Payment Methods */
-        .payment-methods {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .payment-method {
-            border: 2px solid var(--gray-border);
-            border-radius: var(--radius);
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .payment-method:hover {
-            border-color: var(--primary-orange);
-            background-color: rgba(243, 164, 53, 0.05);
-        }
-
-        .payment-method.active {
-            border-color: var(--primary-green);
-            background-color: var(--light-green);
-        }
-
-        .payment-method i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            display: block;
-        }
-
-        .payment-method.mpesa i {
-            color: #007c00;
-        }
-
-        .payment-method.card i {
-            color: var(--primary-green);
-        }
-
-        .payment-method.bank i {
-            color: #0047ab;
-        }
-
-        .payment-method.cash i {
-            color: var(--text-light);
-        }
-
-        /* M-Pesa Payment */
-        .mpesa-payment {
-            background: var(--light-green);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .mpesa-payment.active {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .mpesa-steps {
-            margin: 20px 0;
-            padding-left: 20px;
-        }
-
-        .mpesa-steps li {
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        /* Booking Summary */
+        
         .booking-summary {
-            background: var(--primary-white);
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 140px;
-            height: fit-content;
+            position: static;
+            margin-top: 40px;
         }
+    }
 
-        .summary-header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--gray-border);
-        }
-
-        .summary-header h3 {
-            color: var(--primary-green);
-            margin-bottom: 10px;
-        }
-
-        .summary-resort {
-            color: var(--primary-orange);
-            font-weight: 500;
-        }
-
-        .summary-details {
-            margin-bottom: 30px;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--gray-border);
-        }
-
-        .summary-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .summary-total {
-            background: var(--light-green);
-            padding: 20px;
-            border-radius: var(--radius);
-            margin: 30px 0;
-            text-align: center;
-        }
-
-        .summary-total h3 {
-            color: var(--primary-green);
-            margin-bottom: 10px;
-        }
-
-        .total-amount {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-green);
-        }
-
-        /* Buttons - Using Kanamai color scheme */
-        .btn {
-            padding: 12px 30px;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-orange);
-            color: var(--primary-white);
-            width: 100%;
-            padding: 15px;
-            font-size: 1.1rem;
-        }
-
-        .btn-primary:hover {
-            background-color: #e5941f;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(243, 164, 53, 0.2);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--primary-green);
-            border: 2px solid var(--primary-green);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--primary-green);
-            color: var(--primary-white);
-        }
-
-        /* Loading States */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .loading.active {
-            display: block;
-        }
-
-        .spinner {
-            border: 3px solid var(--light-green);
-            border-top: 3px solid var(--primary-orange);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Success Modal - Using Kanamai colors */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: var(--primary-white);
-            border-radius: var(--radius);
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--secondary-green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 25px;
-        }
-
-        .modal-icon i {
-            font-size: 2.5rem;
-            color: var(--primary-white);
-        }
-
-        .modal-content h2 {
-            color: var(--primary-green);
-            margin-bottom: 15px;
-        }
-
-        .booking-id {
-            background: var(--light-green);
-            padding: 15px;
-            border-radius: var(--radius);
-            margin: 20px 0;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-green);
-        }
-
-        /* Error and Success Messages using existing colors */
-        .error-message {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #721c24;
-            padding: 15px;
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid #dc3545;
-        }
-        
-        .error-message i {
-            font-size: 1.2rem;
-        }
-        
-        .error-message button {
-            margin-left: auto;
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #721c24;
-        }
-        
-        .success-message {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: #155724;
-            padding: 15px;
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid #28a745;
-        }
-        
-        .success-message i {
-            font-size: 1.2rem;
-        }
-        
-        .success-message button {
-            margin-left: auto;
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #155724;
-        }
-
-        /* Footer - EXACTLY like Kanamai Home Page */
-        .resort-footer {
-            background-color: var(--dark-green);
-            color: var(--primary-white);
-            padding: 70px 0 30px;
-        }
-
-        .footer-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-column h3 {
-            color: var(--primary-white);
-            font-size: 1.5rem;
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--primary-orange);
-        }
-
-        .footer-links {
-            list-style: none;
-        }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary-orange);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: var(--primary-white);
-            transition: all 0.3s;
-        }
-
-        .social-links a:hover {
-            background-color: var(--primary-orange);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
-            font-size: 0.9rem;
-        }
-
-        /* Responsive Design - EXACTLY like Kanamai Home Page */
-        @media (max-width: 992px) {
-            .booking-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .booking-summary {
-                position: static;
-                margin-top: 40px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .booking-hero {
-                padding: 150px 0 60px;
-                margin-top: 100px;
-            }
-            
-            .booking-hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .booking-hero p {
-                font-size: 1rem;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-group.full-width {
-                grid-column: span 1;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .resort-nav {
-                position: fixed;
-                top: 120px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 120px);
-                background-color: var(--primary-white);
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                padding-top: 40px;
-                transition: left 0.3s;
-                gap: 30px;
-            }
-            
-            .resort-nav.active {
-                left: 0;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .booking-hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .resort-indicator {
-                font-size: 0.9rem;
-                padding: 10px 15px;
-            }
-            
-            .payment-methods {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .modal-content {
-                padding: 25px 20px;
-            }
-            
-            .modal-content h2 {
-                font-size: 1.5rem;
-            }
-        }
-        /* Resort Header */
-        .resort-header {
-            background-color: var(--primary-white);
-            box-shadow: var(--shadow);
-            position: fixed;
-            width: 100%;
-            top: 0;
-            z-index: 1000;
-        }
-
-        .header-top {
-            background-color: var(--primary-green);
-            color: var(--primary-white);
-            padding: 10px 0;
-        }
-
-        .header-top-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .home-link {
-            color: var(--primary-white);
-            text-decoration: none;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 0.9rem;
-        }
-
-        .home-link:hover {
-            color: var(--primary-orange);
-        }
-
-        .header-actions {
-            display: flex;
-            gap: 15px;
-            align-items: center;
-        }
-
-        .resort-header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 0;
-        }
-
-        .resort-logo {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .logo-img {
-            width: 50px;
-            height: 50px;
-        }
-
-        .resort-logo h1 {
-            font-size: 1.5rem;
-            margin-bottom: 5px;
-            color: var(--primary-green);
-        }
-
-        .resort-location {
-            font-size: 0.9rem;
-            color: var(--primary-orange);
-            font-weight: 500;
-        }
-
-        .resort-nav {
-            display: flex;
-            gap: 25px;
-        }
-
-        .resort-nav a {
-            text-decoration: none;
-            color: var(--text-dark);
-            font-weight: 500;
-            font-size: 1rem;
-            transition: color 0.3s;
-            position: relative;
-        }
-
-        .resort-nav a:hover {
-            color: var(--primary-orange);
-        }
-
-        .resort-nav a.active {
-            color: var(--primary-green);
-            font-weight: 600;
-        }
-
-        .resort-nav a.active::after {
-            content: '';
-            position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 2px;
-            background-color: var(--primary-orange);
-        }
-
-        .mobile-menu-btn {
-            display: none;
-            font-size: 1.5rem;
-            cursor: pointer;
-            color: var(--primary-green);
-        }
-
-        /* Booking Hero */
+    @media (max-width: 768px) {
         .booking-hero {
-            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
-            background-size: cover;
-            background-position: center;
-            color: var(--primary-white);
-            padding: 180px 0 80px;
-            margin-top: 120px;
-            text-align: center;
-            position: relative;
+            padding: 150px 0 60px;
+            margin-top: 100px;
         }
-
+        
         .booking-hero h1 {
-            font-size: 3rem;
-            color: var(--primary-white);
-            margin-bottom: 20px;
+            font-size: 2.2rem;
         }
-
+        
         .booking-hero p {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            max-width: 700px;
-            margin: 0 auto 30px;
+            font-size: 1rem;
         }
-
-        .resort-indicator {
-            background: rgba(243, 164, 53, 0.2);
-            border: 1px solid var(--primary-orange);
-            border-radius: var(--radius);
-            padding: 12px 25px;
-            display: inline-block;
-            margin-bottom: 30px;
-            font-weight: 500;
-        }
-
-        .resort-indicator i {
-            color: var(--primary-orange);
-            margin-right: 10px;
-        }
-
-        /* Beach Wave Decoration */
-        .wave-decoration {
-            position: absolute;
-            bottom: -10px;
-            left: 0;
-            width: 100%;
-            overflow: hidden;
-            line-height: 0;
-        }
-
-        .wave-decoration svg {
-            position: relative;
-            display: block;
-            width: calc(100% + 1.3px);
-            height: 50px;
-        }
-
-        .wave-decoration .shape-fill {
-            fill: var(--gray-bg);
-        }
-
-        /* Booking Container */
-        .booking-container {
-            display: grid;
-            grid-template-columns: 1fr 400px;
-            gap: 40px;
-            padding: 60px 0;
-        }
-
-        /* Booking Form */
-        .booking-form {
-            background: var(--primary-white);
-            border-radius: var(--radius);
-            padding: 40px;
-            box-shadow: var(--shadow);
-        }
-
-        .form-section {
-            margin-bottom: 40px;
-            padding-bottom: 30px;
-            border-bottom: 1px solid var(--gray-border);
-        }
-
-        .form-section:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .form-section h3 {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            margin-bottom: 25px;
-            font-size: 1.4rem;
-        }
-
-        .form-section h3 i {
-            color: var(--primary-orange);
-        }
-
+        
         .form-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
+            grid-template-columns: 1fr;
         }
-
-        .form-group {
-            margin-bottom: 20px;
-        }
-
+        
         .form-group.full-width {
-            grid-column: span 2;
+            grid-column: span 1;
         }
-
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 500;
-            color: var(--text-dark);
-        }
-
-        .form-group label.required::after {
-            content: ' *';
-            color: #dc3545;
-        }
-
-        .form-control {
-            width: 100%;
-            padding: 12px 15px;
-            border: 1px solid var(--gray-border);
-            border-radius: var(--radius);
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            transition: border-color 0.3s;
-        }
-
-        .form-control:focus {
-            outline: none;
-            border-color: var(--primary-orange);
-            box-shadow: 0 0 0 3px rgba(243, 164, 53, 0.1);
-        }
-
-        select.form-control {
-            cursor: pointer;
-            background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%2322440f' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
-            background-repeat: no-repeat;
-            background-position: right 10px center;
-            background-size: 1em;
-            padding-right: 35px;
-        }
-
-        textarea.form-control {
-            min-height: 100px;
-            resize: vertical;
-        }
-
-        .radio-group, .checkbox-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 15px;
-            margin-top: 10px;
-        }
-
-        .radio-option, .checkbox-option {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-        }
-
-        .radio-option input, .checkbox-option input {
-            cursor: pointer;
-        }
-
-        /* Payment Methods */
-        .payment-methods {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .payment-method {
-            border: 2px solid var(--gray-border);
-            border-radius: var(--radius);
-            padding: 15px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .payment-method:hover {
-            border-color: var(--primary-orange);
-            background-color: rgba(243, 164, 53, 0.05);
-        }
-
-        .payment-method.active {
-            border-color: var(--primary-green);
-            background-color: var(--light-green);
-        }
-
-        .payment-method i {
-            font-size: 2rem;
-            margin-bottom: 10px;
+        
+        .mobile-menu-btn {
             display: block;
         }
-
-        .payment-method.mpesa i {
-            color: #007c00;
-        }
-
-        .payment-method.card i {
-            color: var(--primary-green);
-        }
-
-        .payment-method.bank i {
-            color: #0047ab;
-        }
-
-        .payment-method.cash i {
-            color: var(--text-light);
-        }
-
-        /* M-Pesa Payment */
-        .mpesa-payment {
-            background: var(--light-green);
-            border-radius: var(--radius);
-            padding: 20px;
-            margin-top: 20px;
-            display: none;
-        }
-
-        .mpesa-payment.active {
-            display: block;
-            animation: slideDown 0.3s ease;
-        }
-
-        @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .mpesa-steps {
-            margin: 20px 0;
-            padding-left: 20px;
-        }
-
-        .mpesa-steps li {
-            margin-bottom: 10px;
-            line-height: 1.5;
-        }
-
-        /* Booking Summary */
-        .booking-summary {
-            background: var(--primary-white);
-            border-radius: var(--radius);
-            padding: 30px;
-            box-shadow: var(--shadow);
-            position: sticky;
-            top: 140px;
-            height: fit-content;
-        }
-
-        .summary-header {
-            text-align: center;
-            margin-bottom: 30px;
-            padding-bottom: 20px;
-            border-bottom: 1px solid var(--gray-border);
-        }
-
-        .summary-header h3 {
-            color: var(--primary-green);
-            margin-bottom: 10px;
-        }
-
-        .summary-resort {
-            color: var(--primary-orange);
-            font-weight: 500;
-        }
-
-        .summary-details {
-            margin-bottom: 30px;
-        }
-
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 15px;
-            padding-bottom: 15px;
-            border-bottom: 1px solid var(--gray-border);
-        }
-
-        .summary-item:last-child {
-            border-bottom: none;
-            margin-bottom: 0;
-            padding-bottom: 0;
-        }
-
-        .summary-total {
-            background: var(--light-green);
-            padding: 20px;
-            border-radius: var(--radius);
-            margin: 30px 0;
-            text-align: center;
-        }
-
-        .summary-total h3 {
-            color: var(--primary-green);
-            margin-bottom: 10px;
-        }
-
-        .total-amount {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary-green);
-        }
-
-        /* Buttons */
-        .btn {
-            padding: 12px 30px;
-            border-radius: var(--radius);
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            border: none;
-            font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-        }
-
-        .btn-primary {
-            background-color: var(--primary-orange);
-            color: var(--primary-white);
-            width: 100%;
-            padding: 15px;
-            font-size: 1.1rem;
-        }
-
-        .btn-primary:hover {
-            background-color: #e5941f;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(243, 164, 53, 0.2);
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            color: var(--primary-green);
-            border: 2px solid var(--primary-green);
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--primary-green);
-            color: var(--primary-white);
-        }
-
-        /* Loading States */
-        .loading {
-            display: none;
-            text-align: center;
-            padding: 20px;
-        }
-
-        .loading.active {
-            display: block;
-        }
-
-        .spinner {
-            border: 3px solid var(--light-green);
-            border-top: 3px solid var(--primary-orange);
-            border-radius: 50%;
-            width: 40px;
-            height: 40px;
-            animation: spin 1s linear infinite;
-            margin: 0 auto 15px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Success Modal */
-        .modal {
-            display: none;
+        
+        .resort-nav {
             position: fixed;
-            top: 0;
-            left: 0;
+            top: 120px;
+            left: -100%;
             width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 2000;
+            height: calc(100vh - 120px);
+            background-color: var(--primary-white);
+            flex-direction: column;
             align-items: center;
-            justify-content: center;
-        }
-
-        .modal.active {
-            display: flex;
-            animation: fadeIn 0.3s ease;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        .modal-content {
-            background: var(--primary-white);
-            border-radius: var(--radius);
-            padding: 40px;
-            max-width: 500px;
-            width: 90%;
-            text-align: center;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-        }
-
-        .modal-icon {
-            width: 80px;
-            height: 80px;
-            background: var(--secondary-green);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 25px;
-        }
-
-        .modal-icon i {
-            font-size: 2.5rem;
-            color: var(--primary-white);
-        }
-
-        .modal-content h2 {
-            color: var(--primary-green);
-            margin-bottom: 15px;
-        }
-
-        .booking-id {
-            background: var(--light-green);
-            padding: 15px;
-            border-radius: var(--radius);
-            margin: 20px 0;
-            font-size: 1.2rem;
-            font-weight: 600;
-            color: var(--primary-green);
-        }
-
-        /* Error and Success Messages */
-        .error-message {
-            background-color: rgba(220, 53, 69, 0.1);
-            color: #721c24;
-            padding: 15px;
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid #dc3545;
+            justify-content: flex-start;
+            padding-top: 40px;
+            transition: left 0.3s;
+            gap: 30px;
         }
         
-        .error-message i {
-            font-size: 1.2rem;
-        }
-        
-        .error-message button {
-            margin-left: auto;
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #721c24;
-        }
-        
-        .success-message {
-            background-color: rgba(40, 167, 69, 0.1);
-            color: #155724;
-            padding: 15px;
-            border-radius: var(--radius);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            border-left: 4px solid #28a745;
-        }
-        
-        .success-message i {
-            font-size: 1.2rem;
-        }
-        
-        .success-message button {
-            margin-left: auto;
-            background: none;
-            border: none;
-            font-size: 1.2rem;
-            cursor: pointer;
-            color: #155724;
-        }
-
-        /* Footer */
-        .resort-footer {
-            background-color: var(--dark-green);
-            color: var(--primary-white);
-            padding: 70px 0 30px;
-        }
-
-        .footer-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 40px;
-            margin-bottom: 40px;
-        }
-
-        .footer-column h3 {
-            color: var(--primary-white);
-            font-size: 1.5rem;
-            margin-bottom: 25px;
-            position: relative;
-        }
-
-        .footer-column h3::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
+        .resort-nav.active {
             left: 0;
-            width: 50px;
-            height: 2px;
-            background-color: var(--primary-orange);
         }
+    }
 
-        .footer-links {
-            list-style: none;
+    @media (max-width: 576px) {
+        .booking-hero h1 {
+            font-size: 1.8rem;
         }
-
-        .footer-links li {
-            margin-bottom: 12px;
-        }
-
-        .footer-links a {
-            color: rgba(255, 255, 255, 0.8);
-            text-decoration: none;
-            transition: color 0.3s;
-        }
-
-        .footer-links a:hover {
-            color: var(--primary-orange);
-        }
-
-        .social-links {
-            display: flex;
-            gap: 15px;
-            margin-top: 20px;
-        }
-
-        .social-links a {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 40px;
-            height: 40px;
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 50%;
-            color: var(--primary-white);
-            transition: all 0.3s;
-        }
-
-        .social-links a:hover {
-            background-color: var(--primary-orange);
-            transform: translateY(-3px);
-        }
-
-        .copyright {
-            text-align: center;
-            padding-top: 30px;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: rgba(255, 255, 255, 0.7);
+        
+        .resort-indicator {
             font-size: 0.9rem;
+            padding: 10px 15px;
         }
-
-        /* Responsive Design */
-        @media (max-width: 992px) {
-            .booking-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .booking-summary {
-                position: static;
-                margin-top: 40px;
-            }
+        
+        .payment-methods {
+            grid-template-columns: 1fr 1fr;
         }
-
-        @media (max-width: 768px) {
-            .booking-hero {
-                padding: 150px 0 60px;
-                margin-top: 100px;
-            }
-            
-            .booking-hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .booking-hero p {
-                font-size: 1rem;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-group.full-width {
-                grid-column: span 1;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .resort-nav {
-                position: fixed;
-                top: 120px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 120px);
-                background-color: var(--primary-white);
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                padding-top: 40px;
-                transition: left 0.3s;
-                gap: 30px;
-            }
-            
-            .resort-nav.active {
-                left: 0;
-            }
+        
+        .modal-content {
+            padding: 25px 20px;
         }
-
-        @media (max-width: 576px) {
-            .booking-hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .resort-indicator {
-                font-size: 0.9rem;
-                padding: 10px 15px;
-            }
-            
-            .payment-methods {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .modal-content {
-                padding: 25px 20px;
-            }
-            
-            .modal-content h2 {
-                font-size: 1.5rem;
-            }
+        
+        .modal-content h2 {
+            font-size: 1.5rem;
         }
-            /* Responsive Design */
-        @media (max-width: 992px) {
-            .booking-container {
-                grid-template-columns: 1fr;
-            }
-            
-            .booking-summary {
-                position: static;
-                margin-top: 40px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .booking-hero {
-                padding: 150px 0 60px;
-                margin-top: 100px;
-            }
-            
-            .booking-hero h1 {
-                font-size: 2.2rem;
-            }
-            
-            .booking-hero p {
-                font-size: 1rem;
-            }
-            
-            .form-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .form-group.full-width {
-                grid-column: span 1;
-            }
-            
-            .mobile-menu-btn {
-                display: block;
-            }
-            
-            .resort-nav {
-                position: fixed;
-                top: 120px;
-                left: -100%;
-                width: 100%;
-                height: calc(100vh - 120px);
-                background-color: var(--primary-white);
-                flex-direction: column;
-                align-items: center;
-                justify-content: flex-start;
-                padding-top: 40px;
-                transition: left 0.3s;
-                gap: 30px;
-            }
-            
-            .resort-nav.active {
-                left: 0;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .booking-hero h1 {
-                font-size: 1.8rem;
-            }
-            
-            .resort-indicator {
-                font-size: 0.9rem;
-                padding: 10px 15px;
-            }
-            
-            .payment-methods {
-                grid-template-columns: 1fr 1fr;
-            }
-            
-            .modal-content {
-                padding: 25px 20px;
-            }
-            
-            .modal-content h2 {
-                font-size: 1.5rem;
-            }
-        }
-    </style>
+    }
+</style>
 </head>
 <body>
     <!-- Resort Header -->
@@ -2079,7 +1226,7 @@
             </div>
             
             <div class="copyright">
-                <p>&copy; 2025 Jumuia Conference & Beach Resort Kanamai. All rights reserved.</p>
+                <p>&copy; 2026 Jumuia Conference & Beach Resort Kanamai. All rights reserved.</p>
                 <p style="margin-top: 10px;">Part of Jumuia Resorts Limited</p>
             </div>
         </div>

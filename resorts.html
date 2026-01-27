@@ -169,22 +169,108 @@
             cursor: pointer;
             color: var(--primary-green);
         }
-
-        /* Page Hero */
+        
+       /* Page Hero with Slideshow */
         .page-hero {
-            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-1.2.1&auto=format&fit=crop&w=1200&q=80');
-            background-size: cover;
-            background-position: center;
+            position: relative;
+            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85));
             color: var(--primary-white);
             padding: 180px 0 100px;
             margin-top: 90px;
             text-align: center;
+            overflow: hidden;
+            z-index: 1;
+        }
+
+        /* Slideshow Background */
+        .page-hero::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-size: cover;
+            background-position: center;
+            background-image: url('../../images/resorts/limuru/limuru-front.jpeg'); /* Default image */
+            z-index: -1;
+            animation: slideShow 9s infinite;
+            filter: brightness(0.6);
+            transition: background-image 1s ease-in-out;
+        }
+        /* Green Overlay Layer (20% opacity) */
+        .page-hero::after {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: var(--primary-green); /* Using your primary green */
+            opacity: 0.5; 
+            z-index: -1; /* Between slideshow and content */
+            mix-blend-mode: multiply; /* Optional: makes the overlay blend nicely */
+        }
+
+        /* Slideshow Animation */
+        @keyframes slideShow {
+            0%, 33% {
+                background-image: url('../../images/resorts/limuru/limuru-front.jpeg');
+            }
+            34%, 66% {
+                background-image: url('../../images/resorts/kanamai/front kanamai.jpg');
+            }
+            67%, 100% {
+                background-image: url('../../images/resorts/kisumu/resort1.jpg');
+            }
+        }
+
+        /* Alternative smoother animation with opacity */
+        @keyframes slideShowFade {
+            0% {
+                opacity: 1;
+                background-image: url('../../images/resorts/limuru/limuru-front.jpeg');
+            }
+            33% {
+                opacity: 1;
+                background-image: url('../../images/resorts/limuru/limuru-front.jpeg');
+            }
+            34% {
+                opacity: 0;
+                background-image: url('../../images/resorts/limuru/limuru-front.jpeg');
+            }
+            35% {
+                opacity: 0;
+                background-image: url('../../images/resorts/kanamai/front kanamai.jpg');
+            }
+            66% {
+                opacity: 1;
+                background-image: url('../../images/resorts/kanamai/front kanamai.jpg');
+            }
+            67% {
+                opacity: 0;
+                background-image: url('../../images/resorts/kanamai/front kanamai.jpg');
+            }
+            68% {
+                opacity: 0;
+                background-image: url('../../images/resorts/kisumu/resort1.jpg');
+            }
+            99% {
+                opacity: 1;
+                background-image: url('../../images/resorts/kisumu/resort1.jpg');
+            }
+            100% {
+                opacity: 1;
+                background-image: url('../../images/resorts/limuru/limuru-front.jpeg');
+            }
         }
 
         .page-hero h1 {
             font-size: 3.5rem;
             margin-bottom: 20px;
             color: var(--primary-white);
+            position: relative;
+            z-index: 2;
         }
 
         .page-hero p {
@@ -192,6 +278,14 @@
             max-width: 800px;
             margin: 0 auto 40px;
             opacity: 0.9;
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Ensure the text is readable on top of the slideshow */
+        .page-hero > * {
+            position: relative;
+            z-index: 2;
         }
 
         /* Resort Details */
@@ -561,7 +655,7 @@
                 </svg>
                 <div class="logo-text">
                     <h1>Jumuia Resorts</h1>
-                    <p>World-Class Hotels & Conference Centers</p>
+                    <p>Christian Hospitality & Conference Centres</p>
                 </div>
             </a>
             
@@ -589,7 +683,7 @@
     <!-- Page Hero -->
     <section class="page-hero">
         <div class="container">
-            <h1>Our World-Class Resorts</h1>
+            <h1>Our Distinctive Resorts</h1>
             <p>Discover our unique properties across Kenya, each offering distinct experiences while maintaining our signature Christian hospitality and exceptional service standards.</p>
             <a href="#resorts" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 40px;">Explore All Resorts</a>
         </div>
@@ -740,7 +834,7 @@
                         <tr>
                             <td class="resort-name">Contact</td>
                             <td>0710 288 043</td>
-                            <td>020 206 09 65</td>
+                            <td>0759423589</td>
                             <td>0713 576 969</td>
                         </tr>
                     </tbody>
@@ -834,7 +928,7 @@
                     <div class="contact-info">
                         <div class="contact-item">
                             <i class="fas fa-phone"></i>
-                            <span>Main Office: +254 20 2048881</span>
+                            <span>Main Office: +254759423589</span>
                         </div>
                         <div class="contact-item">
                             <i class="fas fa-envelope"></i>
