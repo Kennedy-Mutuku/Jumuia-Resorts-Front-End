@@ -827,7 +827,7 @@
                         <span class="room-tag">Hostel</span>
                     </div>
                     <div class="room-content">
-                        <h3>Hostel Accommodation</h3>
+                        <h3>Youth Facilities</h3>
                         <p>Clean, comfortable hostel rooms perfect for youth groups, students, and large church gatherings on a budget.</p>
                         
                         <ul class="room-features">
@@ -861,98 +861,178 @@
                 <div class="rate-tab" data-tab="special">Special Packages</div>
             </div>
             
-            <div class="rates-table-container">
-                <!-- Accommodation Rates Table -->
-                <div class="rates-content" id="accommodationRates">
-                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Accommodation Packages (Per Person Per Night)</h3>
+            <!-- Accommodation Rates Table -->
+            <div class="rates-content" id="accommodationRates">
+                <div class="rates-table-container">
+                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Residential Rates - Accommodation Packages (KES)</h3>
                     <table class="rates-table">
                         <thead>
                             <tr>
                                 <th>Room Type</th>
-                                <th>B&B Single</th>
-                                <th>B&B Double</th>
-                                <th>Half Board Single</th>
-                                <th>Half Board Double</th>
-                                <th>Full Board Single</th>
-                                <th>Full Board Double</th>
+                                <th colspan="2">Bed & Breakfast</th>
+                                <th colspan="2">Half Board</th>
+                                <th colspan="2">Full Board</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>Single</th>
+                                <th>Double</th>
+                                <th>Single</th>
+                                <th>Double</th>
+                                <th>Single</th>
+                                <th>Double</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
                                 <td><strong>Standard Room</strong></td>
-                                <td>KES 3,560</td>
-                                <td>KES 6,280</td>
-                                <td>KES 4,240</td>
-                                <td>KES 7,200</td>
-                                <td>KES 4,880</td>
-                                <td>KES 8,080</td>
+                                <td>4,450</td>
+                                <td>7,850</td>
+                                <td>5,300</td>
+                                <td>9,000</td>
+                                <td>6,100</td>
+                                <td>10,100</td>
                             </tr>
                             <tr>
-                                <td><strong>Executive Room</strong></td>
-                                <td>KES 4,480</td>
-                                <td>KES 7,200</td>
-                                <td>KES 5,360</td>
-                                <td>KES 8,080</td>
-                                <td>KES 6,000</td>
-                                <td>KES 8,960</td>
+                                <td><strong>Executive</strong></td>
+                                <td>5,600</td>
+                                <td>9,000</td>
+                                <td>6,700</td>
+                                <td>10,100</td>
+                                <td>7,500</td>
+                                <td>11,200</td>
                             </tr>
                             <tr>
                                 <td><strong>Studio Suite</strong></td>
-                                <td>KES 8,000</td>
-                                <td>KES 11,360</td>
-                                <td>KES 9,880</td>
-                                <td>KES 12,480</td>
-                                <td>KES 10,760</td>
-                                <td>KES 13,560</td>
+                                <td>11,200</td>
+                                <td>14,200</td>
+                                <td>12,350</td>
+                                <td>15,600</td>
+                                <td>13,450</td>
+                                <td>16,950</td>
                             </tr>
                         </tbody>
                     </table>
-                    <p class="table-note">Note: Double rates are for the entire room, not per person</p>
+                    
+                    <h4 style="margin-top: 40px; color: var(--primary-green); text-align: center;">Non-Residential Rates - Accommodation Packages (USD)</h4>
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>Room Type</th>
+                                <th colspan="2">Bed & Breakfast</th>
+                                <th colspan="2">Half Board</th>
+                                <th colspan="2">Full Board</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>Single</th>
+                                <th>Double</th>
+                                <th>Single</th>
+                                <th>Double</th>
+                                <th>Single</th>
+                                <th>Double</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Standard Room</strong></td>
+                                <td>$60</td>
+                                <td>$95</td>
+                                <td>$65</td>
+                                <td>$105</td>
+                                <td>$70</td>
+                                <td>$115</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Executive</strong></td>
+                                <td>$80</td>
+                                <td>$110</td>
+                                <td>$85</td>
+                                <td>$120</td>
+                                <td>$90</td>
+                                <td>$130</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Studio Suite</strong></td>
+                                <td>$135</td>
+                                <td>$165</td>
+                                <td>$145</td>
+                                <td>$180</td>
+                                <td>$155</td>
+                                <td>$195</td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
-                
-                <!-- Conference Rates Table (Hidden by default) -->
-                <div class="rates-content" id="conferenceRates" style="display: none;">
-                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Conference & Accommodation Packages (Per Person Per Day)</h3>
+                <p class="table-note">Note: Double rates are for the entire room, not per person</p>
+            </div>
+            
+            <!-- Conference Rates Table (Hidden by default) -->
+            <div class="rates-content" id="conferenceRates" style="display: none;">
+                <div class="rates-table-container">
+                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Full Board Conference & Accommodation (Per Person Per Day)</h3>
                     <table class="rates-table">
                         <thead>
                             <tr>
                                 <th>Package</th>
-                                <th>Price (KES)</th>
+                                <th>Residents (KES)</th>
+                                <th>Non-Residents (USD)</th>
                                 <th>Includes</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Executive Rooms Conference Package</strong></td>
-                                <td>5,500</td>
-                                <td>Conference facilities, accommodation, all meals</td>
+                                <td><strong>Single Standard Room</strong></td>
+                                <td>6,750</td>
+                                <td>$85</td>
+                                <td>Conference facilities, single accommodation, all meals</td>
                             </tr>
                             <tr>
-                                <td><strong>Single Standard Room Conference Package</strong></td>
-                                <td>5,000</td>
-                                <td>Conference facilities, accommodation, all meals</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Twin/Triple Sharing Conference Package</strong></td>
-                                <td>4,750</td>
+                                <td><strong>Twin Room (Sharing)</strong></td>
+                                <td>5,850</td>
+                                <td>$75</td>
                                 <td>Conference facilities, shared accommodation, all meals</td>
                             </tr>
                             <tr>
-                                <td><strong>Full Day Conference Only</strong></td>
-                                <td>2,400</td>
+                                <td><strong>Single Executive Room</strong></td>
+                                <td>7,850</td>
+                                <td>$95</td>
+                                <td>Conference facilities, executive accommodation, all meals</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4 style="margin-top: 40px; color: var(--primary-green); text-align: center;">Day Conference Packages</h4>
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>Package</th>
+                                <th>Residents (KES)</th>
+                                <th>Non-Residents (USD)</th>
+                                <th>Includes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Full Day Conference</strong></td>
+                                <td>2,600</td>
+                                <td>$35</td>
                                 <td>Conference room, tea breaks, lunch</td>
                             </tr>
                             <tr>
-                                <td><strong>Half Day Conference Only</strong></td>
-                                <td>2,000</td>
+                                <td><strong>Half Day Conference</strong></td>
+                                <td>2,200</td>
+                                <td>$30</td>
                                 <td>Conference room, tea break</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
-                
-                <!-- Special Packages Table (Hidden by default) -->
-                <div class="rates-content" id="specialRates" style="display: none;">
+            </div>
+            
+            <!-- Special Packages Table (Hidden by default) -->
+            <div class="rates-content" id="specialRates" style="display: none;">
+                <div class="rates-table-container">
                     <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Special Packages</h3>
                     <table class="rates-table">
                         <thead>
@@ -1019,9 +1099,9 @@
                 <div class="policy-card">
                     <h3><i class="fas fa-child"></i> Child Policy</h3>
                     <ul class="policy-list">
-                        <li><strong>Children below 3 years:</strong> Free when sharing room with parents</li>
-                        <li><strong>Children 4-11 years sharing with parents:</strong> 50% of adult rate</li>
-                        <li><strong>Children 4-11 years in own room:</strong> 75% of adult rate</li>
+                        <li><strong>Children 4 years & below:</strong> Free when sharing room with parents</li>
+                        <li><strong>Children 5-11 years sharing with parents:</strong> 50% of adult rate</li>
+                        <li><strong>Children 5-11 years exclusive use of room:</strong> 75% of adult rate</li>
                         <li><strong>Extra bed for adults:</strong> 40% of room rate</li>
                     </ul>
                 </div>
@@ -1042,7 +1122,7 @@
                         <li><strong>Bed & Breakfast:</strong> Room + Breakfast</li>
                         <li><strong>Half Board:</strong> Room + Breakfast + Dinner</li>
                         <li><strong>Full Board:</strong> Room + Breakfast + Lunch + Dinner</li>
-                        <li><strong>24-hour Restaurant:</strong> Available for additional meals</li>
+                        <li><strong>Open Restaurant:</strong> Available for additional meals</li>
                     </ul>
                 </div>
                 
@@ -1052,8 +1132,41 @@
                         <li>Rates are inclusive of statutory taxes</li>
                         <li>Rates are subject to change without notice</li>
                         <li>All bookings require deposit confirmation</li>
-                        <li>Special rates available for church groups</li>
+                        <li>Special church and corporate rates available</li>
                     </ul>
+                </div>
+            </div>
+            
+            <div class="policy-grid" style="margin-top: 40px;">
+                <div class="policy-card" style="grid-column: span 2;">
+                    <h3><i class="fas fa-times-circle"></i> Cancellation Policy</h3>
+                    <div class="policy-list">
+                        <table style="width: 100%; margin-top: 10px;">
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>30 - 20 days before arrival</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #eee;">15% of booking value</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>20 - 10 days before arrival</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #eee;">30% of booking value</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px; border-bottom: 1px solid #eee;"><strong>10 - 0 days before arrival</strong></td>
+                                <td style="padding: 8px; border-bottom: 1px solid #eee;">100% of booking value</td>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;"><strong>No Show</strong></td>
+                                <td style="padding: 8px;">100% of booking value</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
+                
+                <div class="policy-card" style="grid-column: span 2;">
+                    <h3><i class="fas fa-gamepad"></i> Games Facilities Available</h3>
+                    <div class="policy-list">
+                        <p style="margin: 10px 0; line-height: 1.6;">Football, Volley Ball, Basket Ball, Hand Ball, Lawn Tennis, Field Track Events, Tag of War, Darts Board</p>
+                    </div>
                 </div>
             </div>
         </div>

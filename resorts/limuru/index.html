@@ -1898,19 +1898,132 @@
     <section class="rates-section">
         <div class="container">
             <div class="section-header">
-                <h2>Accommodation Rates 2026</h2>
+                <h2>Accommodation & Conference Rates 2026</h2>
                 <p>Competitive pricing for all types of stays</p>
             </div>
             
             <div class="rates-tabs">
-                <div class="rate-tab active" data-tab="church">Special Church Rates</div>
-                <div class="rate-tab" data-tab="corporate">Corporate Rates</div>
+                <div class="rate-tab active" data-tab="corporate">Corporate Rates</div>
+                <div class="rate-tab" data-tab="church">Special Church Rates</div>
                 <div class="rate-tab" data-tab="conference">Conference Packages</div>
                 <div class="rate-tab" data-tab="special">Special Packages</div>
             </div>
             
+            <!-- Corporate Rates -->
+            <div id="corporateRates" class="rates-content">
+                <div class="rates-table-container">
+                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Corporate Rates - Accommodation Packages (KSH)</h3>
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>Room Type</th>
+                                <th colspan="2">Bed & Breakfast</th>
+                                <th colspan="2">Half Board</th>
+                                <th colspan="2">Full Board</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>Single</th>
+                                <th>Double</th>
+                                <th>Single</th>
+                                <th>Double</th>
+                                <th>Single</th>
+                                <th>Double</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Standard Room</strong></td>
+                                <td>4,450</td>
+                                <td>7,850</td>
+                                <td>5,300</td>
+                                <td>9,000</td>
+                                <td>6,100</td>
+                                <td>10,100</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Executive</strong></td>
+                                <td>5,600</td>
+                                <td>9,000</td>
+                                <td>6,700</td>
+                                <td>10,100</td>
+                                <td>7,500</td>
+                                <td>11,200</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Studio Suite</strong></td>
+                                <td>11,200</td>
+                                <td>14,200</td>
+                                <td>12,350</td>
+                                <td>15,600</td>
+                                <td>13,450</td>
+                                <td>16,950</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4 style="margin-top: 40px; color: var(--primary-green); text-align: center;">Corporate Rates - Accommodation Packages (USD)</h4>
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>Room Type</th>
+                                <th colspan="2">Bed & Breakfast</th>
+                                <th colspan="2">Half Board</th>
+                                <th colspan="2">Full Board</th>
+                            </tr>
+                            <tr>
+                                <th></th>
+                                <th>Single</th>
+                                <th>Double</th>
+                                <th>Single</th>
+                                <th>Double</th>
+                                <th>Single</th>
+                                <th>Double</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Standard Room</strong></td>
+                                <td>$60</td>
+                                <td>$95</td>
+                                <td>$65</td>
+                                <td>$105</td>
+                                <td>$70</td>
+                                <td>$115</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Executive</strong></td>
+                                <td>$80</td>
+                                <td>$110</td>
+                                <td>$85</td>
+                                <td>$120</td>
+                                <td>$90</td>
+                                <td>$130</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Studio Suite</strong></td>
+                                <td>$135</td>
+                                <td>$165</td>
+                                <td>$145</td>
+                                <td>$180</td>
+                                <td>$155</td>
+                                <td>$195</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                
+                <div class="policy-note">
+                    <h4>Corporate Rate Terms:</h4>
+                    <p>• Valid for registered corporate organizations</p>
+                    <p>• Company letterhead required for booking</p>
+                    <p>• 30% corporate discount on conference facilities</p>
+                    <p>• Complimentary WiFi and business center access</p>
+                </div>
+            </div>
+            
             <!-- Church Rates -->
-            <div id="churchRates" class="rates-content">
+            <div id="churchRates" class="rates-content" style="display: none;">
                 <div class="rates-table-container">
                     <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Special Church Rates - Accommodation Packages</h3>
                     <table class="rates-table">
@@ -1967,104 +2080,74 @@
                 </div>
             </div>
             
-            <!-- Corporate Rates -->
-            <div id="corporateRates" class="rates-content" style="display: none;">
+            <!-- Conference Packages -->
+            <div id="conferenceRates" class="rates-content" style="display: none;">
                 <div class="rates-table-container">
-                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Corporate Rates - Accommodation Packages</h3>
+                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Full Board Conference & Accommodation (Per Person Per Day)</h3>
                     <table class="rates-table">
                         <thead>
                             <tr>
-                                <th>Room Type</th>
-                                <th>B&B Single</th>
-                                <th>B&B Double</th>
-                                <th>Half Board Single</th>
-                                <th>Half Board Double</th>
-                                <th>Full Board Single</th>
-                                <th>Full Board Double</th>
+                                <th>Package</th>
+                                <th>Residents (KES)</th>
+                                <th>Non-Residents (USD)</th>
+                                <th>Includes</th>
                             </tr>
                         </thead>
                         <tbody>
                             <tr>
-                                <td><strong>Standard Room</strong></td>
-                                <td>KES 4,200</td>
-                                <td>KES 7,400</td>
-                                <td>KES 5,100</td>
-                                <td>KES 8,500</td>
-                                <td>KES 5,800</td>
-                                <td>KES 9,500</td>
+                                <td><strong>Single Standard Room</strong></td>
+                                <td>6,750</td>
+                                <td>$85</td>
+                                <td>Conference facilities, single accommodation, all meals</td>
                             </tr>
                             <tr>
-                                <td><strong>Executive Room</strong></td>
-                                <td>KES 5,200</td>
-                                <td>KES 8,500</td>
-                                <td>KES 6,300</td>
-                                <td>KES 9,500</td>
-                                <td>KES 7,100</td>
-                                <td>KES 10,600</td>
+                                <td><strong>Twin Room (Sharing)</strong></td>
+                                <td>5,850</td>
+                                <td>$75</td>
+                                <td>Conference facilities, shared accommodation, all meals</td>
                             </tr>
                             <tr>
-                                <td><strong>Studio Suite</strong></td>
-                                <td>KES 9,500</td>
-                                <td>KES 13,500</td>
-                                <td>KES 11,500</td>
-                                <td>KES 14,800</td>
-                                <td>KES 12,800</td>
-                                <td>KES 16,000</td>
+                                <td><strong>Single Executive Room</strong></td>
+                                <td>7,850</td>
+                                <td>$95</td>
+                                <td>Conference facilities, executive accommodation, all meals</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    
+                    <h4 style="margin-top: 40px; color: var(--primary-green); text-align: center;">Day Conference Packages</h4>
+                    <table class="rates-table">
+                        <thead>
+                            <tr>
+                                <th>Package</th>
+                                <th>Residents (KES)</th>
+                                <th>Non-Residents (USD)</th>
+                                <th>Includes</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><strong>Full Day Conference</strong></td>
+                                <td>2,600</td>
+                                <td>$35</td>
+                                <td>Conference room, tea breaks, lunch</td>
+                            </tr>
+                            <tr>
+                                <td><strong>Half Day Conference</strong></td>
+                                <td>2,200</td>
+                                <td>$30</td>
+                                <td>Conference room, tea break</td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
                 
                 <div class="policy-note">
-                    <h4>Corporate Rate Terms:</h4>
-                    <p>• Valid for registered corporate organizations</p>
-                    <p>• Minimum stay of 2 nights required</p>
-                    <p>• Company letterhead required for booking</p>
-                    <p>• 30% corporate discount on conference facilities</p>
-                    <p>• Complimentary WiFi and business center access</p>
-                </div>
-            </div>
-            
-            <!-- Conference Packages -->
-            <div id="conferenceRates" class="rates-content" style="display: none;">
-                <div class="rates-table-container">
-                    <h3 style="color: var(--primary-green); margin-bottom: 20px; text-align: center;">Conference & Accommodation Packages (Per Person Per Day)</h3>
-                    <table class="rates-table">
-                        <thead>
-                            <tr>
-                                <th>Package</th>
-                                <th>Price (KES)</th>
-                                <th>Includes</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td><strong>Executive Rooms Conference Package</strong></td>
-                                <td>5,500</td>
-                                <td>Conference facilities, accommodation, all meals</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Single Standard Room Conference Package</strong></td>
-                                <td>5,000</td>
-                                <td>Conference facilities, accommodation, all meals</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Twin/Triple Sharing Conference Package</strong></td>
-                                <td>4,750</td>
-                                <td>Conference facilities, shared accommodation, all meals</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Full Day Conference Only</strong></td>
-                                <td>2,400</td>
-                                <td>Conference room, tea breaks, lunch</td>
-                            </tr>
-                            <tr>
-                                <td><strong>Half Day Conference Only</strong></td>
-                                <td>2,000</td>
-                                <td>Conference room, tea break</td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <h4>Conference Terms:</h4>
+                    <p>• Minimum 10 persons for conference packages</p>
+                    <p>• Advance booking required (minimum 7 days)</p>
+                    <p>• 50% deposit required for group bookings</p>
+                    <p>• Audio-visual equipment available at additional cost</p>
                 </div>
             </div>
             
@@ -2123,12 +2206,42 @@
                 </div>
                 
                 <div class="policy-note">
-                    <h4>Additional Information:</h4>
-                    <p>• Children 3 years & below: Free (sharing with parents)</p>
-                    <p>• Children 4-11 years sharing with parents: 50% of adult rate</p>
-                    <p>• Children 4-11 years in own room: 75% of adult rate</p>
-                    <p>• Extra bed for adults: 40% of room rate</p>
+                    <h4>General Information:</h4>
+                    <p>• Children 4 years & below: Free (sharing with parents)</p>
+                    <p>• Children 5-11 years sharing with parents: 50% of adult rate</p>
+                    <p>• Children 5-11 years exclusive use of room: 75% of adult rate</p>
+                    <p>• Extra Bed: 40% of the Room rate</p>
                     <p>• Check-in: 12:00 PM | Check-out: 10:00 AM</p>
+                    <p>• Day Room charges: 75% of applicable room charge</p>
+                    <p>• Rates inclusive of statutory taxes</p>
+                    <p>• Rates subject to change without notice</p>
+                </div>
+                
+                <div class="policy-note" style="margin-top: 20px; background-color: #fff8e1; border-left: 4px solid #ffb300;">
+                    <h4>Cancellation Policy:</h4>
+                    <table style="width: 100%; margin-top: 10px;">
+                        <tr>
+                            <td><strong>30 - 20 days</strong></td>
+                            <td>15% of booking value</td>
+                        </tr>
+                        <tr>
+                            <td><strong>20 - 10 days</strong></td>
+                            <td>30% of booking value</td>
+                        </tr>
+                        <tr>
+                            <td><strong>10 - 0 days</strong></td>
+                            <td>100% of booking value</td>
+                        </tr>
+                        <tr>
+                            <td><strong>No Show</strong></td>
+                            <td>100% of booking value</td>
+                        </tr>
+                    </table>
+                </div>
+                
+                <div class="policy-note" style="margin-top: 20px;">
+                    <h4>Games Facilities Available:</h4>
+                    <p>Football, Volley Ball, Basket Ball, Hand Ball, Lawn Tennis, Field Track Events, Tag of War, Darts Board</p>
                 </div>
             </div>
         </div>

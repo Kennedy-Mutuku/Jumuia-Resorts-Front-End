@@ -122,12 +122,12 @@
             font-weight: 500;
         }
 
-        .hotel-nav {
+        .resort-nav {
             display: flex;
             gap: 25px;
         }
 
-        .hotel-nav a {
+        .resort-nav a {
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 500;
@@ -136,16 +136,16 @@
             position: relative;
         }
 
-        .hotel-nav a:hover {
+        .resort-nav a:hover {
             color: var(--primary-orange);
         }
 
-        .hotel-nav a.active {
+        .resort-nav a.active {
             color: var(--primary-green);
             font-weight: 600;
         }
 
-        .hotel-nav a.active::after {
+        .resort-nav a.active::after {
             content: '';
             position: absolute;
             bottom: -5px;
@@ -851,13 +851,13 @@
                 <i class="fas fa-bars"></i>
             </div>
             
-            <nav class="hotel-nav" id="hotelNav">
-                <a href="index.html">Home</a>
-                <a href="rooms.html">Rooms & Rates</a>
-                <a href="conference.html">Conference</a>
-                <a href="offers.html">Offers</a>
-                <a href="excursions.html">Excursions</a>
-                <a href="feedback.html">Rate Us</a>
+            <nav class="resort-nav" id="resortNav">
+                <a href="index.html" class="active">Home</a>
+                <a href="rooms.html" class="active">Rooms & Rates</a>
+                <a href="conference.html" class="">Conference</a>
+                <a href="offers.html" class="active">Offers</a>
+                <a href="excursions.html" class="active">Excursions</a>
+                <a href="feedback.html" class="active">Rate Us</a>
                 <a href="gallery.html" class="active">Gallery</a>
                 <a href="booking.html" class="btn btn-primary">Book Now</a>
             </nav>
@@ -909,7 +909,7 @@
         <div class="container">
             <div class="section-header">
                 <h2>Photo Gallery</h2>
-                <p>Browse through our collection showcasing Jumuia Hotel Kisumu's modern facilities, comfortable rooms, and prime lakeside location</p>
+                <p>Browse through our collection showcasing Jumuia Hotel Kisumu's modern facilities, comfortable rooms, and cross to lakeside location</p>
             </div>
             
             <div class="gallery-grid">
