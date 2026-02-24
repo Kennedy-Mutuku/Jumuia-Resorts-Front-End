@@ -1,0 +1,3029 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumuia Kanamai - Property Dashboard</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/luxon@3.4.4/build/global/luxon.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-green: #22440f;
+            --primary-orange: #f3a435;
+            --primary-white: #ffffff;
+            --secondary-green: #007c00;
+            --light-green: #e9f5e5;
+            --dark-green: #153800;
+            --gray-bg: #f8f9fa;
+            --gray-border: #e0e0e0;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+            --kanamai-color: #007c00;
+            --kanamai-light: rgba(0, 124, 0, 0.1);
+            --kanamai-dark: #006600;
+            --transition: all 0.3s ease;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--gray-bg);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Admin Header - Enhanced */
+        .admin-header {
+            background: linear-gradient(135deg, var(--kanamai-dark), var(--kanamai-color));
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            padding: 15px 0;
+            border-bottom: 4px solid var(--primary-orange);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .admin-logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo-img {
+            width: 45px;
+            height: 45px;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        .admin-logo h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            color: var(--primary-white);
+        }
+
+        .admin-logo p {
+            font-size: 0.85rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 25px;
+        }
+
+        .back-to-dashboard {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--primary-white);
+            text-decoration: none;
+            font-weight: 600;
+            padding: 10px 20px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-radius: var(--radius);
+            transition: var(--transition);
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .back-to-dashboard:hover {
+            background: rgba(255, 255, 255, 0.2);
+            border-color: var(--primary-white);
+            transform: translateY(-2px);
+        }
+
+        .user-profile {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            position: relative;
+            padding: 8px 12px;
+            border-radius: var(--radius);
+            transition: var(--transition);
+        }
+
+        .user-profile:hover {
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            background: linear-gradient(135deg, var(--primary-orange), #ff9d00);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary-white);
+            font-weight: 600;
+            font-size: 1.1rem;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .user-name {
+            color: var(--primary-white);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .user-role {
+            font-size: 0.8rem;
+            color: rgba(255, 255, 255, 0.8);
+        }
+
+        .user-menu {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            display: none;
+            min-width: 220px;
+            z-index: 1001;
+            margin-top: 10px;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .user-menu.show {
+            display: block;
+        }
+
+        .menu-item {
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: var(--transition);
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .menu-item:hover {
+            background-color: var(--light-green);
+            transform: translateX(5px);
+        }
+
+        .menu-item:last-child {
+            border-bottom: none;
+        }
+
+        .menu-item.logout {
+            color: #dc3545;
+        }
+
+        .menu-item.logout:hover {
+            background-color: rgba(220, 53, 69, 0.1);
+        }
+        
+        /* Property Hero - Enhanced */
+        .property-hero {
+            background: linear-gradient(rgba(0, 124, 0, 0.85), rgba(0, 124, 0, 0.85)), 
+                        url('https://images.unsplash.com/photo-1544551763-46a013bb70d5?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: var(--primary-white);
+            padding: 120px 0 60px;
+            margin-top: 80px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .property-hero::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 100px;
+            background: linear-gradient(to top, var(--gray-bg), transparent);
+        }
+
+        .property-hero h1 {
+            color: var(--primary-white);
+            font-size: 3rem;
+            margin-bottom: 15px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        .property-tagline {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 600px;
+            margin-bottom: 30px;
+            line-height: 1.8;
+        }
+
+        .property-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 15px 25px;
+            border-radius: var(--radius);
+            backdrop-filter: blur(10px);
+            transition: var(--transition);
+        }
+
+        .info-item:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: translateY(-3px);
+        }
+
+        .info-item i {
+            color: var(--primary-orange);
+            font-size: 1.5rem;
+        }
+
+        .info-text {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 0.85rem;
+            opacity: 0.8;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            font-weight: 600;
+            font-size: 1.1rem;
+        }
+        
+        /* Admin Layout */
+        .admin-layout {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+        
+        /* Property Sidebar - Enhanced */
+        .property-sidebar {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 0;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 100px;
+            overflow: hidden;
+            border: 1px solid var(--gray-border);
+        }
+
+        .sidebar-header {
+            text-align: center;
+            padding: 30px 20px;
+            background: linear-gradient(135deg, var(--kanamai-color), var(--kanamai-dark));
+            color: var(--primary-white);
+            margin-bottom: 10px;
+        }
+
+        .property-icon {
+            width: 80px;
+            height: 80px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 15px;
+            color: var(--primary-white);
+            font-size: 2rem;
+            border: 3px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .sidebar-header h3 {
+            color: var(--primary-white);
+            margin-bottom: 5px;
+        }
+
+        .property-subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .property-nav {
+            list-style: none;
+            padding: 20px 0;
+        }
+
+        .property-nav li {
+            margin-bottom: 2px;
+        }
+
+        .property-nav a {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 18px 25px;
+            color: var(--text-dark);
+            text-decoration: none;
+            border-radius: 0;
+            transition: var(--transition);
+            border-left: 4px solid transparent;
+            position: relative;
+        }
+
+        .property-nav a:hover {
+            background-color: var(--kanamai-light);
+            color: var(--kanamai-color);
+            border-left-color: var(--kanamai-color);
+            padding-left: 30px;
+        }
+
+        .property-nav a.active {
+            background: linear-gradient(to right, var(--kanamai-light), transparent);
+            color: var(--kanamai-color);
+            border-left-color: var(--kanamai-color);
+            font-weight: 600;
+        }
+
+        .property-nav a.active::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background: var(--kanamai-color);
+        }
+
+        .property-nav i {
+            width: 24px;
+            text-align: center;
+            font-size: 1.2rem;
+            color: var(--kanamai-color);
+        }
+
+        .property-nav a.active i {
+            color: var(--kanamai-color);
+        }
+
+        .nav-badge {
+            background: linear-gradient(135deg, var(--primary-orange), #ff9d00);
+            color: var(--primary-white);
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-left: auto;
+            min-width: 24px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Main Content */
+        .property-content {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-border);
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 40px;
+            padding-bottom: 25px;
+            border-bottom: 2px solid var(--kanamai-light);
+        }
+
+        .breadcrumb {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-light);
+            font-size: 0.95rem;
+        }
+
+        .breadcrumb a {
+            color: var(--kanamai-color);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        .breadcrumb a:hover {
+            color: var(--kanamai-dark);
+            text-decoration: underline;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            padding: 12px 25px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.15);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--kanamai-color), var(--kanamai-dark));
+            color: var(--primary-white);
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, var(--kanamai-dark), var(--kanamai-color));
+        }
+
+        .btn-orange {
+            background: linear-gradient(135deg, var(--primary-orange), #ff9d00);
+            color: var(--primary-white);
+        }
+
+        .btn-orange:hover {
+            background: linear-gradient(135deg, #e5941f, #e88c00);
+        }
+
+        .btn-secondary {
+            background-color: var(--primary-white);
+            color: var(--kanamai-color);
+            border: 2px solid var(--kanamai-color);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--kanamai-color);
+            color: var(--primary-white);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: var(--primary-white);
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: var(--primary-white);
+        }
+        
+        /* Beach-specific features - Enhanced */
+        .beach-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 25px;
+            margin: 40px 0;
+        }
+
+        .beach-feature {
+            background: linear-gradient(135deg, rgba(0, 124, 0, 0.05), rgba(243, 164, 53, 0.05));
+            padding: 25px;
+            border-radius: var(--radius);
+            border-left: 4px solid var(--kanamai-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .beach-feature::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--kanamai-color) 0%, transparent 100%);
+            opacity: 0;
+            transition: var(--transition);
+            z-index: 0;
+        }
+
+        .beach-feature:hover::before {
+            opacity: 0.05;
+        }
+
+        .beach-feature:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 124, 0, 0.1);
+        }
+
+        .beach-feature h4 {
+            color: var(--kanamai-color);
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 1.2rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        .beach-feature p {
+            color: var(--text-dark);
+            font-size: 1rem;
+            line-height: 1.6;
+            position: relative;
+            z-index: 1;
+        }
+
+        .feature-status {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid rgba(0, 124, 0, 0.1);
+            font-size: 0.9rem;
+            color: var(--text-light);
+            position: relative;
+            z-index: 1;
+        }
+
+        .status-indicator {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        .status-good {
+            background: rgba(40, 167, 69, 0.1);
+            color: #28a745;
+        }
+
+        .status-warning {
+            background: rgba(255, 193, 7, 0.1);
+            color: #856404;
+        }
+
+        .status-info {
+            background: rgba(23, 162, 184, 0.1);
+            color: #0c5460;
+        }
+        
+        /* Dashboard Widgets - Enhanced */
+        .dashboard-widgets {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 40px;
+        }
+
+        .widget {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 25px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gray-border);
+        }
+
+        .widget:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .widget::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(to right, var(--kanamai-color), var(--primary-orange));
+        }
+
+        .widget-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 20px;
+        }
+
+        .widget-title {
+            font-size: 1.1rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .widget-stat {
+            font-size: 2.8rem;
+            font-weight: 700;
+            color: var(--kanamai-color);
+            margin: 15px 0;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .widget-change {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .widget-change.positive {
+            color: #28a745;
+        }
+
+        .widget-change.negative {
+            color: #dc3545;
+        }
+
+        .widget-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, rgba(0, 124, 0, 0.1), rgba(0, 124, 0, 0.2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: var(--kanamai-color);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .widget-footer {
+            margin-top: 20px;
+            padding-top: 15px;
+            border-top: 1px solid var(--gray-border);
+            font-size: 0.85rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        /* Charts Section - Enhanced */
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .chart-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-border);
+            transition: var(--transition);
+        }
+
+        .chart-card:hover {
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+        }
+
+        .chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--kanamai-light);
+        }
+
+        .chart-title {
+            font-size: 1.4rem;
+            color: var(--kanamai-color);
+            font-weight: 600;
+        }
+
+        .chart-controls {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .chart-select {
+            padding: 8px 15px;
+            border: 1px solid var(--gray-border);
+            border-radius: var(--radius);
+            background: var(--primary-white);
+            color: var(--text-dark);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.9rem;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .chart-select:hover {
+            border-color: var(--kanamai-color);
+        }
+
+        .chart-select:focus {
+            outline: none;
+            border-color: var(--kanamai-color);
+            box-shadow: 0 0 0 3px rgba(0, 124, 0, 0.1);
+        }
+
+        .chart-container {
+            height: 320px;
+            position: relative;
+        }
+        
+        /* Rooms Status - Enhanced */
+        .rooms-section {
+            margin-bottom: 40px;
+        }
+
+        .rooms-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--kanamai-light);
+        }
+
+        .rooms-section h3 {
+            color: var(--kanamai-color);
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .rooms-filter {
+            display: flex;
+            gap: 10px;
+        }
+
+        .filter-btn {
+            padding: 8px 20px;
+            border: 1px solid var(--gray-border);
+            border-radius: var(--radius);
+            background: var(--primary-white);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+            font-size: 0.9rem;
+        }
+
+        .filter-btn.active {
+            background: var(--kanamai-color);
+            color: var(--primary-white);
+            border-color: var(--kanamai-color);
+        }
+
+        .filter-btn:hover:not(.active) {
+            border-color: var(--kanamai-color);
+            color: var(--kanamai-color);
+        }
+
+        .rooms-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+
+        .room-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 20px;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+            transition: var(--transition);
+            cursor: pointer;
+            border: 2px solid var(--gray-border);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .room-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .room-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .room-card.occupied {
+            border-color: rgba(220, 53, 69, 0.3);
+            background-color: rgba(220, 53, 69, 0.05);
+        }
+
+        .room-card.occupied::before {
+            background: linear-gradient(to right, #dc3545, #e83e8c);
+        }
+
+        .room-card.available {
+            border-color: rgba(0, 124, 0, 0.3);
+            background-color: rgba(0, 124, 0, 0.05);
+        }
+
+        .room-card.available::before {
+            background: linear-gradient(to right, var(--kanamai-color), var(--secondary-green));
+        }
+
+        .room-card.maintenance {
+            border-color: rgba(255, 193, 7, 0.3);
+            background-color: rgba(255, 193, 7, 0.05);
+        }
+
+        .room-card.maintenance::before {
+            background: linear-gradient(to right, #ffc107, #ffd54f);
+        }
+
+        .room-card.cleaning {
+            border-color: rgba(23, 162, 184, 0.3);
+            background-color: rgba(23, 162, 184, 0.05);
+        }
+
+        .room-card.cleaning::before {
+            background: linear-gradient(to right, #17a2b8, #31d2f2);
+        }
+
+        .room-number {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--kanamai-color);
+            margin-bottom: 10px;
+        }
+
+        .room-card.occupied .room-number {
+            color: #dc3545;
+        }
+
+        .room-type {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .room-status {
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 5px 15px;
+            border-radius: 20px;
+            display: inline-block;
+            letter-spacing: 0.5px;
+        }
+
+        .status-occupied {
+            background: linear-gradient(135deg, #dc3545, #e83e8c);
+            color: white;
+        }
+
+        .status-available {
+            background: linear-gradient(135deg, var(--kanamai-color), var(--secondary-green));
+            color: white;
+        }
+
+        .status-maintenance {
+            background: linear-gradient(135deg, #ffc107, #ffd54f);
+            color: #333;
+        }
+
+        .status-cleaning {
+            background: linear-gradient(135deg, #17a2b8, #31d2f2);
+            color: white;
+        }
+
+        .room-details {
+            margin-top: 10px;
+            font-size: 0.8rem;
+            color: var(--text-light);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 5px;
+        }
+        
+        /* Recent Bookings Table - Enhanced */
+        .recent-bookings {
+            margin-bottom: 40px;
+        }
+
+        .recent-bookings-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--kanamai-light);
+        }
+
+        .recent-bookings h3 {
+            color: var(--kanamai-color);
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .bookings-table {
+            overflow-x: auto;
+            margin-top: 20px;
+            border-radius: var(--radius);
+            border: 1px solid var(--gray-border);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.08);
+        }
+
+        .bookings-table table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .bookings-table th {
+            background: linear-gradient(135deg, var(--kanamai-color), var(--kanamai-dark));
+            color: var(--primary-white);
+            padding: 18px 20px;
+            text-align: left;
+            font-weight: 600;
+            white-space: nowrap;
+            font-size: 0.95rem;
+        }
+
+        .bookings-table th:first-child {
+            border-top-left-radius: var(--radius);
+        }
+
+        .bookings-table th:last-child {
+            border-top-right-radius: var(--radius);
+        }
+
+        .bookings-table td {
+            padding: 18px 20px;
+            border-bottom: 1px solid var(--gray-border);
+            font-size: 0.95rem;
+        }
+
+        .bookings-table tr:nth-child(even) {
+            background-color: rgba(233, 245, 229, 0.3);
+        }
+
+        .bookings-table tr:hover {
+            background-color: var(--kanamai-light);
+        }
+
+        .status-badge {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            display: inline-block;
+            text-align: center;
+            min-width: 100px;
+        }
+
+        .status-pending {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            color: #856404;
+            border: 1px solid #ffeaa7;
+        }
+
+        .status-confirmed {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .status-checkedin {
+            background: linear-gradient(135deg, #cce5ff, #b8daff);
+            color: #004085;
+            border: 1px solid #b8daff;
+        }
+
+        .status-checkedout {
+            background: linear-gradient(135deg, #e2e3e5, #d6d8db);
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+
+        .status-cancelled {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .action-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            background: var(--gray-bg);
+            color: var(--text-dark);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .action-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .action-btn.view {
+            background: var(--kanamai-light);
+            color: var(--kanamai-color);
+        }
+
+        .action-btn.edit {
+            background: rgba(23, 162, 184, 0.1);
+            color: #17a2b8;
+        }
+
+        .action-btn.delete {
+            background: rgba(220, 53, 69, 0.1);
+            color: #dc3545;
+        }
+        
+        /* Quick Actions - Enhanced */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 25px;
+            margin-top: 40px;
+        }
+
+        .action-card {
+            background-color: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 30px;
+            text-align: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--gray-border);
+            transition: var(--transition);
+            cursor: pointer;
+            text-decoration: none;
+            color: inherit;
+            display: block;
+        }
+
+        .action-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
+            border-color: var(--kanamai-color);
+            color: var(--kanamai-color);
+        }
+
+        .action-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, rgba(0, 124, 0, 0.1), rgba(0, 124, 0, 0.2));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            font-size: 1.8rem;
+            color: var(--kanamai-color);
+            transition: var(--transition);
+        }
+
+        .action-card:hover .action-icon {
+            background: linear-gradient(135deg, var(--kanamai-color), var(--kanamai-dark));
+            color: var(--primary-white);
+            transform: scale(1.1);
+        }
+
+        .action-card h4 {
+            margin-bottom: 10px;
+            color: var(--kanamai-color);
+            font-size: 1.2rem;
+        }
+
+        .action-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+        
+        /* Loading State */
+        .loading {
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 3px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--primary-white);
+            animation: spin 1s ease-in-out infinite;
+        }
+
+        @keyframes spin { 
+            to { transform: rotate(360deg); } 
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Alert Styles */
+        .alert {
+            padding: 20px;
+            border-radius: var(--radius);
+            margin-bottom: 30px;
+            display: none;
+            animation: fadeIn 0.5s ease;
+        }
+
+        .alert-error {
+            background: linear-gradient(135deg, #f8d7da, #f5c6cb);
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+            border-left: 4px solid #dc3545;
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #d4edda, #c3e6cb);
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            border-left: 4px solid #28a745;
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #cce5ff, #b8daff);
+            color: #004085;
+            border: 1px solid #b8daff;
+            border-left: 4px solid #17a2b8;
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+            color: #856404;
+            border: 1px solid #ffeaa7;
+            border-left: 4px solid #ffc107;
+        }
+        
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+            padding: 20px;
+        }
+
+        .modal-content {
+            background: var(--primary-white);
+            border-radius: var(--radius);
+            width: 100%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal-header {
+            padding: 25px 30px;
+            border-bottom: 1px solid var(--gray-border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h3 {
+            color: var(--kanamai-color);
+            margin: 0;
+            font-size: 1.5rem;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--text-light);
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            transition: var(--transition);
+        }
+
+        .modal-close:hover {
+            background: var(--gray-bg);
+            color: var(--text-dark);
+        }
+
+        .modal-body {
+            padding: 30px;
+        }
+
+        .form-group {
+            margin-bottom: 25px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--kanamai-color);
+            font-weight: 600;
+            font-size: 0.95rem;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 20px;
+            border: 1px solid var(--gray-border);
+            border-radius: var(--radius);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--kanamai-color);
+            box-shadow: 0 0 0 3px rgba(0, 124, 0, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .modal-footer {
+            padding: 20px 30px;
+            border-top: 1px solid var(--gray-border);
+            display: flex;
+            gap: 15px;
+            justify-content: flex-end;
+        }
+        
+        /* Responsive Design */
+        @media (max-width: 1200px) {
+            .charts-section {
+                grid-template-columns: 1fr;
+            }
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+            .property-sidebar {
+                position: static;
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .admin-layout {
+                grid-template-columns: 1fr;
+            }
+            .property-sidebar {
+                position: static;
+                margin-bottom: 30px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .property-hero h1 {
+                font-size: 2.2rem;
+            }
+            .dashboard-widgets {
+                grid-template-columns: 1fr;
+            }
+            .header-controls {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            .action-buttons {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .action-buttons .btn {
+                flex: 1;
+                min-width: 150px;
+                justify-content: center;
+            }
+            .rooms-grid {
+                grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+            }
+            .quick-actions {
+                grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            }
+            .content-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 20px;
+            }
+            .beach-features {
+                grid-template-columns: 1fr;
+            }
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            .table-actions {
+                flex-direction: column;
+                gap: 5px;
+            }
+        }
+
+        @media (max-width: 576px) {
+            .property-hero {
+                padding: 100px 0 40px;
+            }
+            .property-info {
+                flex-direction: column;
+                gap: 15px;
+            }
+            .info-item {
+                width: 100%;
+            }
+            .rooms-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            .quick-actions {
+                grid-template-columns: 1fr;
+            }
+            .modal-content {
+                margin: 20px;
+                width: calc(100% - 40px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Admin Header -->
+    <header class="admin-header">
+        <div class="container header-container">
+            <div class="admin-logo">
+                <svg class="logo-img" viewBox="0 0 133 78">
+                    <path d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#22440f" stroke-width="0.75"/>
+                    <path d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#22440f" stroke-width="0.75"/>
+                    <path d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#22440f"/>
+                    <path d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#22440f"/>
+                    <path d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#22440f"/>
+                    <path d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                </svg>
+                <div>
+                    <h1>Jumuia Kanamai</h1>
+                    <p>Beach Resort & Conference Center</p>
+                </div>
+            </div>
+            
+            <div class="header-controls">
+                <a href="../dashboard.html" class="back-to-dashboard">
+                    <i class="fas fa-arrow-left"></i>
+                    <span>Main Dashboard</span>
+                </a>
+                
+                <div class="user-profile" id="userProfile">
+                    <div class="avatar" id="userAvatar">U</div>
+                    <div>
+                        <div class="user-name" id="userName">Loading...</div>
+                        <div class="user-role">Kanamai Beach Resort</div>
+                    </div>
+                    <i class="fas fa-chevron-down"></i>
+                    <div class="user-menu" id="userMenu">
+                        <div class="menu-item" id="profileBtn">
+                            <i class="fas fa-user-circle"></i>
+                            <span>My Profile</span>
+                        </div>
+                        <div class="menu-item" id="helpBtn">
+                            <i class="fas fa-question-circle"></i>
+                            <span>Help & Support</span>
+                        </div>
+                        <div class="menu-item logout" id="logoutBtn">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Logout</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Property Hero -->
+    <section class="property-hero">
+        <div class="container">
+            <h1>Jumuia Conference & Beach Resort - Kanamai</h1>
+            <p class="property-tagline">Experience breathtaking beachfront luxury with world-class conference facilities, stunning swimming pools, and unforgettable coastal adventure activities. Your paradise by the sea awaits.</p>
+            
+            <div class="property-info">
+                <div class="info-item">
+                    <i class="fas fa-map-marker-alt"></i>
+                    <div class="info-text">
+                        <div class="info-label">Location</div>
+                        <div class="info-value">Kanamai Coast, Mombasa Road</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-phone"></i>
+                    <div class="info-text">
+                        <div class="info-label">Contact</div>
+                        <div class="info-value">0710 288 043</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-envelope"></i>
+                    <div class="info-text">
+                        <div class="info-label">Email</div>
+                        <div class="info-value">reservations.kanamai@resortjumuia.com</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <i class="fas fa-clock"></i>
+                    <div class="info-text">
+                        <div class="info-label">Check-in/out</div>
+                        <div class="info-value">2:00 PM / 11:00 AM</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin Layout -->
+    <div class="container">
+        <div class="admin-layout">
+            <!-- Property Sidebar -->
+            <aside class="property-sidebar">
+                <div class="sidebar-header">
+                    <div class="property-icon">
+                        <i class="fas fa-umbrella-beach"></i>
+                    </div>
+                    <h3>Beach Resort Menu</h3>
+                    <div class="property-subtitle">Manage all aspects</div>
+                </div>
+                
+                <ul class="property-nav">
+                    <li>
+                        <a href="#overview" class="active" data-module="overview">
+                            <i class="fas fa-tachometer-alt"></i>
+                            <span>Overview Dashboard</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#bookings" data-module="bookings">
+                            <i class="fas fa-calendar-check"></i>
+                            <span>Reservations</span>
+                            <span class="nav-badge" id="pendingBookingsBadge">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#rooms" data-module="rooms">
+                            <i class="fas fa-bed"></i>
+                            <span>Room Management</span>
+                            <span class="nav-badge" id="availableRoomsBadge">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#beach-activities" data-module="beach-activities">
+                            <i class="fas fa-water"></i>
+                            <span>Beach Activities</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#pool" data-module="pool">
+                            <i class="fas fa-swimming-pool"></i>
+                            <span>Pool Management</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#excursions" data-module="excursions">
+                            <i class="fas fa-ship"></i>
+                            <span>Coastal Excursions</span>
+                            <span class="nav-badge" id="scheduledExcursions">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#restaurant" data-module="restaurant">
+                            <i class="fas fa-utensils"></i>
+                            <span>Restaurant & Bar</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#revenue" data-module="revenue">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Revenue & Billing</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#messages" data-module="messages">
+                            <i class="fas fa-comments"></i>
+                            <span>Guest Messages</span>
+                            <span class="nav-badge" id="unreadMessagesBadge">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#reviews" data-module="reviews">
+                            <i class="fas fa-star"></i>
+                            <span>Guest Reviews</span>
+                            <span class="nav-badge" id="newReviewsBadge">0</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#reports" data-module="reports">
+                            <i class="fas fa-chart-bar"></i>
+                            <span>Analytics & Reports</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#settings" data-module="settings">
+                            <i class="fas fa-cog"></i>
+                            <span>Property Settings</span>
+                        </a>
+                    </li>
+                </ul>
+            </aside>
+
+            <!-- Main Content -->
+            <main class="property-content">
+                <!-- Overview Module -->
+                <div id="overviewModule" class="module-content active">
+                    <div class="content-header">
+                        <div class="breadcrumb">
+                            <a href="../dashboard.html">Main Dashboard</a> / 
+                            <a href="#">Kanamai Beach Resort</a> / 
+                            <span>Overview Dashboard</span>
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-orange" onclick="showQuickBooking()">
+                                <i class="fas fa-plus-circle"></i>
+                                New Reservation
+                            </button>
+                            <button class="btn btn-primary" onclick="manageBeachActivities()">
+                                <i class="fas fa-umbrella-beach"></i>
+                                Beach Activities
+                            </button>
+                            <button class="btn btn-secondary" onclick="showPoolStatus()">
+                                <i class="fas fa-swimming-pool"></i>
+                                Pool Status
+                            </button>
+                            <button class="btn btn-success" onclick="showExcursions()">
+                                <i class="fas fa-ship"></i>
+                                View Excursions
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Alerts -->
+                    <div class="alert alert-info" id="infoAlert" style="display: none;">
+                        <i class="fas fa-info-circle"></i>
+                        <span id="infoMessage"></span>
+                    </div>
+
+                    <!-- Beach Features -->
+                    <div class="beach-features">
+                        <div class="beach-feature">
+                            <h4><i class="fas fa-water"></i> Beach Status</h4>
+                            <p>Current tide levels and beach conditions for guest safety and activities.</p>
+                            <div class="feature-status">
+                                <div id="beachStatus">Tide: Low | Condition: Calm</div>
+                                <div class="status-indicator status-good">
+                                    <i class="fas fa-check-circle"></i>
+                                    Safe for swimming
+                                </div>
+                            </div>
+                        </div>
+                        <div class="beach-feature">
+                            <h4><i class="fas fa-swimming-pool"></i> Pool Status</h4>
+                            <p>Main pool and children's pool conditions, temperature, and maintenance schedule.</p>
+                            <div class="feature-status">
+                                <div id="poolStatus">Temperature: 28°C | Open: 8AM-8PM</div>
+                                <div class="status-indicator status-info">
+                                    <i class="fas fa-clock"></i>
+                                    All pools operational
+                                </div>
+                            </div>
+                        </div>
+                        <div class="beach-feature">
+                            <h4><i class="fas fa-ship"></i> Coastal Excursions</h4>
+                            <p>Today's scheduled boat trips, snorkeling tours, and water sports activities.</p>
+                            <div class="feature-status">
+                                <div id="excursionsToday">3 scheduled excursions today</div>
+                                <div class="status-indicator status-info">
+                                    <i class="fas fa-anchor"></i>
+                                    2 boat trips, 1 snorkeling
+                                </div>
+                            </div>
+                        </div>
+                        <div class="beach-feature">
+                            <h4><i class="fas fa-utensils"></i> Restaurant & Bar</h4>
+                            <p>Seafood restaurant hours, specials, and bar services for today.</p>
+                            <div class="feature-status">
+                                <div>Open 24 hours | Today's Special: Seafood Platter</div>
+                                <div class="status-indicator status-good">
+                                    <i class="fas fa-concierge-bell"></i>
+                                    Kitchen operational
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Dashboard Widgets -->
+                    <div class="dashboard-widgets">
+                        <div class="widget">
+                            <div class="widget-header">
+                                <div>
+                                    <div class="widget-title">Today's Occupancy</div>
+                                    <div class="widget-stat" id="occupancyRate">0%</div>
+                                    <div class="widget-change" id="occupancyChange">
+                                        <i class="fas fa-spinner fa-spin"></i>
+                                        <span>Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="widget-icon">
+                                    <i class="fas fa-bed"></i>
+                                </div>
+                            </div>
+                            <div class="widget-footer">
+                                <i class="fas fa-info-circle"></i>
+                                <span id="occupiedRoomsText">0 of 30 rooms occupied</span>
+                            </div>
+                        </div>
+
+                        <div class="widget">
+                            <div class="widget-header">
+                                <div>
+                                    <div class="widget-title">Today's Revenue</div>
+                                    <div class="widget-stat" id="todayRevenue">KES 0</div>
+                                    <div class="widget-change" id="revenueChange">
+                                        <span>Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="widget-icon">
+                                    <i class="fas fa-money-bill-wave"></i>
+                                </div>
+                            </div>
+                            <div class="widget-footer">
+                                <i class="fas fa-chart-line"></i>
+                                <span id="revenueTrend">Calculating trend...</span>
+                            </div>
+                        </div>
+
+                        <div class="widget">
+                            <div class="widget-header">
+                                <div>
+                                    <div class="widget-title">Pending Actions</div>
+                                    <div class="widget-stat" id="pendingBookings">0</div>
+                                    <div class="widget-change" id="pendingChange">
+                                        <span>Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="widget-icon">
+                                    <i class="fas fa-clock"></i>
+                                </div>
+                            </div>
+                            <div class="widget-footer">
+                                <i class="fas fa-exclamation-circle"></i>
+                                <span>Requires immediate attention</span>
+                            </div>
+                        </div>
+
+                        <div class="widget">
+                            <div class="widget-header">
+                                <div>
+                                    <div class="widget-title">Current Guests</div>
+                                    <div class="widget-stat" id="currentGuests">0</div>
+                                    <div class="widget-change" id="guestsChange">
+                                        <span>Loading...</span>
+                                    </div>
+                                </div>
+                                <div class="widget-icon">
+                                    <i class="fas fa-users"></i>
+                                </div>
+                            </div>
+                            <div class="widget-footer">
+                                <i class="fas fa-user-check"></i>
+                                <span id="checkinsToday">0 check-ins today</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Charts Section -->
+                    <div class="charts-section">
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3 class="chart-title">Occupancy Trend (Last 7 Days)</h3>
+                                <div class="chart-controls">
+                                    <select class="chart-select" id="occupancyPeriod" onchange="updateChart('occupancy', this.value)">
+                                        <option value="7">Last 7 Days</option>
+                                        <option value="30">Last 30 Days</option>
+                                        <option value="90">Last 90 Days</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="occupancyChart"></canvas>
+                            </div>
+                        </div>
+
+                        <div class="chart-card">
+                            <div class="chart-header">
+                                <h3 class="chart-title">Revenue Breakdown (This Month)</h3>
+                                <div class="chart-controls">
+                                    <select class="chart-select" id="revenuePeriod" onchange="updateChart('revenue', this.value)">
+                                        <option value="month">This Month</option>
+                                        <option value="week">This Week</option>
+                                        <option value="year">This Year</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="chart-container">
+                                <canvas id="revenueChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Rooms Status -->
+                    <div class="rooms-section">
+                        <div class="rooms-section-header">
+                            <h3>Rooms Status</h3>
+                            <div class="rooms-filter">
+                                <button class="filter-btn active" data-filter="all">All Rooms</button>
+                                <button class="filter-btn" data-filter="available">Available</button>
+                                <button class="filter-btn" data-filter="occupied">Occupied</button>
+                                <button class="filter-btn" data-filter="maintenance">Maintenance</button>
+                            </div>
+                        </div>
+                        <div class="rooms-grid" id="roomsGrid">
+                            <!-- Rooms will be populated by JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Recent Bookings -->
+                    <div class="recent-bookings">
+                        <div class="recent-bookings-header">
+                            <h3>Recent Bookings</h3>
+                            <button class="btn btn-primary" onclick="loadBookings()">
+                                <i class="fas fa-sync-alt"></i>
+                                Refresh
+                            </button>
+                        </div>
+                        <div class="bookings-table">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Booking ID</th>
+                                        <th>Guest Name</th>
+                                        <th>Check-in</th>
+                                        <th>Check-out</th>
+                                        <th>Room Type</th>
+                                        <th>Amount</th>
+                                        <th>Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="recentBookingsTable">
+                                    <tr>
+                                        <td colspan="8" style="text-align: center; padding: 40px;">
+                                            <div class="loading" style="border-top-color: var(--kanamai-color); width: 30px; height: 30px;"></div>
+                                            <p style="margin-top: 15px; color: var(--text-light);">Loading bookings...</p>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Quick Actions -->
+                    <div class="quick-actions">
+                        <a href="#bookings" class="action-card" onclick="showQuickBooking()">
+                            <div class="action-icon">
+                                <i class="fas fa-plus"></i>
+                            </div>
+                            <h4>New Reservation</h4>
+                            <p>Create a new beachfront booking</p>
+                        </a>
+                        <a href="#checkins" class="action-card" onclick="checkInOut('checkin')">
+                            <div class="action-icon">
+                                <i class="fas fa-sign-in-alt"></i>
+                            </div>
+                            <h4>Check-in Guest</h4>
+                            <p>Process guest arrival</p>
+                        </a>
+                        <a href="#checkouts" class="action-card" onclick="checkInOut('checkout')">
+                            <div class="action-icon">
+                                <i class="fas fa-sign-out-alt"></i>
+                            </div>
+                            <h4>Check-out Guest</h4>
+                            <p>Process guest departure</p>
+                        </a>
+                        <a href="#messages" class="action-card" onclick="showMessages()">
+                            <div class="action-icon">
+                                <i class="fas fa-comments"></i>
+                            </div>
+                            <h4>Guest Messages</h4>
+                            <p>View and respond to messages</p>
+                        </a>
+                        <a href="#reports" class="action-card" onclick="showReports()">
+                            <div class="action-icon">
+                                <i class="fas fa-chart-bar"></i>
+                            </div>
+                            <h4>Generate Reports</h4>
+                            <p>Create property performance reports</p>
+                        </a>
+                        <a href="#settings" class="action-card" onclick="showSettings()">
+                            <div class="action-icon">
+                                <i class="fas fa-cog"></i>
+                            </div>
+                            <h4>Beach Settings</h4>
+                            <p>Configure resort settings</p>
+                        </a>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+
+    <!-- Quick Booking Modal -->
+    <div class="modal-overlay" id="bookingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>New Reservation</h3>
+                <button class="modal-close" onclick="closeModal('bookingModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="bookingForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">First Name *</label>
+                            <input type="text" class="form-control" id="firstName" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Last Name *</label>
+                            <input type="text" class="form-control" id="lastName" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address *</label>
+                        <input type="email" class="form-control" id="email" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Phone Number *</label>
+                        <input type="tel" class="form-control" id="phone" required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Check-in Date *</label>
+                            <input type="date" class="form-control" id="checkIn" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Check-out Date *</label>
+                            <input type="date" class="form-control" id="checkOut" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Room Type *</label>
+                        <select class="form-control" id="roomType" required>
+                            <option value="">Select room type</option>
+                            <option value="beachfront-suite">Beachfront Suite</option>
+                            <option value="ocean-view">Ocean View Room</option>
+                            <option value="garden-view">Garden View Room</option>
+                            <option value="family-room">Family Room</option>
+                            <option value="executive-suite">Executive Suite</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Number of Guests *</label>
+                        <select class="form-control" id="guests" required>
+                            <option value="1">1 Guest</option>
+                            <option value="2">2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                            <option value="5+">5+ Guests</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Special Requests</label>
+                        <textarea class="form-control" id="requests" rows="3" placeholder="Any special requirements or requests..."></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('bookingModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="submitBooking()">Create Booking</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Check-in/out Modal -->
+    <div class="modal-overlay" id="checkinModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="checkinModalTitle">Check-in Guest</h3>
+                <button class="modal-close" onclick="closeModal('checkinModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="form-label">Booking ID or Guest Name</label>
+                    <input type="text" class="form-control" id="searchBooking" placeholder="Enter booking ID or guest name...">
+                </div>
+                <div id="bookingResults"></div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" onclick="closeModal('checkinModal')">Cancel</button>
+                <button class="btn btn-primary" onclick="processCheckin()" id="processBtn">Process</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Alert Modal -->
+    <div class="modal-overlay" id="alertModal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h3 id="alertModalTitle">Alert</h3>
+                <button class="modal-close" onclick="closeModal('alertModal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="alertModalMessage"></p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" onclick="closeModal('alertModal')">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { 
+            getAuth, 
+            onAuthStateChanged, 
+            signOut
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { 
+            getFirestore, 
+            collection, 
+            query, 
+            where, 
+            orderBy, 
+            limit, 
+            getDocs, 
+            onSnapshot,
+            doc,
+            getDoc,
+            updateDoc,
+            addDoc,
+            serverTimestamp,
+            Timestamp
+        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        // Firebase Configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
+            authDomain: "jumuia-resort-limited.firebaseapp.com",
+            projectId: "jumuia-resort-limited",
+            storageBucket: "jumuia-resort-limited.firebasestorage.app",
+            messagingSenderId: "152170552230",
+            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
+            measurementId: "G-Q7BWHJ9C3M"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Global variables
+        let currentUser = null;
+        let currentModule = 'overview';
+        let propertyData = {
+            id: 'kanamai',
+            name: 'Jumuia Conference & Beach Resort - Kanamai',
+            totalRooms: 30,
+            roomTypes: [
+                { id: 'beachfront-suite', name: 'Beachfront Suite', count: 8, price: 45000 },
+                { id: 'ocean-view', name: 'Ocean View Room', count: 10, price: 32000 },
+                { id: 'garden-view', name: 'Garden View Room', count: 8, price: 25000 },
+                { id: 'family-room', name: 'Family Room', count: 2, price: 55000 },
+                { id: 'executive-suite', name: 'Executive Suite', count: 2, price: 65000 }
+            ]
+        };
+        let charts = {};
+        let realtimeListeners = [];
+
+        // Initialize when DOM is loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            initEventListeners();
+            checkAuth();
+            setupDateTime();
+        });
+
+        // Authentication check
+        async function checkAuth() {
+            try {
+                const sessionData = JSON.parse(localStorage.getItem('jumuiaAdminUser'));
+                
+                if (!sessionData) {
+                    window.location.href = "../index.html";
+                    return;
+                }
+                
+                currentUser = sessionData;
+                
+                // Check if user has access to this property
+                if (currentUser.role === 'staff' && currentUser.property !== 'kanamai') {
+                    showAlert("You don't have access to this property", 'error');
+                    setTimeout(() => {
+                        window.location.href = "../dashboard.html";
+                    }, 2000);
+                    return;
+                }
+                
+                // Set user info
+                updateUserInfo();
+                
+                // Load property data
+                loadPropertyData();
+                
+                // Initialize charts
+                setTimeout(initCharts, 500);
+                
+                // Start real-time listeners
+                startRealtimeListeners();
+                
+            } catch (error) {
+                console.error("Auth error:", error);
+                window.location.href = "../index.html";
+            }
+        }
+
+        function updateUserInfo() {
+            document.getElementById('userName').textContent = currentUser.name;
+            document.getElementById('userAvatar').textContent = currentUser.name.charAt(0).toUpperCase();
+        }
+
+        function initEventListeners() {
+            // User Menu
+            document.getElementById('userProfile').addEventListener('click', function(e) {
+                e.stopPropagation();
+                document.getElementById('userMenu').classList.toggle('show');
+            });
+
+            document.getElementById('logoutBtn').addEventListener('click', async function() {
+                try {
+                    await signOut(auth);
+                    localStorage.removeItem('jumuiaAdminUser');
+                    window.location.href = "../index.html";
+                } catch (error) {
+                    console.error('Logout error:', error);
+                    showAlert('Logout failed. Please try again.', 'error');
+                }
+            });
+
+            document.getElementById('profileBtn').addEventListener('click', function() {
+                showAlert('Profile feature coming soon!', 'info');
+                document.getElementById('userMenu').classList.remove('show');
+            });
+
+            document.getElementById('helpBtn').addEventListener('click', function() {
+                showAlert('Help documentation will be available soon!', 'info');
+                document.getElementById('userMenu').classList.remove('show');
+            });
+
+            // Close menu when clicking outside
+            document.addEventListener('click', function(e) {
+                if (!e.target.closest('.user-profile')) {
+                    document.getElementById('userMenu').classList.remove('show');
+                }
+            });
+
+            // Navigation
+            document.querySelectorAll('.property-nav a').forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const module = this.getAttribute('data-module');
+                    if (module) {
+                        loadModule(module);
+                    }
+                });
+            });
+
+            // Room filters
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.addEventListener('click', function() {
+                    document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+                    filterRooms(this.getAttribute('data-filter'));
+                });
+            });
+
+            // Initialize date inputs
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            
+            const checkInInput = document.getElementById('checkIn');
+            const checkOutInput = document.getElementById('checkOut');
+            if (checkInInput) checkInInput.value = today;
+            if (checkOutInput) checkOutInput.value = tomorrowStr;
+            if (checkInInput) checkInInput.min = today;
+            if (checkOutInput) checkOutInput.min = tomorrowStr;
+        }
+
+        function setupDateTime() {
+            function updateDateTime() {
+                const now = luxon.DateTime.now().setZone('Africa/Nairobi');
+                const dateStr = now.toLocaleString(luxon.DateTime.DATE_FULL);
+                const timeStr = now.toLocaleString(luxon.DateTime.TIME_SIMPLE);
+                
+                // Update beach status based on time
+                const hour = now.hour;
+                let tide = 'Low';
+                let condition = 'Calm';
+                
+                if (hour >= 6 && hour < 12) tide = 'Rising';
+                else if (hour >= 12 && hour < 18) tide = 'High';
+                else if (hour >= 18) tide = 'Falling';
+                
+                document.getElementById('beachStatus').textContent = `Tide: ${tide} | Condition: ${condition}`;
+            }
+            
+            updateDateTime();
+            setInterval(updateDateTime, 60000); // Update every minute
+        }
+
+        async function loadPropertyData() {
+            try {
+                showLoading(true);
+                
+                await Promise.all([
+                    loadDashboardStats(),
+                    loadRooms(),
+                    loadRecentBookings()
+                ]);
+                
+                updateBeachFeatures();
+                
+            } catch (error) {
+                console.error("Error loading property data:", error);
+                showAlert('Failed to load property data. Please refresh the page.', 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        async function loadDashboardStats() {
+            try {
+                const today = luxon.DateTime.now().setZone('Africa/Nairobi').toISODate();
+                
+                // Get today's occupancy
+                const occupancyQuery = query(
+                    collection(db, 'bookings'),
+                    where('property', '==', 'kanamai'),
+                    where('status', 'in', ['confirmed', 'checked-in']),
+                    where('checkIn', '<=', today),
+                    where('checkOut', '>=', today)
+                );
+                
+                const occupancySnapshot = await getDocs(occupancyQuery);
+                const occupiedRooms = occupancySnapshot.size;
+                const occupancyRate = Math.round((occupiedRooms / propertyData.totalRooms) * 100);
+                
+                // Update occupancy widget
+                document.getElementById('occupancyRate').textContent = `${occupancyRate}%`;
+                document.getElementById('occupiedRoomsText').textContent = `${occupiedRooms} of ${propertyData.totalRooms} rooms occupied`;
+                document.getElementById('currentGuests').textContent = occupiedRooms;
+                
+                // Calculate revenue for today
+                let todayRevenue = 0;
+                occupancySnapshot.forEach(doc => {
+                    const booking = doc.data();
+                    todayRevenue += booking.totalAmount || 0;
+                });
+                
+                document.getElementById('todayRevenue').textContent = `KES ${todayRevenue.toLocaleString()}`;
+                
+                // Get pending bookings
+                const pendingQuery = query(
+                    collection(db, 'bookings'),
+                    where('property', '==', 'kanamai'),
+                    where('status', '==', 'pending'),
+                    where('checkIn', '>=', today)
+                );
+                
+                const pendingSnapshot = await getDocs(pendingQuery);
+                const pendingCount = pendingSnapshot.size;
+                document.getElementById('pendingBookings').textContent = pendingCount;
+                document.getElementById('pendingBookingsBadge').textContent = pendingCount;
+                
+                // Get today's check-ins
+                const checkinsQuery = query(
+                    collection(db, 'bookings'),
+                    where('property', '==', 'kanamai'),
+                    where('checkIn', '==', today),
+                    where('status', 'in', ['confirmed', 'checked-in'])
+                );
+                
+                const checkinsSnapshot = await getDocs(checkinsQuery);
+                document.getElementById('checkinsToday').textContent = `${checkinsSnapshot.size} check-ins today`;
+                
+                // Update change indicators (demo data)
+                updateChangeIndicators();
+                
+            } catch (error) {
+                console.error("Error loading dashboard stats:", error);
+                showAlert('Failed to load dashboard statistics', 'warning');
+            }
+        }
+
+        function updateChangeIndicators() {
+            // Demo data - in production, this would compare with previous period
+            const occupancyChange = document.getElementById('occupancyChange');
+            occupancyChange.innerHTML = `
+                <i class="fas fa-arrow-up" style="color: #28a745;"></i>
+                <span>5% from yesterday</span>
+            `;
+            occupancyChange.className = 'widget-change positive';
+            
+            const revenueChange = document.getElementById('revenueChange');
+            revenueChange.innerHTML = `
+                <i class="fas fa-arrow-up" style="color: #28a745;"></i>
+                <span>12% from yesterday</span>
+            `;
+            revenueChange.className = 'widget-change positive';
+            
+            document.getElementById('revenueTrend').textContent = 'Up 12% from yesterday';
+        }
+
+        async function loadRooms() {
+            try {
+                const today = luxon.DateTime.now().setZone('Africa/Nairobi').toISODate();
+                
+                // Get occupied rooms for today
+                const occupiedQuery = query(
+                    collection(db, 'bookings'),
+                    where('property', '==', 'kanamai'),
+                    where('status', 'in', ['confirmed', 'checked-in']),
+                    where('checkIn', '<=', today),
+                    where('checkOut', '>=', today)
+                );
+                
+                const occupiedSnapshot = await getDocs(occupiedQuery);
+                const occupiedRoomIds = [];
+                
+                occupiedSnapshot.forEach(doc => {
+                    const booking = doc.data();
+                    if (booking.roomNumber) {
+                        occupiedRoomIds.push(booking.roomNumber);
+                    }
+                });
+                
+                // Create rooms grid
+                let roomsHTML = '';
+                let availableRooms = 0;
+                
+                for (let i = 1; i <= propertyData.totalRooms; i++) {
+                    const roomNumber = i.toString().padStart(3, '0');
+                    const isOccupied = occupiedRoomIds.includes(roomNumber);
+                    const roomType = getRoomTypeForNumber(i);
+                    
+                    let status = 'available';
+                    let statusClass = 'available';
+                    let statusText = 'AVAILABLE';
+                    let statusBadgeClass = 'status-available';
+                    
+                    if (isOccupied) {
+                        status = 'occupied';
+                        statusClass = 'occupied';
+                        statusText = 'OCCUPIED';
+                        statusBadgeClass = 'status-occupied';
+                    } else if (i % 10 === 0) { // Every 10th room in maintenance
+                        status = 'maintenance';
+                        statusClass = 'maintenance';
+                        statusText = 'MAINTENANCE';
+                        statusBadgeClass = 'status-maintenance';
+                    } else if (i % 7 === 0) { // Every 7th room cleaning
+                        status = 'cleaning';
+                        statusClass = 'cleaning';
+                        statusText = 'CLEANING';
+                        statusBadgeClass = 'status-cleaning';
+                    } else {
+                        availableRooms++;
+                    }
+                    
+                    roomsHTML += `
+                        <div class="room-card ${statusClass}" data-room="${roomNumber}" data-status="${status}" onclick="viewRoomDetails('${roomNumber}')">
+                            <div class="room-number">${roomNumber}</div>
+                            <div class="room-type">${roomType.name}</div>
+                            <div class="room-status ${statusBadgeClass}">${statusText}</div>
+                            <div class="room-details">
+                                <i class="fas fa-user"></i> ${roomType.maxGuests} guests
+                            </div>
+                        </div>
+                    `;
+                }
+                
+                document.getElementById('roomsGrid').innerHTML = roomsHTML;
+                document.getElementById('availableRoomsBadge').textContent = availableRooms;
+                
+            } catch (error) {
+                console.error("Error loading rooms:", error);
+                document.getElementById('roomsGrid').innerHTML = `
+                    <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #dc3545;">
+                        <i class="fas fa-exclamation-circle"></i> Failed to load rooms
+                    </div>
+                `;
+            }
+        }
+
+        function getRoomTypeForNumber(roomNumber) {
+            if (roomNumber <= 8) return { name: 'Beachfront Suite', maxGuests: 2, price: 45000 };
+            if (roomNumber <= 18) return { name: 'Ocean View Room', maxGuests: 2, price: 32000 };
+            if (roomNumber <= 26) return { name: 'Garden View Room', maxGuests: 2, price: 25000 };
+            if (roomNumber <= 28) return { name: 'Family Room', maxGuests: 4, price: 55000 };
+            return { name: 'Executive Suite', maxGuests: 2, price: 65000 };
+        }
+
+        function filterRooms(filter) {
+            const rooms = document.querySelectorAll('.room-card');
+            rooms.forEach(room => {
+                if (filter === 'all' || room.getAttribute('data-status') === filter) {
+                    room.style.display = 'block';
+                } else {
+                    room.style.display = 'none';
+                }
+            });
+        }
+
+        async function loadRecentBookings() {
+            try {
+                const bookingsQuery = query(
+                    collection(db, 'bookings'),
+                    where('property', '==', 'kanamai'),
+                    orderBy('createdAt', 'desc'),
+                    limit(10)
+                );
+                
+                const snapshot = await getDocs(bookingsQuery);
+                const bookingsTable = document.getElementById('recentBookingsTable');
+                bookingsTable.innerHTML = '';
+                
+                if (snapshot.empty) {
+                    bookingsTable.innerHTML = `
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 40px; color: var(--text-light);">
+                                <i class="fas fa-calendar-times"></i> No bookings found
+                            </td>
+                        </tr>
+                    `;
+                    return;
+                }
+                
+                snapshot.forEach(doc => {
+                    const booking = doc.data();
+                    const checkIn = formatDate(booking.checkIn);
+                    const checkOut = formatDate(booking.checkOut);
+                    const statusBadge = getStatusBadge(booking.status);
+                    
+                    bookingsTable.innerHTML += `
+                        <tr>
+                            <td><strong>${booking.bookingId || 'N/A'}</strong></td>
+                            <td>${booking.firstName || ''} ${booking.lastName || ''}</td>
+                            <td>${checkIn}</td>
+                            <td>${checkOut}</td>
+                            <td>${booking.roomTypeDisplay || booking.roomType || 'N/A'}</td>
+                            <td>KES ${(booking.totalAmount || 0).toLocaleString()}</td>
+                            <td><span class="status-badge ${statusBadge.class}">${statusBadge.text}</span></td>
+                            <td>
+                                <div class="table-actions">
+                                    <button class="action-btn view" onclick="viewBooking('${doc.id}')" title="View Details">
+                                        <i class="fas fa-eye"></i>
+                                    </button>
+                                    <button class="action-btn edit" onclick="editBooking('${doc.id}')" title="Edit">
+                                        <i class="fas fa-edit"></i>
+                                    </button>
+                                    ${booking.status === 'pending' ? `
+                                    <button class="action-btn" style="background: rgba(40, 167, 69, 0.1); color: #28a745;" 
+                                            onclick="confirmBooking('${doc.id}')" title="Confirm">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                    ` : ''}
+                                </div>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+            } catch (error) {
+                console.error("Error loading recent bookings:", error);
+                bookingsTable.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #dc3545;">
+                            <i class="fas fa-exclamation-circle"></i> Failed to load bookings
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        function updateBeachFeatures() {
+            // Update beach and pool status with dynamic data
+            const now = new Date();
+            const hour = now.getHours();
+            
+            // Beach status
+            let beachCondition = 'Calm';
+            let beachSafety = 'Safe for swimming';
+            
+            if (hour >= 18 || hour < 6) {
+                beachCondition = 'Night - No Swimming';
+                beachSafety = 'Swimming not allowed';
+            } else if (hour >= 12 && hour < 15) {
+                beachCondition = 'Moderate Waves';
+                beachSafety = 'Swim with caution';
+            }
+            
+            document.getElementById('beachStatus').textContent = `Tide: ${getTideLevel()} | Condition: ${beachCondition}`;
+            
+            // Pool status
+            const poolTemp = 28 + Math.floor(Math.random() * 3);
+            document.getElementById('poolStatus').textContent = `Temperature: ${poolTemp}°C | Open: 8AM-8PM`;
+            
+            // Excursions
+            const excursionsCount = Math.floor(Math.random() * 5) + 1;
+            document.getElementById('excursionsToday').textContent = `${excursionsCount} scheduled excursions today`;
+            document.getElementById('scheduledExcursions').textContent = excursionsCount;
+        }
+
+        function getTideLevel() {
+            const now = new Date();
+            const hour = now.getHours();
+            
+            if (hour >= 0 && hour < 6) return 'Low';
+            if (hour >= 6 && hour < 12) return 'Rising';
+            if (hour >= 12 && hour < 18) return 'High';
+            return 'Falling';
+        }
+
+        function startRealtimeListeners() {
+            // Clear existing listeners
+            realtimeListeners.forEach(unsubscribe => unsubscribe());
+            realtimeListeners = [];
+            
+            // Listen for pending bookings
+            const pendingQuery = query(
+                collection(db, 'bookings'),
+                where('property', '==', 'kanamai'),
+                where('status', '==', 'pending')
+            );
+            
+            const pendingUnsubscribe = onSnapshot(pendingQuery, (snapshot) => {
+                document.getElementById('pendingBookingsBadge').textContent = snapshot.size;
+                document.getElementById('pendingBookings').textContent = snapshot.size;
+            });
+            
+            realtimeListeners.push(pendingUnsubscribe);
+            
+            // Listen for unread messages
+            const messagesQuery = query(
+                collection(db, 'messages'),
+                where('property', '==', 'kanamai'),
+                where('read', '==', false)
+            );
+            
+            const messagesUnsubscribe = onSnapshot(messagesQuery, (snapshot) => {
+                document.getElementById('unreadMessagesBadge').textContent = snapshot.size;
+            });
+            
+            realtimeListeners.push(messagesUnsubscribe);
+        }
+
+        function initCharts() {
+            const occupancyCtx = document.getElementById('occupancyChart');
+            if (!occupancyCtx) return;
+            
+            // Occupancy Chart
+            charts.occupancyChart = new Chart(occupancyCtx.getContext('2d'), {
+                type: 'line',
+                data: {
+                    labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                    datasets: [{
+                        label: 'Occupancy Rate (%)',
+                        data: [65, 70, 75, 80, 85, 90, 85],
+                        borderColor: 'var(--kanamai-color)',
+                        backgroundColor: 'rgba(0, 124, 0, 0.1)',
+                        borderWidth: 3,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: 'var(--kanamai-color)',
+                        pointBorderColor: '#ffffff',
+                        pointBorderWidth: 2,
+                        pointRadius: 6,
+                        pointHoverRadius: 8
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: 'var(--kanamai-color)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Occupancy: ${context.parsed.y}%`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 100,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return value + '%';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Revenue Chart
+            const revenueCtx = document.getElementById('revenueChart');
+            if (!revenueCtx) return;
+            
+            charts.revenueChart = new Chart(revenueCtx.getContext('2d'), {
+                type: 'bar',
+                data: {
+                    labels: ['Rooms', 'Restaurant', 'Bar', 'Excursions', 'Spa', 'Conference'],
+                    datasets: [{
+                        label: 'Revenue (KES)',
+                        data: [450000, 320000, 180000, 120000, 80000, 250000],
+                        backgroundColor: [
+                            'rgba(0, 124, 0, 0.8)',
+                            'rgba(0, 124, 0, 0.7)',
+                            'rgba(0, 124, 0, 0.6)',
+                            'rgba(0, 124, 0, 0.5)',
+                            'rgba(0, 124, 0, 0.4)',
+                            'rgba(0, 124, 0, 0.3)'
+                        ],
+                        borderColor: 'var(--kanamai-color)',
+                        borderWidth: 1,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                            titleColor: '#ffffff',
+                            bodyColor: '#ffffff',
+                            borderColor: 'var(--kanamai-color)',
+                            borderWidth: 1,
+                            callbacks: {
+                                label: function(context) {
+                                    return `Revenue: KES ${context.parsed.y.toLocaleString()}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            grid: {
+                                color: 'rgba(0, 0, 0, 0.05)'
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return 'KES ' + (value / 1000).toFixed(0) + 'K';
+                                }
+                            }
+                        },
+                        x: {
+                            grid: {
+                                display: false
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateChart(chartType, period) {
+            // This would update chart data based on period
+            showAlert(`Updating ${chartType} chart for ${period} period`, 'info');
+        }
+
+        function loadModule(module) {
+            if (module === currentModule) return;
+            
+            currentModule = module;
+            
+            // Update navigation
+            document.querySelectorAll('.property-nav a').forEach(link => {
+                link.classList.remove('active');
+                if (link.getAttribute('data-module') === module) {
+                    link.classList.add('active');
+                }
+            });
+            
+            // Update breadcrumb
+            updateBreadcrumb(module);
+            
+            // Show module content
+            document.querySelectorAll('.module-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            const moduleElement = document.getElementById(`${module}Module`);
+            if (moduleElement) {
+                moduleElement.classList.add('active');
+            } else {
+                // Load module content
+                loadModuleContent(module);
+            }
+        }
+
+        function updateBreadcrumb(module) {
+            const moduleNames = {
+                'overview': 'Overview Dashboard',
+                'bookings': 'Reservations',
+                'rooms': 'Room Management',
+                'beach-activities': 'Beach Activities',
+                'pool': 'Pool Management',
+                'excursions': 'Coastal Excursions',
+                'restaurant': 'Restaurant & Bar',
+                'revenue': 'Revenue & Billing',
+                'messages': 'Guest Messages',
+                'reviews': 'Guest Reviews',
+                'reports': 'Analytics & Reports',
+                'settings': 'Property Settings'
+            };
+            
+            const breadcrumb = document.querySelector('.breadcrumb');
+            if (breadcrumb) {
+                breadcrumb.innerHTML = `
+                    <a href="../dashboard.html">Main Dashboard</a> / 
+                    <a href="#">Kanamai Beach Resort</a> / 
+                    <span>${moduleNames[module] || module}</span>
+                `;
+            }
+        }
+
+        async function loadModuleContent(module) {
+            showLoading(true, `Loading ${module}...`);
+            
+            try {
+                // This would load module-specific content
+                // For now, show a placeholder
+                document.querySelectorAll('.module-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                const mainContent = document.querySelector('.property-content');
+                mainContent.innerHTML = `
+                    <div id="${module}Module" class="module-content active">
+                        <div class="content-header">
+                            <div class="breadcrumb">
+                                <a href="../dashboard.html">Main Dashboard</a> / 
+                                <a href="#">Kanamai Beach Resort</a> / 
+                                <span>${module.charAt(0).toUpperCase() + module.slice(1)}</span>
+                            </div>
+                        </div>
+                        <div style="text-align: center; padding: 80px 20px;">
+                            <div class="property-icon" style="margin: 0 auto 30px; background: var(--kanamai-light); color: var(--kanamai-color);">
+                                <i class="fas fa-cogs"></i>
+                            </div>
+                            <h3 style="color: var(--kanamai-color); margin-bottom: 15px;">${module.charAt(0).toUpperCase() + module.slice(1)} Module</h3>
+                            <p style="color: var(--text-light); max-width: 500px; margin: 0 auto 30px;">
+                                This module is currently under development. It will be available soon with full functionality.
+                            </p>
+                            <button class="btn btn-primary" onclick="loadModule('overview')">
+                                <i class="fas fa-arrow-left"></i>
+                                Back to Overview
+                            </button>
+                        </div>
+                    </div>
+                `;
+                
+            } catch (error) {
+                console.error(`Error loading module ${module}:`, error);
+                showAlert(`Failed to load ${module} module`, 'error');
+            } finally {
+                showLoading(false);
+            }
+        }
+
+        // Utility Functions
+        function formatDate(dateString) {
+            if (!dateString) return '-';
+            try {
+                return luxon.DateTime.fromISO(dateString).setZone('Africa/Nairobi').toLocaleString(luxon.DateTime.DATE_MED);
+            } catch (error) {
+                return dateString;
+            }
+        }
+
+        function getStatusBadge(status) {
+            const statusMap = {
+                'pending': { class: 'status-pending', text: 'PENDING' },
+                'confirmed': { class: 'status-confirmed', text: 'CONFIRMED' },
+                'checked-in': { class: 'status-checkedin', text: 'CHECKED IN' },
+                'checked-out': { class: 'status-checkedout', text: 'CHECKED OUT' },
+                'cancelled': { class: 'status-cancelled', text: 'CANCELLED' }
+            };
+            return statusMap[status] || { class: 'status-pending', text: 'PENDING' };
+        }
+
+        function showAlert(message, type = 'info') {
+            const alertElement = document.getElementById('infoAlert');
+            const messageElement = document.getElementById('infoMessage');
+            
+            if (!alertElement || !messageElement) return;
+            
+            // Set message and type
+            messageElement.textContent = message;
+            alertElement.className = `alert alert-${type}`;
+            
+            // Show alert
+            alertElement.style.display = 'block';
+            
+            // Auto-hide after 5 seconds
+            setTimeout(() => {
+                alertElement.style.display = 'none';
+            }, 5000);
+        }
+
+        function showModal(modalId) {
+            document.getElementById(modalId).style.display = 'flex';
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showLoading(show = true, message = 'Loading...') {
+            // This would show/hide a loading overlay
+            if (show) {
+                console.log(message);
+            }
+        }
+
+        // Action Functions - Make them available globally
+        window.showQuickBooking = function() {
+            showModal('bookingModal');
+        };
+
+        window.checkInOut = function(type) {
+            const modal = document.getElementById('checkinModal');
+            const title = document.getElementById('checkinModalTitle');
+            const btn = document.getElementById('processBtn');
+            
+            if (type === 'checkin') {
+                title.textContent = 'Check-in Guest';
+                btn.textContent = 'Check-in';
+                btn.onclick = processCheckin;
+            } else {
+                title.textContent = 'Check-out Guest';
+                btn.textContent = 'Check-out';
+                btn.onclick = processCheckout;
+            }
+            
+            showModal('checkinModal');
+        };
+
+        window.processCheckin = async function() {
+            showAlert('Check-in functionality coming soon!', 'info');
+            closeModal('checkinModal');
+        };
+
+        window.processCheckout = async function() {
+            showAlert('Check-out functionality coming soon!', 'info');
+            closeModal('checkinModal');
+        };
+
+        window.submitBooking = async function() {
+            // Validate form
+            const form = document.getElementById('bookingForm');
+            if (!form.checkValidity()) {
+                form.reportValidity();
+                return;
+            }
+            
+            try {
+                showLoading(true, 'Creating booking...');
+                
+                // Generate booking data
+                const bookingData = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    checkIn: document.getElementById('checkIn').value,
+                    checkOut: document.getElementById('checkOut').value,
+                    roomType: document.getElementById('roomType').value,
+                    guests: document.getElementById('guests').value,
+                    requests: document.getElementById('requests').value,
+                    property: 'kanamai',
+                    status: 'pending',
+                    createdAt: serverTimestamp(),
+                    bookingId: `KAN-${Date.now().toString().slice(-6)}`,
+                    totalAmount: calculateBookingAmount()
+                };
+                
+                // Save to Firestore
+                await addDoc(collection(db, 'bookings'), bookingData);
+                
+                showAlert('Booking created successfully!', 'success');
+                closeModal('bookingModal');
+                form.reset();
+                
+                // Refresh bookings
+                loadRecentBookings();
+                loadDashboardStats();
+                
+            } catch (error) {
+                console.error('Error creating booking:', error);
+                showAlert('Failed to create booking. Please try again.', 'error');
+            } finally {
+                showLoading(false);
+            }
+        };
+
+        function calculateBookingAmount() {
+            const roomType = document.getElementById('roomType').value;
+            const checkIn = new Date(document.getElementById('checkIn').value);
+            const checkOut = new Date(document.getElementById('checkOut').value);
+            
+            // Calculate nights
+            const nights = Math.ceil((checkOut - checkIn) / (1000 * 60 * 60 * 24));
+            
+            // Room prices
+            const prices = {
+                'beachfront-suite': 45000,
+                'ocean-view': 32000,
+                'garden-view': 25000,
+                'family-room': 55000,
+                'executive-suite': 65000
+            };
+            
+            return (prices[roomType] || 30000) * nights;
+        }
+
+        window.viewBooking = function(bookingId) {
+            showAlert(`View booking ${bookingId} - Feature coming soon!`, 'info');
+        };
+
+        window.editBooking = function(bookingId) {
+            showAlert(`Edit booking ${bookingId} - Feature coming soon!`, 'info');
+        };
+
+        window.confirmBooking = async function(bookingId) {
+            try {
+                await updateDoc(doc(db, 'bookings', bookingId), {
+                    status: 'confirmed',
+                    confirmedAt: serverTimestamp()
+                });
+                showAlert('Booking confirmed successfully!', 'success');
+                loadRecentBookings();
+            } catch (error) {
+                console.error('Error confirming booking:', error);
+                showAlert('Failed to confirm booking', 'error');
+            }
+        };
+
+        window.viewRoomDetails = function(roomNumber) {
+            showAlert(`Room ${roomNumber} details - Feature coming soon!`, 'info');
+        };
+
+        window.manageBeachActivities = function() {
+            loadModule('beach-activities');
+        };
+
+        window.showPoolStatus = function() {
+            loadModule('pool');
+        };
+
+        window.showExcursions = function() {
+            loadModule('excursions');
+        };
+
+        window.showMessages = function() {
+            loadModule('messages');
+        };
+
+        window.showReports = function() {
+            loadModule('reports');
+        };
+
+        window.showSettings = function() {
+            loadModule('settings');
+        };
+
+        window.loadBookings = function() {
+            loadRecentBookings();
+            showAlert('Bookings refreshed', 'success');
+        };
+
+        // Initialize date inputs
+        const today = luxon.DateTime.now().setZone('Africa/Nairobi').toISODate();
+        const tomorrow = luxon.DateTime.now().setZone('Africa/Nairobi').plus({ days: 1 }).toISODate();
+        
+        const checkInInput = document.getElementById('checkIn');
+        const checkOutInput = document.getElementById('checkOut');
+        if (checkInInput) {
+            checkInInput.value = today;
+            checkInInput.min = today;
+        }
+        if (checkOutInput) {
+            checkOutInput.value = tomorrow;
+            checkOutInput.min = tomorrow;
+        }
+
+    </script>
+</body>
+</html>

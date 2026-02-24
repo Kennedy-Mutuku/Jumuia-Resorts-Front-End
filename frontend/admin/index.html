@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jumuia Resorts - Log In</title>
+    <link rel="stylesheet" href="../css/admin.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
+</head>
+
+<body class="login-page">
+    <div class="login-smart-window">
+        <div class="login-box">
+            <div class="login-header-logo">
+                <div class="jr-logo-circle">
+                    <span>JR</span>
+                </div>
+                <h3>Jumuia Resorts</h3>
+            </div>
+
+            <div class="login-title">
+                <h2>Log in</h2>
+            </div>
+
+            <form id="loginForm" class="smart-login-form">
+                <div class="form-row">
+                    <label for="email">e-mail</label>
+                    <input type="email" id="email" name="email" placeholder="admin@jumuiaresorts.com" required>
+                </div>
+
+                <div class="form-row">
+                    <label for="password">Password</label>
+                    <div class="password-wrapper">
+                        <input type="password" id="password" name="password" placeholder="••••••••" required>
+                        <button type="button" class="password-eye" id="togglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="btn-clear" id="clearBtn">Clear</button>
+                    <button type="submit" class="btn-next" id="loginBtn">
+                        <span id="loginText">Next</span>
+                        <span id="loginSpinner" class="spinner" style="display: none;"></span>
+                    </button>
+                </div>
+
+                <div id="loginError" class="alert alert-error" style="display: none;"></div>
+
+                <div class="form-links">
+                    <a href="#" class="forgot-link">Forgot password</a>
+                    <a href="../index.html" class="home-link">Home</a>
+                </div>
+            </form>
+        </div>
+    </div>
+    </div>
+
+    <script src="../js/api-config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // Removed auto-redirect to ensure users always see the login form
+            // as per the requirement for manual authentication.
+
+            const loginSystem = new LoginSystem();
+            loginSystem.init();
+        });
+
+        class LoginSystem {
+            constructor() {
+                this.db = null;
+                this.auth = null;
+            }
+
+            async init() {
+                this.setupEventListeners();
+                console.log('Login system initialized');
+            }
+
+            // Removed initializeFirebase for migration to Node.js
+
+            setupEventListeners() {
+                // Password toggle
+                document.getElementById('togglePassword').addEventListener('click', function () {
+                    const passwordInput = document.getElementById('password');
+                    const icon = this.querySelector('i');
+                    if (passwordInput.type === 'password') {
+                        passwordInput.type = 'text';
+                        icon.classList.replace('fa-eye', 'fa-eye-slash');
+                    } else {
+                        passwordInput.type = 'password';
+                        icon.classList.replace('fa-eye-slash', 'fa-eye');
+                    }
+                });
+
+                // Clear button
+                document.getElementById('clearBtn').addEventListener('click', () => {
+                    document.getElementById('loginForm').reset();
+                    document.getElementById('loginError').style.display = 'none';
+                });
+
+                // Form submission
+                document.getElementById('loginForm').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    this.handleLogin();
+                });
+            }
+
+            async handleLogin() {
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+                const loginError = document.getElementById('loginError');
+                const loginBtn = document.getElementById('loginBtn');
+                const loginText = document.getElementById('loginText');
+                const loginSpinner = document.getElementById('loginSpinner');
+
+                // Reset error
+                loginError.style.display = 'none';
+
+                // Validation
+                if (!email || !password) {
+                    this.showError('Please enter email and password');
+                    return;
+                }
+
+                // Show loading
+                loginBtn.disabled = true;
+                loginText.style.display = 'none';
+                loginSpinner.style.display = 'block';
+
+                try {
+                    const response = await fetch(`${window.API_CONFIG.API_URL}/auth/login`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({ email, password })
+                    });
+
+                    const data = await response.json();
+
+                    if (!response.ok) {
+                        throw new Error(data.message || 'Login failed');
+                    }
+
+
+                    // Create session
+                    this.createSession(data);
+
+                    // Show success message
+                    this.showSuccess('Login successful!');
+
+                    // Redirect to dashboard after a short delay to allow visibility of success message
+                    setTimeout(() => {
+                        window.location.href = 'dashboard.html';
+                    }, 800);
+
+                } catch (error) {
+                    console.error('Login error:', error);
+
+                    // Show specific "Wrong password" message for auth failures
+                    if (error.message.includes('401') || error.message.includes('Invalid')) {
+                        this.showError('Wrong password');
+                    } else {
+                        this.showError(error.message);
+                    }
+
+                    // Reset button
+                    loginBtn.disabled = false;
+                    loginText.style.display = 'inline';
+                    loginSpinner.style.display = 'none';
+                }
+            }
+
+            autoCreateAdminUser(email, uid) {
+                // Auto-create user based on email pattern
+                const emailParts = email.split('@')[0].split('.');
+                const role = emailParts.includes('general') ? 'general-manager' :
+                    emailParts.includes('manager') ? 'manager' :
+                        emailParts.includes('staff') ? 'staff' : null;
+
+                if (!role) return null;
+
+                const name = emailParts.map(part => part.charAt(0).toUpperCase() + part.slice(1)).join(' ');
+
+                // Determine properties based on email
+                let properties = [];
+                let assignedProperty = 'all';
+
+                if (role === 'general-manager') {
+                    properties = ['limuru', 'kanamai', 'kisumu'];
+                    assignedProperty = 'all';
+                } else {
+                    if (email.includes('limuru')) {
+                        properties = ['limuru'];
+                        assignedProperty = 'limuru';
+                    } else if (email.includes('kanamai')) {
+                        properties = ['kanamai'];
+                        assignedProperty = 'kanamai';
+                    } else if (email.includes('kisumu')) {
+                        properties = ['kisumu'];
+                        assignedProperty = 'kisumu';
+                    } else {
+                        // Default to Limuru if no property specified
+                        properties = ['limuru'];
+                        assignedProperty = 'limuru';
+                    }
+                }
+
+                return {
+                    uid: uid,
+                    email: email,
+                    name: name,
+                    role: role,
+                    properties: properties,
+                    assignedProperty: assignedProperty,
+                    permissions: this.getDefaultPermissions(role),
+                    createdAt: new Date().toISOString(),
+                    updatedAt: new Date().toISOString()
+                };
+            }
+
+            getDefaultPermissions(role) {
+                const permissions = {
+                    'general-manager': ['all'],
+                    'manager': ['view_dashboard', 'manage_bookings', 'view_reports', 'manage_feedback', 'manage_messages'],
+                    'staff': ['view_dashboard', 'view_bookings', 'manage_checkins', 'view_feedback', 'respond_messages']
+                };
+                return permissions[role] || [];
+            }
+
+            createSession(userData) {
+                const sessionData = {
+                    uid: userData._id,
+                    email: userData.email,
+                    name: userData.name,
+                    role: userData.role,
+                    properties: userData.properties || [],
+                    assignedProperty: userData.assignedProperty || 'all',
+                    token: userData.token,
+                    loginTime: new Date().toISOString(),
+                    expiryTime: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString() // 8 hours
+                };
+
+                localStorage.setItem('jumuia_resort_session', JSON.stringify(sessionData));
+                sessionStorage.setItem('jumuia_auth', 'authenticated');
+
+                // Also set a cookie for backup
+                document.cookie = `jumuia_session=${JSON.stringify(sessionData)}; path=/; max-age=28800; SameSite=Strict`;
+            }
+
+            showError(message) {
+                const loginError = document.getElementById('loginError');
+                loginError.textContent = message;
+                loginError.className = 'alert alert-error';
+                loginError.style.display = 'block';
+
+                // Auto-hide after 10 seconds
+                setTimeout(() => {
+                    loginError.style.display = 'none';
+                }, 10000);
+            }
+
+            showSuccess(message) {
+                const loginError = document.getElementById('loginError');
+                loginError.textContent = message;
+                loginError.className = 'alert alert-success';
+                loginError.style.display = 'block';
+            }
+        }
+
+        // Make LoginSystem globally available
+        window.LoginSystem = LoginSystem;
+    </script>
+</body>
+
+</html>

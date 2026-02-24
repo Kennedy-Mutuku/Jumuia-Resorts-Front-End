@@ -1,0 +1,2213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Stay - Jumuia Resorts</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/main.css">
+    <style>
+        /* ===== GLOBAL STYLES ===== */
+
+        :root {
+            /* Primary Colors */
+            --primary-green: #22440f;
+            --primary-orange: #f3a435;
+            --primary-white: #ffffff;
+            --secondary-green: #024423;
+            --dark-green: #153800;
+            --light-green: #e9f5e5;
+            
+            /* Neutral Colors */
+            --gray-bg: #f8f9fa;
+            --gray-light: #f0f0f0;
+            --gray-border: #e0e0e0;
+            --gray-medium: #cccccc;
+            --gray-dark: #666666;
+            
+            /* Text Colors */
+            --text-dark: #333333;
+            --text-light: #666666;
+            --text-white: #ffffff;
+            
+            /* Status Colors */
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+            
+            /* UI Elements */
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-lg: 0 10px 30px rgba(0, 0, 0, 0.15);
+            --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.05);
+            --radius: 8px;
+            --radius-sm: 4px;
+            --radius-lg: 12px;
+            --transition: all 0.3s ease;
+            
+            /* Spacing */
+            --space-xs: 0.25rem;
+            --space-sm: 0.5rem;
+            --space-md: 1rem;
+            --space-lg: 1.5rem;
+            --space-xl: 2rem;
+            --space-xxl: 3rem;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--gray-bg);
+            font-size: 16px;
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--primary-green);
+            line-height: 1.3;
+            margin-bottom: var(--space-md);
+        }
+
+        h1 { font-size: 2.5rem; }
+        h2 { font-size: 2rem; }
+        h3 { font-size: 1.75rem; }
+        h4 { font-size: 1.5rem; }
+        h5 { font-size: 1.25rem; }
+        h6 { font-size: 1rem; }
+
+        p {
+            margin-bottom: var(--space-md);
+            color: var(--text-light);
+        }
+
+        a {
+            color: var(--primary-green);
+            text-decoration: none;
+            transition: var(--transition);
+        }
+
+        a:hover {
+            color: var(--primary-orange);
+        }
+
+        ul, ol {
+            margin-bottom: var(--space-md);
+            padding-left: var(--space-xl);
+        }
+
+        li {
+            margin-bottom: var(--space-sm);
+            line-height: 1.6;
+        }
+
+        img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 var(--space-lg);
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: var(--space-xxl);
+            padding: 0 var(--space-lg);
+        }
+
+        .section-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: var(--space-md);
+            position: relative;
+            display: inline-block;
+        }
+
+        .section-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80px;
+            height: 3px;
+            background-color: var(--primary-orange);
+        }
+
+        .section-header p {
+            max-width: 700px;
+            margin: 0 auto;
+            color: var(--text-light);
+            font-size: 1.1rem;
+        }
+
+        /* ===== HEADER STYLES ===== */
+        header {
+            background-color: var(--primary-white);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: var(--transition);
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: var(--space-md) 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+            flex-shrink: 0;
+        }
+
+        .logo-text h1 {
+            font-size: 1.5rem;
+            margin-bottom: 0;
+            color: var(--primary-green);
+            line-height: 1.2;
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+            margin-bottom: 0;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: var(--space-xl);
+            align-items: center;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: var(--transition);
+            position: relative;
+            padding: var(--space-sm) 0;
+        }
+
+        .main-nav a:hover {
+            color: var(--primary-orange);
+        }
+
+        .main-nav a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background-color: var(--primary-orange);
+            transition: var(--transition);
+        }
+
+        .main-nav a:hover::after {
+            width: 100%;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: var(--space-lg);
+            align-items: center;
+        }
+
+        /* ===== BUTTON STYLES ===== */
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: var(--space-sm);
+            padding: 12px 30px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            font-size: 1rem;
+            font-family: 'Montserrat', sans-serif;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+            text-decoration: none;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        .btn i {
+            font-size: 1.1rem;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+            border: 2px solid var(--primary-orange);
+        }
+
+        .btn-primary:hover {
+            background-color: #e5941f;
+            border-color: #e5941f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(243, 164, 53, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            transform: translateY(-2px);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: var(--primary-white);
+            border: 2px solid var(--success);
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+            border-color: #1e7e34;
+            transform: translateY(-2px);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: var(--primary-white);
+            border: 2px solid var(--danger);
+        }
+
+        .btn-danger:hover {
+            background-color: #c82333;
+            border-color: #bd2130;
+            transform: translateY(-2px);
+        }
+
+        .btn-block {
+            display: flex;
+            width: 100%;
+        }
+
+        .btn-lg {
+            padding: 16px 40px;
+            font-size: 1.1rem;
+        }
+
+        .btn-sm {
+            padding: 8px 20px;
+            font-size: 0.9rem;
+        }
+
+        /* ===== HERO SECTION ===== */
+        .booking-hero {
+            /* Background with improved gradient */
+            background:linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('/images/resorts/kanamai/Double\ Room.jpg');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: var(--primary-white);
+            padding: 180px 0 100px;
+            margin-top:10px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+            min-height: 600px;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Fade-out gradient at bottom */
+        .booking-hero::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 150px;
+            background: linear-gradient(to bottom, 
+                transparent 0%, 
+                rgba(34, 68, 15, 0.3) 50%,
+                var(--gray-bg) 100%
+            );
+            z-index: 1;
+        }
+
+        /* Container for content */
+        .booking-hero .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Main heading */
+        .booking-hero h1 {
+            font-size: clamp(2.5rem, 5vw, 3.5rem); /* Responsive font size */
+            color: var(--primary-white);
+            margin-bottom: 1.5rem;
+            text-shadow: 
+                0 2px 15px rgba(0, 0, 0, 0.7),
+                0 4px 30px rgba(0, 0, 0, 0.4);
+            animation: fadeInUp 0.8s ease 0.1s both;
+            line-height: 1.2;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+        }
+
+        /* Paragraph text */
+        .booking-hero p {
+            font-size: clamp(1.1rem, 2.5vw, 1.3rem);
+            color: rgba(255, 255, 255, 0.95);
+            max-width: 800px;
+            margin: 0 auto 2.5rem;
+            line-height: 1.8;
+            animation: fadeInUp 1s ease 0.3s both;
+            text-shadow: 0 1px 8px rgba(0, 0, 0, 0.5);
+            font-weight: 400;
+        }
+
+        /* Button styling */
+        .booking-hero .btn {
+            animation: fadeInUp 1.2s ease 0.5s both;
+            padding: 16px 45px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            border-radius: var(--radius);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 
+                0 4px 20px rgba(243, 164, 53, 0.3),
+                0 8px 30px rgba(0, 0, 0, 0.2);
+            position: relative;
+            z-index: 2;
+            border: 2px solid transparent;
+        }
+
+        /* Button hover effects */
+        .booking-hero .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 
+                0 8px 30px rgba(243, 164, 53, 0.4),
+                0 12px 40px rgba(0, 0, 0, 0.25);
+            border-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Background overlay for better text contrast */
+        .booking-hero::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: radial-gradient(
+                circle at center,
+                transparent 0%,
+                rgba(34, 68, 15, 0.4) 100%
+            );
+            z-index: 1;
+        }
+
+        /* Fade-in animation */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(40px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .booking-hero {
+                padding: 140px 0 80px;
+                margin-top: 70px;
+                min-height: 500px;
+                background-attachment: scroll; /* Better performance on mobile */
+            }
+            
+            .booking-hero h1 {
+                margin-bottom: 1.2rem;
+                font-size: 2.2rem;
+            }
+            
+            .booking-hero p {
+                margin-bottom: 2rem;
+                font-size: 1.1rem;
+                line-height: 1.7;
+            }
+            
+            .booking-hero::before {
+                height: 100px;
+            }
+            
+            .booking-hero .btn {
+                padding: 14px 35px;
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .booking-hero {
+                padding: 120px 0 60px;
+                min-height: 450px;
+            }
+            
+            .booking-hero h1 {
+                font-size: 1.8rem;
+                margin-bottom: 1rem;
+            }
+            
+            .booking-hero p {
+                font-size: 1rem;
+                margin-bottom: 1.8rem;
+                line-height: 1.6;
+            }
+            
+            .booking-hero .btn {
+                padding: 12px 30px;
+                font-size: 0.95rem;
+            }
+        }
+
+        /* Fallback for older browsers */
+        @supports not (background-attachment: fixed) {
+            .booking-hero {
+                background-attachment: scroll;
+            }
+        }
+
+        /* ===== RESORT SELECTION ===== */
+        .resort-selection {
+            padding: var(--space-xxl) 0;
+            background-color: var(--primary-white);
+        }
+
+        .resort-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+
+        .resort-card {
+            background: var(--primary-white);
+            border-radius: var(--radius-lg);
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            position: relative;
+            border: 1px solid var(--gray-border);
+        }
+
+        .resort-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--primary-orange);
+        }
+
+        .resort-image {
+            height: 250px;
+            background-size: cover;
+            background-position: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .resort-image::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(to bottom, transparent 50%, rgba(0, 0, 0, 0.7));
+        }
+
+        .resort-overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: var(--space-lg);
+            color: var(--primary-white);
+            z-index: 2;
+        }
+
+        .resort-overlay h3 {
+            color: var(--primary-white);
+            font-size: 1.5rem;
+            margin-bottom: 0;
+            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
+        }
+
+        .resort-content {
+            padding: var(--space-xl);
+        }
+
+        .resort-title {
+            font-size: 1.5rem;
+            color: var(--primary-green);
+            margin-bottom: var(--space-sm);
+            line-height: 1.3;
+        }
+
+        .resort-location {
+            color: var(--primary-orange);
+            margin-bottom: var(--space-md);
+            display: flex;
+            align-items: center;
+            gap: var(--space-sm);
+            font-weight: 500;
+        }
+
+        .resort-location i {
+            font-size: 1.1rem;
+        }
+
+        .resort-content p {
+            color: var(--text-light);
+            margin-bottom: var(--space-lg);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        .resort-features {
+            display: flex;
+            flex-wrap: wrap;
+            gap: var(--space-sm);
+            margin: var(--space-lg) 0;
+        }
+
+        .feature-tag {
+            background: var(--light-green);
+            color: var(--primary-green);
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: var(--transition);
+        }
+
+        .feature-tag:hover {
+            background: var(--primary-green);
+            color: var(--primary-white);
+        }
+
+        .starting-from {
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: var(--primary-white);
+            padding: var(--space-lg);
+            border-radius: var(--radius);
+            text-align: center;
+            margin: var(--space-xl) 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .starting-from::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: linear-gradient(45deg, transparent, rgba(255, 255, 255, 0.1), transparent);
+            transform: rotate(45deg);
+            animation: shine 3s infinite;
+        }
+
+        @keyframes shine {
+            0% { transform: translateX(-100%) rotate(45deg); }
+            100% { transform: translateX(100%) rotate(45deg); }
+        }
+
+        .starting-from span {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: block;
+            margin-top: var(--space-xs);
+            position: relative;
+            z-index: 1;
+        }
+
+        .starting-from small {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            position: relative;
+            z-index: 1;
+        }
+
+        .resort-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
+        }
+
+        .resort-actions .btn-primary {
+            flex: 1;
+        }
+
+        /* ===== QUICK BOOKING FORM ===== */
+        .quick-booking-form {
+            background: linear-gradient(135deg, var(--light-green) 0%, #f8f9fa 100%);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xxl);
+            margin: var(--space-xxl) 0;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid var(--gray-border);
+        }
+
+        .quick-booking-form::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-green), var(--primary-orange));
+        }
+
+        .quick-booking-form h2 {
+            color: var(--primary-green);
+            margin-bottom: var(--space-sm);
+            text-align: center;
+        }
+
+        .quick-booking-form > p {
+            text-align: center;
+            color: var(--text-light);
+            margin-bottom: var(--space-xl);
+            font-size: 1.1rem;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-lg);
+            margin-bottom: var(--space-lg);
+        }
+
+        .form-group {
+            position: relative;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: var(--space-sm);
+            font-weight: 600;
+            color: var(--primary-green);
+            font-size: 0.95rem;
+        }
+
+        .form-group label.required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 14px 16px;
+            border: 1px solid var(--gray-border);
+            border-radius: var(--radius);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            background-color: var(--primary-white);
+            transition: var(--transition);
+            color: var(--text-dark);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(243, 164, 53, 0.1);
+            background-color: var(--primary-white);
+        }
+
+        .form-control::placeholder {
+            color: var(--gray-dark);
+            opacity: 0.7;
+        }
+
+        select.form-control {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%2322440f' viewBox='0 0 16 16'%3E%3Cpath d='M7.247 11.14 2.451 5.658C1.885 5.013 2.345 4 3.204 4h9.592a1 1 0 0 1 .753 1.659l-4.796 5.48a1 1 0 0 1-1.506 0z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 16px center;
+            background-size: 12px;
+            padding-right: 40px;
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+            line-height: 1.5;
+        }
+
+        .checkbox-option {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-sm);
+            margin-bottom: var(--space-sm);
+            cursor: pointer;
+        }
+
+        .checkbox-option input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            margin-top: 2px;
+            cursor: pointer;
+            accent-color: var(--primary-green);
+        }
+
+        .checkbox-option label {
+            margin-bottom: 0;
+            font-weight: normal;
+            color: var(--text-dark);
+            cursor: pointer;
+            line-height: 1.5;
+        }
+
+        .booking-options {
+            display: flex;
+            gap: var(--space-lg);
+            justify-content: center;
+            margin-top: var(--space-xl);
+            flex-wrap: wrap;
+        }
+
+        /* ===== LOADING STATES ===== */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: var(--space-xl);
+        }
+
+        .loading.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .spinner {
+            border: 3px solid var(--light-green);
+            border-top: 3px solid var(--primary-orange);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto var(--space-md);
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ===== WHY BOOK SECTION ===== */
+        .why-book {
+            padding: var(--space-xxl) 0;
+            background: linear-gradient(135deg, #f8f9fa 0%, var(--primary-white) 100%);
+        }
+
+        .reasons-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--space-xl);
+            margin-top: var(--space-xl);
+        }
+
+        .reason-card {
+            background: var(--primary-white);
+            padding: var(--space-xl);
+            border-radius: var(--radius);
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: var(--transition);
+            border: 1px solid transparent;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .reason-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--primary-orange));
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.3s ease;
+        }
+
+        .reason-card:hover {
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+            border-color: var(--gray-border);
+        }
+
+        .reason-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .reason-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary-green), var(--secondary-green));
+            color: var(--primary-white);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+            font-size: 1.8rem;
+            transition: var(--transition);
+        }
+
+        .reason-card:hover .reason-icon {
+            transform: scale(1.1) rotate(5deg);
+            background: linear-gradient(135deg, var(--primary-orange), #e5941f);
+        }
+
+        .reason-card h3 {
+            color: var(--primary-green);
+            margin-bottom: var(--space-md);
+            font-size: 1.3rem;
+        }
+
+        .reason-card p {
+            color: var(--text-light);
+            font-size: 0.95rem;
+            line-height: 1.7;
+        }
+
+        /* ===== TESTIMONIAL SECTION ===== */
+        .testimonial-section {
+            padding: var(--space-xxl) 0;
+            background: linear-gradient(135deg, var(--primary-green) 0%, var(--dark-green) 100%);
+            color: var(--primary-white);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .testimonial-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='%23ffffff' fill-opacity='0.03' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+
+        .testimonial-section .section-header h2 {
+            color: var(--primary-white);
+        }
+
+        .testimonial-section .section-header p {
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .testimonial-slider {
+            max-width: 800px;
+            margin: var(--space-xl) auto 0;
+            position: relative;
+        }
+
+        .testimonial {
+            background: rgba(255, 255, 255, 0.1);
+            padding: var(--space-xl);
+            border-radius: var(--radius);
+            margin: 0 var(--space-lg);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            animation: fadeIn 0.5s ease;
+        }
+
+        .testimonial-content {
+            font-size: 1.2rem;
+            font-style: italic;
+            margin-bottom: var(--space-lg);
+            line-height: 1.8;
+            color: rgba(255, 255, 255, 0.95);
+            position: relative;
+        }
+
+        .testimonial-content::before,
+        .testimonial-content::after {
+            content: '"';
+            font-size: 3rem;
+            color: var(--primary-orange);
+            opacity: 0.5;
+            position: absolute;
+            font-family: Georgia, serif;
+        }
+
+        .testimonial-content::before {
+            top: -10px;
+            left: -20px;
+        }
+
+        .testimonial-content::after {
+            bottom: -30px;
+            right: -20px;
+        }
+
+        .testimonial-author {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+            justify-content: center;
+        }
+
+        .author-avatar {
+            width: 60px;
+            height: 60px;
+            background: var(--primary-orange);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+            font-size: 1.2rem;
+            color: var(--primary-white);
+            flex-shrink: 0;
+        }
+
+        .author-info h4 {
+            color: var(--primary-white);
+            margin-bottom: 0;
+            font-size: 1.1rem;
+        }
+
+        .author-info small {
+            color: rgba(255, 255, 255, 0.8);
+            font-size: 0.9rem;
+        }
+
+        .testimonial-dots {
+            display: flex;
+            gap: var(--space-sm);
+            justify-content: center;
+            margin-top: var(--space-lg);
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            background-color: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .dot.active {
+            background-color: var(--primary-orange);
+            transform: scale(1.2);
+        }
+
+        .dot:hover {
+            background-color: rgba(255, 255, 255, 0.5);
+        }
+
+        /* ===== MODAL STYLES ===== */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+            padding: var(--space-lg);
+            animation: fadeIn 0.3s ease;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--primary-white);
+            border-radius: var(--radius-lg);
+            padding: var(--space-xxl);
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-dark);
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-close:hover {
+            color: var(--danger);
+            background-color: var(--gray-light);
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto var(--space-lg);
+        }
+
+        .modal-icon i {
+            font-size: 2.5rem;
+            color: var(--primary-white);
+        }
+
+        .modal-content h2 {
+            color: var(--primary-green);
+            margin-bottom: var(--space-md);
+        }
+
+        .modal-content p {
+            color: var(--text-light);
+            margin-bottom: var(--space-lg);
+            line-height: 1.6;
+        }
+
+        .booking-id {
+            background: var(--light-green);
+            color: var(--primary-green);
+            padding: var(--space-md);
+            border-radius: var(--radius);
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: var(--space-lg) 0;
+            font-family: monospace;
+            letter-spacing: 1px;
+            border: 2px dashed var(--primary-green);
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-xl);
+        }
+
+        /* ===== FOOTER STYLES ===== */
+        footer {
+            background-color: var(--dark-green);
+            color: var(--primary-white);
+            padding: var(--space-xxl) 0 var(--space-xl);
+            position: relative;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--space-xl);
+            margin-bottom: var(--space-xl);
+        }
+
+        .footer-column h3 {
+            color: var(--primary-white);
+            font-size: 1.5rem;
+            margin-bottom: var(--space-lg);
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .footer-links {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .footer-links li {
+            margin-bottom: var(--space-sm);
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: var(--transition);
+            display: inline-block;
+            padding: 2px 0;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+            transform: translateX(5px);
+        }
+
+        .contact-info {
+            display: flex;
+            flex-direction: column;
+            gap: var(--space-md);
+        }
+
+        .contact-item {
+            display: flex;
+            align-items: flex-start;
+            gap: var(--space-md);
+        }
+
+        .contact-item i {
+            color: var(--primary-orange);
+            font-size: 1.1rem;
+            margin-top: 3px;
+        }
+
+        .contact-item span {
+            color: rgba(255, 255, 255, 0.8);
+            line-height: 1.5;
+        }
+
+        .social-links {
+            display: flex;
+            gap: var(--space-md);
+            margin-top: var(--space-lg);
+        }
+
+        .social-links a {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 50%;
+            color: var(--primary-white);
+            transition: var(--transition);
+            font-size: 1.1rem;
+        }
+
+        .social-links a:hover {
+            background-color: var(--primary-orange);
+            transform: translateY(-3px);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: var(--space-xl);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        .copyright p {
+            margin-bottom: 0;
+        }
+
+        /* ===== TOAST NOTIFICATIONS ===== */
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: var(--primary-white);
+            padding: var(--space-lg) var(--space-xl);
+            border-radius: var(--radius);
+            box-shadow: var(--shadow-lg);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            min-width: 300px;
+            max-width: 400px;
+            z-index: 9999;
+            animation: slideInRight 0.3s ease;
+            border-left: 4px solid var(--primary-orange);
+        }
+
+        .toast-success {
+            border-left-color: var(--success);
+        }
+
+        .toast-error {
+            border-left-color: var(--danger);
+        }
+
+        .toast-content {
+            display: flex;
+            align-items: center;
+            gap: var(--space-md);
+        }
+
+        .toast-content i {
+            font-size: 1.2rem;
+        }
+
+        .toast-success .toast-content i {
+            color: var(--success);
+        }
+
+        .toast-error .toast-content i {
+            color: var(--danger);
+        }
+
+        .toast-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--gray-dark);
+            padding: 0;
+            margin-left: var(--space-md);
+            line-height: 1;
+        }
+
+        @keyframes slideInRight {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* ===== MOBILE MENU ===== */
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-green);
+            background: none;
+            border: none;
+            width: 40px;
+            height: 40px;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* ===== RESPONSIVE DESIGN ===== */
+        @media (max-width: 1200px) {
+            .container {
+                max-width: 960px;
+            }
+            
+            h1 { font-size: 2.2rem; }
+            h2 { font-size: 1.8rem; }
+            h3 { font-size: 1.5rem; }
+        }
+
+        @media (max-width: 992px) {
+            .booking-hero h1 {
+                font-size: 2.8rem;
+            }
+            
+            .booking-hero p {
+                font-size: 1.2rem;
+            }
+            
+            .resort-cards {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+                gap: var(--space-lg);
+            }
+            
+            .form-row {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .mobile-menu-btn {
+                display: flex;
+            }
+            
+            .main-nav {
+                position: fixed;
+                top: 90px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 90px);
+                background-color: var(--primary-white);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: var(--space-xl);
+                transition: left 0.3s ease;
+                gap: var(--space-xl);
+                box-shadow: var(--shadow-lg);
+                z-index: 999;
+            }
+            
+            .main-nav.active {
+                left: 0;
+            }
+            
+            .header-actions {
+                display: none;
+            }
+            
+            .booking-hero {
+                padding: 140px 0 80px;
+            }
+            
+            .booking-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .booking-hero p {
+                font-size: 1.1rem;
+            }
+            
+            .quick-booking-form {
+                padding: var(--space-xl);
+            }
+            
+            .resort-cards {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+            
+            .resort-actions {
+                flex-direction: column;
+            }
+            
+            .booking-options {
+                flex-direction: column;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .footer-container {
+                grid-template-columns: 1fr;
+                gap: var(--space-lg);
+            }
+        }
+
+        @media (max-width: 576px) {
+            .booking-hero {
+                padding: 120px 0 60px;
+            }
+            
+            .booking-hero h1 {
+                font-size: 1.8rem;
+            }
+            
+            .booking-hero p {
+                font-size: 1rem;
+            }
+            
+            .section-header h2 {
+                font-size: 1.8rem;
+            }
+            
+            .resort-content {
+                padding: var(--space-lg);
+            }
+            
+            .modal-content {
+                padding: var(--space-xl) var(--space-lg);
+            }
+            
+            .toast {
+                min-width: auto;
+                width: calc(100% - 40px);
+                left: 20px;
+                right: 20px;
+            }
+            
+            .btn {
+                padding: 10px 20px;
+                font-size: 0.95rem;
+            }
+            
+            .btn-lg {
+                padding: 12px 30px;
+            }
+        }
+
+        /* ===== UTILITY CLASSES ===== */
+        .text-center { text-align: center; }
+        .text-left { text-align: left; }
+        .text-right { text-align: right; }
+        
+        .mt-0 { margin-top: 0; }
+        .mt-1 { margin-top: var(--space-xs); }
+        .mt-2 { margin-top: var(--space-sm); }
+        .mt-3 { margin-top: var(--space-md); }
+        .mt-4 { margin-top: var(--space-lg); }
+        .mt-5 { margin-top: var(--space-xl); }
+        
+        .mb-0 { margin-bottom: 0; }
+        .mb-1 { margin-bottom: var(--space-xs); }
+        .mb-2 { margin-bottom: var(--space-sm); }
+        .mb-3 { margin-bottom: var(--space-md); }
+        .mb-4 { margin-bottom: var(--space-lg); }
+        .mb-5 { margin-bottom: var(--space-xl); }
+        
+        .p-0 { padding: 0; }
+        .p-1 { padding: var(--space-xs); }
+        .p-2 { padding: var(--space-sm); }
+        .p-3 { padding: var(--space-md); }
+        .p-4 { padding: var(--space-lg); }
+        .p-5 { padding: var(--space-xl); }
+        
+        .hidden { display: none; }
+        .visible { display: block; }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header - Same as main index.html -->
+    <header>
+        <div class="container header-container">
+            <a href="index.html" class="logo">
+                <svg class="logo-img" viewBox="0 0 133 78">
+                    <path class="st0" d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path class="st0" d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path class="st1" d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
+                    <path class="st1" d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
+                    <path class="st1" d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
+                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                </svg>
+                <div class="logo-text">
+                    <h1>Jumuia Resorts</h1>
+                    <p>Christian Hospitality & Conference Centres</p>
+                </div>
+            </a>
+            
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <nav class="main-nav" id="mainNav">
+                <a href="index.html" class="active">Home</a>
+                <a href="About Us.html" class="active">About Us</a>
+                <a href="resorts.html" class="active">Our Resorts</a>
+                <a href="services.html" class="active">Services</a>
+                <a href="offers.html" class="active">Offers</a>
+                <a href="feedback.html" class="active">Feedback</a>
+                <a href="contact.html" class="active">Contact</a>
+                <a href="admin/index.html" class="btn-secondary">Log In</a>
+            </nav>
+            
+            <div class="header-actions">
+                <a href="#quick-book" class="btn btn-primary">Book Now</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Booking Hero -->
+    <section class="booking-hero" id="home">
+        <div class="container">
+            <h1>Book Your Perfect Getaway</h1>
+            <p>Experience luxury hospitality across Kenya's most beautiful locations. Whether it's a beach vacation, mountain retreat, or city stay, we have the perfect resort for you.</p>
+            <a href="#resorts" class="btn btn-primary" style="padding: 15px 40px; font-size: 1.1rem;">
+                <i class="fas fa-hotel"></i> Explore Our Resorts
+            </a>
+        </div>
+    </section>
+
+    <!-- Resort Selection -->
+    <section class="resort-selection" id="resorts">
+        <div class="container">
+            <div class="section-header">
+                <h2>Choose Your Destination</h2>
+                <p>Select from our three unique resorts, each offering a distinct experience</p>
+            </div>
+            
+            <div class="resort-cards">
+                <!-- Limuru Resort -->
+                <div class="resort-card" id="limuru-resort">
+                    <div class="resort-image" style="background-image: url('../../images/resorts/limuru/limuru-front.jpeg');">
+                        <div class="resort-overlay">
+                            <h3 style="color: white; margin: 0;">Limuru Highlands</h3>
+                        </div>
+                    </div>
+                    <div class="resort-content">
+                        <h3 class="resort-title">Jumuia Conference & Country Home</h3>
+                        <div class="resort-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Limuru, Kenya</span>
+                        </div>
+                        <p>Nestled in the serene Limuru highlands, perfect for conferences, retreats, and church events with breathtaking views and tranquil surroundings.</p>
+                        
+                        <div class="resort-features">
+                            <span class="feature-tag">Conference Facilities</span>
+                            <span class="feature-tag">Hostel Accommodation</span>
+                            <span class="feature-tag">Nature Walks</span>
+                            <span class="feature-tag">Mountain Views</span>
+                        </div>
+                        
+                        <div class="starting-from">
+                            Starting from
+                            <span>KSh 3,560</span>
+                            per night
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px; margin-top: 20px;">
+                            <a href="resorts/limuru/booking.html" class="btn btn-primary" style="flex: 1;">
+                                <i class="fas fa-calendar-check"></i> Book Now
+                            </a>
+                            <a href="resorts/limuru/index.html" class="btn btn-secondary">
+                                <i class="fas fa-info-circle"></i> Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kanamai Resort -->
+                <div class="resort-card" id="kanamai-resort">
+                    <div class="resort-image" style="background-image: url('../../images/resorts/kanamai/Reception-kanamai.jpg');">
+                        <div class="resort-overlay">
+                            <h3 style="color: white; margin: 0;">Kanamai Beach</h3>
+                        </div>
+                    </div>
+                    <div class="resort-content">
+                        <h3 class="resort-title">Jumuia Conference & Beach Resort</h3>
+                        <div class="resort-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Kanamai Coast, Kenya</span>
+                        </div>
+                        <p>Breathtaking beachfront location with conference facilities, swimming pools, and coastal adventure activities for the perfect getaway.</p>
+                        
+                        <div class="resort-features">
+                            <span class="feature-tag">Beachfront</span>
+                            <span class="feature-tag">Swimming Pool</span>
+                            <span class="feature-tag">Water Sports</span>
+                            <span class="feature-tag">Beach Events</span>
+                        </div>
+                        
+                        <div class="starting-from">
+                            Starting from
+                            <span>KSh 5,300</span>
+                            per night
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px; margin-top: 20px;">
+                            <a href="resorts/kanamai/booking.html" class="btn btn-primary" style="flex: 1;">
+                                <i class="fas fa-calendar-check"></i> Book Now
+                            </a>
+                            <a href="resorts/kanamai/index.html" class="btn btn-secondary">
+                                <i class="fas fa-info-circle"></i> Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Kisumu Resort -->
+                <div class="resort-card" id="kisumu-resort">
+                    <div class="resort-image" style="background-image: url('../../images/resorts/kisumu/resort1.jpg');">
+                        <div class="resort-overlay">
+                            <h3 style="color: white; margin: 0;">Lake Victoria</h3>
+                        </div>
+                    </div>
+                    <div class="resort-content">
+                        <h3 class="resort-title">Jumuia Hotel Kisumu</h3>
+                        <div class="resort-location">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Kisumu, Kenya</span>
+                        </div>
+                        <p>Urban luxury with lakeside views, perfect for business travelers, conferences, and events in the heart of Kisumu city.</p>
+                        
+                        <div class="resort-features">
+                            <span class="feature-tag">City Center</span>
+                            <span class="feature-tag">Lake Views</span>
+                            <span class="feature-tag">Conference Rooms</span>
+                            <span class="feature-tag">Business Center</span>
+                        </div>
+                        
+                        <div class="starting-from">
+                            Starting from
+                            <span>KSh 4,500</span>
+                            per night
+                        </div>
+                        
+                        <div style="display: flex; gap: 15px; margin-top: 20px;">
+                            <a href="resorts/kisumu/booking.html" class="btn btn-primary" style="flex: 1;">
+                                <i class="fas fa-calendar-check"></i> Book Now
+                            </a>
+                            <a href="resorts/kisumu/index.html" class="btn btn-secondary">
+                                <i class="fas fa-info-circle"></i> Details
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Quick Booking Form -->
+    <section class="quick-booking-form" id="quick-book">
+        <div class="container">
+            <h2>Quick Booking Inquiry</h2>
+            <p>Not sure which resort? Let us help you find the perfect stay!</p>
+            
+            <form id="quickBookingForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quickName">Your Name *</label>
+                        <input type="text" id="quickName" class="form-control" placeholder="Full name" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quickEmail">Email Address *</label>
+                        <input type="email" id="quickEmail" class="form-control" placeholder="Your email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quickPhone">Phone Number *</label>
+                        <input type="tel" id="quickPhone" class="form-control" placeholder="0712 345 678" required>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quickCheckIn">Check-in Date *</label>
+                        <input type="date" id="quickCheckIn" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quickCheckOut">Check-out Date *</label>
+                        <input type="date" id="quickCheckOut" class="form-control" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="quickResort">Preferred Resort</label>
+                        <select id="quickResort" class="form-control">
+                            <option value="">Any Resort</option>
+                            <option value="limuru">Limuru Country Home</option>
+                            <option value="kanamai">Kanamai Beach Resort</option>
+                            <option value="kisumu">Kisumu Hotel</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="quickPurpose">Purpose of Visit</label>
+                        <select id="quickPurpose" class="form-control">
+                            <option value="">Select Purpose</option>
+                            <option value="vacation">Vacation/Holiday</option>
+                            <option value="business">Business/Conference</option>
+                            <option value="wedding">Wedding/Honeymoon</option>
+                            <option value="family">Family Getaway</option>
+                            <option value="church">Church Event/Retreat</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quickGuests">Number of Guests *</label>
+                        <select id="quickGuests" class="form-control" required>
+                            <option value="1">1 Guest</option>
+                            <option value="2" selected>2 Guests</option>
+                            <option value="3">3 Guests</option>
+                            <option value="4">4 Guests</option>
+                            <option value="5+">5+ Guests</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="quickBudget">Budget Range</label>
+                        <select id="quickBudget" class="form-control">
+                            <option value="">Any Budget</option>
+                            <option value="economy">Economy (Under KSh 5,000/night)</option>
+                            <option value="standard">Standard (KSh 5,000-10,000/night)</option>
+                            <option value="premium">Premium (KSh 10,000+/night)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="quickMessage">Special Requests</label>
+                    <textarea id="quickMessage" class="form-control" rows="3" placeholder="Any special requirements or questions..."></textarea>
+                </div>
+                
+                <div class="booking-options">
+                    <button type="submit" class="btn btn-primary" style="padding: 15px 40px;">
+                        <i class="fas fa-paper-plane"></i> Send Inquiry
+                    </button>
+                    <a href="tel:+254202048881" class="btn btn-secondary" style="padding: 15px 40px;">
+                        <i class="fas fa-phone"></i> Call Us Now
+                    </a>
+                </div>
+                
+                <div class="loading" id="quickLoading">
+                    <div class="spinner"></div>
+                    <p>Processing your inquiry...</p>
+                </div>
+            </form>
+        </div>
+    </section>
+
+    <!-- Why Book With Us -->
+    <section class="why-book" id="why-book">
+        <div class="container">
+            <div class="section-header">
+                <h2>Why Book With Jumuia Resorts?</h2>
+                <p>Experience the difference with our exceptional service and amenities</p>
+            </div>
+            
+            <div class="reasons-grid">
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-shield-alt"></i>
+                    </div>
+                    <h3>Best Price Guarantee</h3>
+                    <p>We guarantee the best prices when you book directly with us. Found a lower price? We'll match it!</p>
+                </div>
+                
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-undo-alt"></i>
+                    </div>
+                    <h3>Flexible Cancellation</h3>
+                    <p>Free cancellation up to 48 hours before check-in. Book with confidence and peace of mind.</p>
+                </div>
+                
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <h3>Personalized Service</h3>
+                    <p>Our dedicated team ensures your stay is perfectly tailored to your needs and preferences.</p>
+                </div>
+                
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-medal"></i>
+                    </div>
+                    <h3>Quality Assured</h3>
+                    <p>All our resorts maintain the highest standards of cleanliness, comfort, and hospitality.</p>
+                </div>
+                
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-gift"></i>
+                    </div>
+                    <h3>Exclusive Offers</h3>
+                    <p>Direct bookings receive exclusive offers, upgrades, and special packages not available elsewhere.</p>
+                </div>
+                
+                <div class="reason-card">
+                    <div class="reason-icon">
+                        <i class="fas fa-headset"></i>
+                    </div>
+                    <h3>24/7 Support</h3>
+                    <p>Our reservations team is available 24/7 to assist with bookings, changes, and inquiries.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Testimonials -->
+    <section class="testimonial-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 style="color: var(--primary-white);">What Our Guests Say</h2>
+                <p style="color: rgba(255,255,255,0.9);">Hear from travelers who have experienced Jumuia hospitality</p>
+            </div>
+            
+            <div class="testimonial-slider">
+                <div class="testimonial" id="testimonial1">
+                    <div class="testimonial-content">
+                        "Our family vacation at Kanamai Beach Resort was absolutely perfect! The staff went above and beyond to make our stay memorable. The beachfront location is breathtaking."
+                    </div>
+                    <div class="testimonial-author">
+                        <div class="author-avatar">SW</div>
+                        <div>
+                            <h4 style="color: var(--primary-white); margin: 0;">Sarah W.</h4>
+                            <small style="color: rgba(255,255,255,0.8);">Family Vacation, Dec 2023</small>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: center; margin-top: 30px;">
+                    <span class="dot active" onclick="currentSlide(1)" style="height: 12px; width: 12px; background-color: var(--primary-orange); border-radius: 50%; display: inline-block; margin: 0 5px; cursor: pointer;"></span>
+                    <span class="dot" onclick="currentSlide(2)" style="height: 12px; width: 12px; background-color: rgba(255,255,255,0.3); border-radius: 50%; display: inline-block; margin: 0 5px; cursor: pointer;"></span>
+                    <span class="dot" onclick="currentSlide(3)" style="height: 12px; width: 12px; background-color: rgba(255,255,255,0.3); border-radius: 50%; display: inline-block; margin: 0 5px; cursor: pointer;"></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer - Same as main index.html -->
+    <footer id="contact">
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Jumuia Resorts</h3>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Luxury hospitality across Kenya with world-class facilities and exceptional service.</p>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-twitter"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Our Resorts</h3>
+                    <ul class="footer-links">
+                        <li><a href="resorts/limuru/index.html">Limuru Conference & Country Home</a></li>
+                        <li><a href="resorts/kanamai/index.html">Kanamai Beach Resort</a></li>
+                        <li><a href="resorts/kisumu/index.html">Kisumu Hotel</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="booking.html">Book Now</a></li>
+                        <li><a href="offers.html">Special Offers</a></li>
+                        <li><a href="feedback.html">Feedback</a></li>
+                        <li><a href="admin/index.html">Log In</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Contact Us</h3>
+                    <div class="contact-info">
+                        <div class="contact-item">
+                            <i class="fas fa-phone"></i>
+                            <span>Main Office: +254759423589</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-envelope"></i>
+                            <span>info@resortjumuia.com</span>
+                        </div>
+                        <div class="contact-item">
+                            <i class="fas fa-globe"></i>
+                            <span>www.resortjumuia.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2026 Jumuia Resorts Limited. All rights reserved.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Booking Success Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <div class="modal-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>Inquiry Submitted!</h2>
+            <p>Thank you for your booking inquiry. Our reservations team will contact you within 24 hours to confirm availability and provide the best options for your stay.</p>
+            
+            <div class="booking-id" id="inquiryId">
+                INQ-<span id="inquiryNumber">123456</span>
+            </div>
+            
+            <p><strong>What happens next?</strong></p>
+            <ul style="text-align: left; margin: 15px 0 25px; padding-left: 20px;">
+                <li>You'll receive a confirmation email shortly</li>
+                <li>Our team will check availability at your preferred resorts</li>
+                <li>We'll contact you with personalized options and pricing</li>
+            </ul>
+            
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <a href="index.html" class="btn btn-primary" style="flex: 1;">
+                    <i class="fas fa-home"></i> Back to Home
+                </a>
+                <button class="btn btn-secondary" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript -->
+    <script src="js/main.js"></script>
+    <script src="js/booking.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script>
+        // Initialize booking functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set minimum dates for booking form
+            const today = new Date().toISOString().split('T')[0];
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            const tomorrowStr = tomorrow.toISOString().split('T')[0];
+            
+            document.getElementById('quickCheckIn').min = today;
+            document.getElementById('quickCheckOut').min = today;
+            
+            // Set default dates
+            document.getElementById('quickCheckIn').value = today;
+            document.getElementById('quickCheckOut').value = tomorrowStr;
+            
+            // Handle quick booking form submission
+            document.getElementById('quickBookingForm').addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                if (!window.FirebaseServices || !window.FirebaseServices.db) {
+                    alert('Please wait while the booking system loads...');
+                    return;
+                }
+                
+                // Get form data
+                const inquiryData = {
+                    name: document.getElementById('quickName').value,
+                    email: document.getElementById('quickEmail').value,
+                    phone: document.getElementById('quickPhone').value,
+                    checkIn: document.getElementById('quickCheckIn').value,
+                    checkOut: document.getElementById('quickCheckOut').value,
+                    resort: document.getElementById('quickResort').value,
+                    purpose: document.getElementById('quickPurpose').value,
+                    guests: document.getElementById('quickGuests').value,
+                    budget: document.getElementById('quickBudget').value,
+                    message: document.getElementById('quickMessage').value,
+                    status: 'pending',
+                    createdAt: new Date().toISOString(),
+                    type: 'inquiry'
+                };
+                
+                // Validate
+                if (!inquiryData.name || !inquiryData.email || !inquiryData.phone) {
+                    showErrorToast('Please fill in all required fields');
+                    return;
+                }
+                
+                // Show loading
+                document.getElementById('quickLoading').classList.add('active');
+                const submitBtn = this.querySelector('button[type="submit"]');
+                const originalText = submitBtn.innerHTML;
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+                submitBtn.disabled = true;
+                
+                try {
+                    // Generate inquiry ID
+                    const timestamp = Date.now().toString().slice(-6);
+                    const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+                    inquiryData.inquiryId = `INQ-${timestamp}${random}`;
+                    
+                    // Save to Firebase
+                    const db = window.FirebaseServices.db;
+                    await db.collection('inquiries').add(inquiryData);
+                    
+                    // Show success modal
+                    document.getElementById('inquiryNumber').textContent = `${timestamp}${random}`;
+                    document.getElementById('bookingModal').classList.add('active');
+                    
+                    // Reset form
+                    this.reset();
+                    document.getElementById('quickCheckIn').value = today;
+                    document.getElementById('quickCheckOut').value = tomorrowStr;
+                    
+                    // Track analytics
+                    if (window.FirebaseServices.analytics) {
+                        window.FirebaseServices.analytics.logEvent('inquiry_submitted', {
+                            resort: inquiryData.resort || 'any',
+                            purpose: inquiryData.purpose || 'general'
+                        });
+                    }
+                    
+                    // Send email notification
+                    await sendInquiryEmail(inquiryData);
+                    
+                } catch (error) {
+                    console.error('Error saving inquiry:', error);
+                    showErrorToast('Failed to submit inquiry. Please try again or contact us directly.');
+                } finally {
+                    // Hide loading
+                    document.getElementById('quickLoading').classList.remove('active');
+                    submitBtn.innerHTML = originalText;
+                    submitBtn.disabled = false;
+                }
+            });
+            
+            // Initialize testimonial slider
+            let slideIndex = 1;
+            const slides = document.querySelectorAll('.testimonial');
+            const dots = document.querySelectorAll('.dot');
+            
+            function showSlides(n) {
+                if (n > slides.length) { slideIndex = 1; }
+                if (n < 1) { slideIndex = slides.length; }
+                
+                slides.forEach(slide => slide.style.display = 'none');
+                dots.forEach(dot => dot.style.backgroundColor = 'rgba(255,255,255,0.3)');
+                
+                if (slides[slideIndex-1]) {
+                    slides[slideIndex-1].style.display = 'block';
+                    dots[slideIndex-1].style.backgroundColor = 'var(--primary-orange)';
+                }
+            }
+            
+            function currentSlide(n) {
+                showSlides(slideIndex = n);
+            }
+            
+            // Auto-rotate testimonials
+            function autoRotate() {
+                slideIndex++;
+                if (slideIndex > slides.length) { slideIndex = 1; }
+                showSlides(slideIndex);
+            }
+            
+            // Initialize
+            showSlides(slideIndex);
+            setInterval(autoRotate, 5000);
+            
+            // Assign to window for dot onclick
+            window.currentSlide = currentSlide;
+        });
+        
+        // Close modal function
+        function closeModal() {
+            document.getElementById('bookingModal').classList.remove('active');
+        }
+        
+        // Send email for inquiry
+        async function sendInquiryEmail(inquiryData) {
+            try {
+                // Check if EmailJS is available
+                if (typeof emailjs === 'undefined') {
+                    console.log('EmailJS not loaded');
+                    return;
+                }
+                
+                // Initialize EmailJS with your public key
+                emailjs.init('QABuHzAPilhRW0PTT');
+                
+                // Send to resort team
+                await emailjs.send('service_9yusqtl', 'booking_inquiry_resort', {
+                    to_email: 'admin@resortjumuia.com',
+                    inquiry_id: inquiryData.inquiryId,
+                    guest_name: inquiryData.name,
+                    guest_email: inquiryData.email,
+                    guest_phone: inquiryData.phone,
+                    check_in: formatDate(inquiryData.checkIn),
+                    check_out: formatDate(inquiryData.checkOut),
+                    resort: inquiryData.resort ? getResortName(inquiryData.resort) : 'Any Resort',
+                    purpose: inquiryData.purpose || 'Not specified',
+                    guests: inquiryData.guests,
+                    message: inquiryData.message || 'No special requests',
+                    inquiry_date: new Date().toLocaleDateString('en-KE')
+                });
+                
+                console.log('Inquiry email sent to resort team');
+                
+                // Send confirmation to guest
+                await emailjs.send('service_9yusqtl', 'inquiry_confirmation_guest', {
+                    to_email: inquiryData.email,
+                    inquiry_id: inquiryData.inquiryId,
+                    guest_name: inquiryData.name,
+                    check_in: formatDate(inquiryData.checkIn),
+                    check_out: formatDate(inquiryData.checkOut),
+                    inquiry_date: new Date().toLocaleDateString('en-KE'),
+                    contact_email: 'info@resortjumuia.com',
+                    contact_phone: '+254 20 2048881'
+                });
+                
+                console.log('Confirmation email sent to guest');
+                
+            } catch (error) {
+                console.error('Email sending failed:', error);
+                // Don't fail the inquiry if emails fail
+            }
+        }
+        
+        // Format date for display
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-KE', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
+            });
+        }
+        
+        // Get resort name from code
+        function getResortName(resortCode) {
+            const resorts = {
+                'limuru': 'Limuru Conference & Country Home',
+                'kanamai': 'Kanamai Beach Resort',
+                'kisumu': 'Kisumu Hotel'
+            };
+            return resorts[resortCode] || resortCode;
+        }
+        
+        // Expose functions to window
+        window.closeModal = closeModal;
+        window.formatDate = formatDate;
+    </script>
+    <!-- Add this script at the END of body, before closing </body> tag -->
+    <script src="js/booking.js"></script>
+</body>
+</html>

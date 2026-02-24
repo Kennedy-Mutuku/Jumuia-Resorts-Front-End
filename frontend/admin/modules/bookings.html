@@ -1,0 +1,139 @@
+<div id="bookingsModule" class="module-content active">
+    <div class="content-header">
+        <div class="page-title">
+            <h1>Booking Management</h1>
+            <p>Manage all property bookings and reservations</p>
+        </div>
+        <div class="breadcrumb">
+            <a href="#dashboard"><i class="fas fa-home"></i> Home</a>
+            <span>/</span>
+            <span>Bookings</span>
+        </div>
+    </div>
+
+    <div id="alertBanner" class="alert" style="display: none;">
+        <i class="fas fa-info-circle"></i>
+        <div style="flex: 1;">
+            <span id="alertMessage"></span>
+        </div>
+        <button onclick="document.getElementById('alertBanner').style.display = 'none'" style="background: none; border: none; color: inherit; cursor: pointer;">
+            <i class="fas fa-times"></i>
+        </button>
+    </div>
+
+    <div class="booking-filters">
+        <div class="filter-group">
+            <label class="filter-label">Status</label>
+            <select id="bookingStatus" class="filter-select" onchange="filterBookings()">
+                <option value="all">All Bookings</option>
+                <option value="pending">Pending</option>
+                <option value="confirmed">Confirmed</option>
+                <option value="checked-in">Checked In</option>
+                <option value="checked-out">Checked Out</option>
+                <option value="cancelled">Cancelled</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label class="filter-label">Date Range</label>
+            <select id="bookingDateRange" class="filter-select" onchange="filterBookings()">
+                <option value="today">Today</option>
+                <option value="tomorrow">Tomorrow</option>
+                <option value="week">This Week</option>
+                <option value="month" selected>This Month</option>
+                <option value="custom">Custom Range</option>
+            </select>
+        </div>
+        <div class="filter-group">
+            <label class="filter-label">&nbsp;</label>
+            <button class="btn btn-primary" onclick="filterBookings()" style="width: 100%;">
+                <i class="fas fa-filter"></i> Apply Filters
+            </button>
+        </div>
+    </div>
+
+    <div class="action-buttons" style="margin-bottom: 20px;">
+        <button class="btn btn-primary" onclick="showNewBookingModal()">
+            <i class="fas fa-plus"></i> New Booking
+        </button>
+        <button class="btn btn-secondary" onclick="exportBookings()">
+            <i class="fas fa-download"></i> Export
+        </button>
+    </div>
+
+    <div id="bookingsList">
+        <!-- Bookings will be loaded here -->
+    </div>
+
+    <div id="loadingBookings" class="empty-state">
+        <i class="fas fa-spinner fa-spin"></i>
+        <h3>Loading bookings...</h3>
+    </div>
+
+    <div id="noBookings" class="empty-state" style="display: none;">
+        <i class="fas fa-calendar-times"></i>
+        <h3>No bookings found</h3>
+        <p>Try adjusting your filters or create a new booking.</p>
+    </div>
+</div>
+
+<!-- New Booking Modal -->
+<div class="modal-overlay" id="newBookingModal">
+    <div class="modal">
+        <div class="modal-header">
+            <h3>Create New Booking</h3>
+            <button class="modal-close" onclick="hideNewBookingModal()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <div class="modal-body">
+            <form id="newBookingForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="filter-label">Guest Name</label>
+                        <input type="text" class="form-control" id="guestName" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="filter-label">Guest Email</label>
+                        <input type="email" class="form-control" id="guestEmail" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="filter-label">Check-in Date</label>
+                        <input type="date" class="form-control" id="checkInDate" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="filter-label">Check-out Date</label>
+                        <input type="date" class="form-control" id="checkOutDate" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="filter-label">Room Type</label>
+                        <select class="form-control" id="roomType" required>
+                            <option value="">Select Room Type</option>
+                            <option value="standard">Standard Room</option>
+                            <option value="deluxe">Deluxe Room</option>
+                            <option value="suite">Suite</option>
+                            <option value="executive">Executive Suite</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="filter-label">Number of Guests</label>
+                        <input type="number" class="form-control" id="guestsCount" min="1" max="10" value="2" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group form-full">
+                        <label class="filter-label">Special Requests</label>
+                        <textarea class="form-control" id="specialRequests" rows="3"></textarea>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="hideNewBookingModal()">Cancel</button>
+            <button class="btn btn-primary" onclick="createBooking()">Create Booking</button>
+        </div>
+    </div>
+</div>

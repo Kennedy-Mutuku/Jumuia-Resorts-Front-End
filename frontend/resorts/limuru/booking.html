@@ -1,0 +1,1667 @@
+<!-- resorts/limuru/booking.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Your Stay - Jumuia Limuru</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Your existing CSS styles remain exactly the same */
+        :root {
+            --primary-green: #22440f;
+            --primary-orange: #f3a435;
+            --primary-white: #ffffff;
+            --secondary-green: #024423;
+            --dark-green: #153800;
+            --light-green: #e9f5e5;
+            --gray-bg: #f8f9fa;
+            --gray-border: #e0e0e0;
+            --text-dark: #333333;
+            --text-light: #666666;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --radius: 8px;
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--gray-bg);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            color: var(--text-dark);
+            line-height: 1.6;
+            background-color: var(--gray-bg);
+        }
+
+        h1, h2, h3, h4 {
+            font-family: 'Playfair Display', serif;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header Styles */
+        header {
+            background-color: var(--primary-white);
+            box-shadow: var(--shadow);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            text-decoration: none;
+        }
+
+        .logo-img {
+            width: 60px;
+            height: 60px;
+        }
+
+        .logo-text h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: var(--primary-green);
+        }
+
+        .logo-text p {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            font-weight: 500;
+        }
+
+        .main-nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .main-nav a {
+            text-decoration: none;
+            color: var(--text-dark);
+            font-weight: 500;
+            font-size: 1rem;
+            transition: color 0.3s;
+            position: relative;
+        }
+
+        .main-nav a:hover {
+            color: var(--primary-orange);
+        }
+
+        .main-nav a.active {
+            color: var(--primary-green);
+            font-weight: 600;
+        }
+
+        .main-nav a.active::after {
+            content: '';
+            position: absolute;
+            bottom: -5px;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--primary-green);
+        }
+
+        /* Booking Hero */
+        .booking-hero {
+            background: linear-gradient(rgba(34, 68, 15, 0.85), rgba(34, 68, 15, 0.85)), url('https://images.unsplash.com/photo-1590490360182-c33d57733427?ixlib=rb-4.0.3&auto=format&fit=crop&w=2070&q=80');
+            background-size: cover;
+            background-position: center;
+            color: var(--primary-white);
+            padding: 150px 0 80px;
+            margin-top: 90px;
+            text-align: center;
+        }
+
+        .booking-hero h1 {
+            font-size: 3rem;
+            color: var(--primary-white);
+            margin-bottom: 15px;
+        }
+
+        .booking-hero p {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            max-width: 700px;
+            margin: 0 auto 30px;
+        }
+
+        .resort-indicator {
+            background: rgba(243, 164, 53, 0.2);
+            border: 1px solid var(--primary-orange);
+            border-radius: var(--radius);
+            padding: 10px 20px;
+            display: inline-block;
+            margin-bottom: 30px;
+        }
+
+        .resort-indicator i {
+            color: var(--primary-orange);
+            margin-right: 10px;
+        }
+
+        /* Booking Container */
+        .booking-container {
+            display: grid;
+            grid-template-columns: 1fr 400px;
+            gap: 40px;
+            padding: 60px 0;
+        }
+
+        /* Booking Form */
+        .booking-form {
+            background: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 40px;
+            box-shadow: var(--shadow);
+        }
+
+        .form-section {
+            margin-bottom: 40px;
+            padding-bottom: 30px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .form-section:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .form-section h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+            font-size: 1.4rem;
+        }
+
+        .form-section h3 i {
+            color: var(--primary-orange);
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group.full-width {
+            grid-column: span 2;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-dark);
+        }
+
+        .form-group label.required::after {
+            content: ' *';
+            color: var(--danger);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-border);
+            border-radius: var(--radius);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(243, 164, 53, 0.1);
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .radio-group, .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .radio-option, .checkbox-option {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+        }
+
+        .radio-option input, .checkbox-option input {
+            cursor: pointer;
+        }
+
+        /* Payment Methods */
+        .payment-methods {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+
+        .payment-method {
+            border: 2px solid var(--gray-border);
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-method:hover {
+            border-color: var(--primary-orange);
+            background-color: rgba(243, 164, 53, 0.05);
+        }
+
+        .payment-method.active {
+            border-color: var(--primary-green);
+            background-color: var(--light-green);
+        }
+
+        .payment-method i {
+            font-size: 2rem;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .payment-method.mpesa i {
+            color: #007c00;
+        }
+
+        .payment-method.card i {
+            color: var(--primary-green);
+        }
+
+        .payment-method.bank i {
+            color: #0047ab;
+        }
+
+        .payment-method.cash i {
+            color: var(--text-light);
+        }
+
+        /* M-Pesa Payment */
+        .mpesa-payment {
+            background: var(--light-green);
+            border-radius: var(--radius);
+            padding: 20px;
+            margin-top: 20px;
+            display: none;
+        }
+
+        .mpesa-payment.active {
+            display: block;
+            animation: slideDown 0.3s ease;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .mpesa-steps {
+            margin: 20px 0;
+            padding-left: 20px;
+        }
+
+        .mpesa-steps li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        /* Booking Summary */
+        .booking-summary {
+            background: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 30px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 120px;
+            height: fit-content;
+        }
+
+        .summary-header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .summary-header h3 {
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .summary-resort {
+            color: var(--primary-orange);
+            font-weight: 500;
+        }
+
+        .summary-details {
+            margin-bottom: 30px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid var(--gray-border);
+        }
+
+        .summary-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+
+        .summary-total {
+            background: var(--light-green);
+            padding: 20px;
+            border-radius: var(--radius);
+            margin: 30px 0;
+            text-align: center;
+        }
+
+        .summary-total h3 {
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .total-amount {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 12px 30px;
+            border-radius: var(--radius);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            border: none;
+            font-family: 'Montserrat', sans-serif;
+            font-size: 1rem;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .btn-primary {
+            background-color: var(--primary-orange);
+            color: var(--primary-white);
+            width: 100%;
+            padding: 15px;
+            font-size: 1.1rem;
+        }
+
+        .btn-primary:hover {
+            background-color: #e5941f;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(243, 164, 53, 0.2);
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--primary-green);
+            border: 2px solid var(--primary-green);
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: var(--primary-white);
+        }
+
+        .btn-success:hover {
+            background-color: #218838;
+        }
+
+        /* Loading States */
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+
+        .loading.active {
+            display: block;
+        }
+
+        .spinner {
+            border: 3px solid var(--light-green);
+            border-top: 3px solid var(--primary-orange);
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* Success Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 2000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: var(--primary-white);
+            border-radius: var(--radius);
+            padding: 40px;
+            max-width: 500px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .modal-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--success);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 25px;
+        }
+
+        .modal-icon i {
+            font-size: 2.5rem;
+            color: var(--primary-white);
+        }
+
+        .modal-content h2 {
+            color: var(--primary-green);
+            margin-bottom: 15px;
+        }
+
+        .booking-id {
+            background: var(--light-green);
+            padding: 15px;
+            border-radius: var(--radius);
+            margin: 20px 0;
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: var(--primary-green);
+        }
+
+        /* Footer */
+        footer {
+            background-color: var(--dark-green);
+            color: var(--primary-white);
+            padding: 70px 0 30px;
+            margin-top: 60px;
+        }
+
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-column h3 {
+            color: var(--primary-white);
+            font-size: 1.5rem;
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .footer-column h3::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 0;
+            width: 50px;
+            height: 2px;
+            background-color: var(--primary-orange);
+        }
+
+        .footer-links {
+            list-style: none;
+        }
+
+        .footer-links li {
+            margin-bottom: 12px;
+        }
+
+        .footer-links a {
+            color: rgba(255, 255, 255, 0.8);
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary-orange);
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: rgba(255, 255, 255, 0.7);
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .booking-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .booking-summary {
+                position: static;
+                margin-top: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .booking-hero h1 {
+                font-size: 2.2rem;
+            }
+            
+            .booking-hero p {
+                font-size: 1rem;
+            }
+            
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .form-group.full-width {
+                grid-column: span 1;
+            }
+            
+            .mobile-menu-btn {
+                display: block;
+            }
+            
+            .main-nav {
+                position: fixed;
+                top: 90px;
+                left: -100%;
+                width: 100%;
+                height: calc(100vh - 90px);
+                background-color: var(--primary-white);
+                flex-direction: column;
+                align-items: center;
+                justify-content: flex-start;
+                padding-top: 40px;
+                transition: left 0.3s;
+                gap: 30px;
+            }
+            
+            .main-nav.active {
+                left: 0;
+            }
+        }
+        .error-message {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #dc3545;
+        }
+        
+        .error-message i {
+            font-size: 1.2rem;
+        }
+        
+        .error-message button {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #721c24;
+        }
+        
+        .success-message {
+            background-color: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: var(--radius);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            border-left: 4px solid #28a745;
+        }
+        
+        .success-message i {
+            font-size: 1.2rem;
+        }
+        
+        .success-message button {
+            margin-left: auto;
+            background: none;
+            border: none;
+            font-size: 1.2rem;
+            cursor: pointer;
+            color: #155724;
+        }
+       
+        /* Add this to your existing CSS */
+        .btn, button {
+            cursor: pointer !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+        
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed !important;
+        }
+        
+        /* Make sure nothing is covering the buttons */
+        #submitBooking, .payment-method, .test-button {
+            pointer-events: auto !important;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <a href="../../index.html" class="logo">
+                <svg class="logo-img" viewBox="0 0 133 78">
+                    <path class="st0" d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path class="st0" d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
+                    <path class="st1" d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
+                    <path class="st1" d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
+                    <path class="st1" d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
+                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                </svg>
+                <div class="logo-text">
+                    <h1>Jumuia Limuru</h1>
+                    <p>Conference & Country Home</p>
+                </div>
+            </a>
+            
+            <div class="mobile-menu-btn" id="mobileMenuBtn">
+                <i class="fas fa-bars"></i>
+            </div>
+            
+            <nav class="resort-nav" id="resortNav">
+                <a href="index.html" class="active">Home</a>
+                <a href="rooms.html" class="active">Rooms & Rates</a>
+                <a href="conference.html" class="active">Conference</a>
+                <a href="excursions.html" class="active">Excursions</a>
+                <a href="feedback.html" class="active">Feedback</a>
+                <a href="offers.html" class="active">Offers</a>
+                <a href="gallery.html" class="active">Gallery</a>
+                <a href="booking.html" class="btn btn-primary">Book Now</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Booking Hero -->
+    <section class="booking-hero">
+        <div class="container">
+            <div class="resort-indicator">
+                <i class="fas fa-map-marker-alt"></i>
+                You're booking at: Jumuia Conference & Country Home - Limuru
+            </div>
+            <h1>Book Your Stay</h1>
+            <p>Complete the form below to book your accommodation at our serene Limuru country home. All fields marked with * are required.</p>
+        </div>
+    </section>
+
+    <!-- Booking Container -->
+    <div class="container booking-container">
+        <!-- Booking Form -->
+        <div class="booking-form">
+            <form id="bookingForm">
+                <!-- Hidden Resort Field -->
+                <input type="hidden" id="resort" name="resort" value="limuru">
+                
+                <!-- Guest Information -->
+                <div class="form-section">
+                    <h3><i class="fas fa-user"></i> Guest Information</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="firstName" class="required">First Name</label>
+                            <input type="text" id="firstName" name="firstName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="lastName" class="required">Last Name</label>
+                            <input type="text" id="lastName" name="lastName" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="email" class="required">Email Address</label>
+                            <input type="email" id="email" name="email" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="phone" class="required">Phone Number</label>
+                            <input type="tel" id="phone" name="phone" class="form-control" required placeholder="e.g., 0712345678">
+                        </div>
+                        <div class="form-group">
+                            <label for="nationality" class="required">Nationality</label>
+                            <select id="nationality" name="nationality" class="form-control" required>
+                                <option value="">Select Nationality</option>
+                                <option value="kenyan">Kenyan</option>
+                                <option value="other">Other African</option>
+                                <option value="international">International</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="idNumber">ID/Passport Number</label>
+                            <input type="text" id="idNumber" name="idNumber" class="form-control">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Stay Details -->
+                <div class="form-section">
+                    <h3><i class="fas fa-calendar-alt"></i> Stay Details</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="checkIn" class="required">Check-in Date</label>
+                            <input type="date" id="checkIn" name="checkIn" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="checkOut" class="required">Check-out Date</label>
+                            <input type="date" id="checkOut" name="checkOut" class="form-control" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="adults" class="required">Adults</label>
+                            <select id="adults" name="adults" class="form-control" required>
+                                <option value="1">1 Adult</option>
+                                <option value="2" selected>2 Adults</option>
+                                <option value="3">3 Adults</option>
+                                <option value="4">4 Adults</option>
+                                <option value="5+">5+ Adults</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="children">Children (under 12)</label>
+                            <select id="children" name="children" class="form-control">
+                                <option value="0">No Children</option>
+                                <option value="1">1 Child</option>
+                                <option value="2">2 Children</option>
+                                <option value="3">3 Children</option>
+                                <option value="4+">4+ Children</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Room Selection -->
+                <div class="form-section">
+                    <h3><i class="fas fa-bed"></i> Room & Package Selection</h3>
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="roomType" class="required">Room Type</label>
+                            <select id="roomType" name="roomType" class="form-control" required>
+                                <option value="">Select Room Type</option>
+                                <option value="standard_single">Standard Single</option>
+                                <option value="standard_double">Standard Double</option>
+                                <option value="executive">Executive Room</option>
+                                <option value="studio_suite">Studio Suite</option>
+                                <option value="hostel">Hostel Bed</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="packageType" class="required">Package Type</label>
+                            <select id="packageType" name="packageType" class="form-control" required>
+                                <option value="">Select Package</option>
+                                <option value="bnb">Bed & Breakfast</option>
+                                <option value="hb">Half Board</option>
+                                <option value="fb">Full Board</option>
+                                <option value="conference">Conference Package</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <!-- Special Requests -->
+                    <div class="form-group full-width">
+                        <label for="specialRequests">Special Requests</label>
+                        <textarea id="specialRequests" name="specialRequests" class="form-control" placeholder="Any special requests, dietary requirements, or additional information..."></textarea>
+                    </div>
+                </div>
+
+                <!-- Payment Method -->
+                <div class="form-section">
+                    <h3><i class="fas fa-credit-card"></i> Payment Method</h3>
+                    <div class="payment-methods">
+                        <div class="payment-method mpesa" data-method="mpesa">
+                            <i class="fas fa-mobile-alt"></i>
+                            <span>M-Pesa</span>
+                            <small>Instant Payment</small>
+                        </div>
+                        <div class="payment-method card" data-method="card">
+                            <i class="fas fa-credit-card"></i>
+                            <span>Credit Card</span>
+                            <small>Online Payment</small>
+                        </div>
+                        <div class="payment-method bank" data-method="bank">
+                            <i class="fas fa-university"></i>
+                            <span>Bank Transfer</span>
+                            <small>Pay before arrival</small>
+                        </div>
+                        <div class="payment-method cash" data-method="cash">
+                            <i class="fas fa-money-bill-wave"></i>
+                            <span>Pay on Arrival</span>
+                            <small>Check-in payment</small>
+                        </div>
+                    </div>
+                    <input type="hidden" id="paymentMethod" name="paymentMethod" value="mpesa">
+                    
+                    <!-- M-Pesa Instructions -->
+                    <div id="mpesaInstructions" class="mpesa-payment active">
+                        <h4><i class="fas fa-info-circle"></i> M-Pesa Payment Instructions</h4>
+                        <p>After submitting your booking, you'll receive an M-Pesa prompt on your phone.</p>
+                        <ol class="mpesa-steps">
+                            <li>Enter your M-Pesa PIN when prompted</li>
+                            <li>You'll receive a confirmation SMS from M-Pesa</li>
+                            <li>Your booking will be confirmed instantly</li>
+                        </ol>
+                        <div class="form-group">
+                            <label for="mpesaNumber" class="required">M-Pesa Phone Number</label>
+                            <input type="tel" id="mpesaNumber" name="mpesaNumber" class="form-control" value="" placeholder="e.g., 0712345678">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Terms & Conditions -->
+                <div class="form-section">
+                    <div class="form-group full-width">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="terms" name="terms" required>
+                            <label for="terms" class="required">I agree to the <a href="#" style="color: var(--primary-green);">Terms & Conditions</a> and <a href="#" style="color: var(--primary-green);">Cancellation Policy</a></label>
+                        </div>
+                    </div>
+                    <div class="form-group full-width">
+                        <div class="checkbox-option">
+                            <input type="checkbox" id="newsletter" name="newsletter">
+                            <label for="newsletter">I would like to receive special offers and updates via email</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary" id="submitBooking">
+                    <i class="fas fa-paper-plane"></i> Complete Booking
+                </button>
+                
+                <!-- Loading State -->
+                <div class="loading" id="loading">
+                    <div class="spinner"></div>
+                    <p>Processing your booking...</p>
+                </div>
+            </form>
+        </div>
+
+        <!-- Booking Summary -->
+        <div class="booking-summary">
+            <div class="summary-header">
+                <h3>Booking Summary</h3>
+                <p class="summary-resort">Jumuia Limuru</p>
+            </div>
+            
+            <div class="summary-details">
+                <div class="summary-item">
+                    <span>Check-in</span>
+                    <strong id="summaryCheckIn">-</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Check-out</span>
+                    <strong id="summaryCheckOut">-</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Nights</span>
+                    <strong id="summaryNights">0</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Guests</span>
+                    <strong id="summaryGuests">-</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Room Type</span>
+                    <strong id="summaryRoomType">-</strong>
+                </div>
+                <div class="summary-item">
+                    <span>Package</span>
+                    <strong id="summaryPackage">-</strong>
+                </div>
+            </div>
+            
+            <div class="summary-total">
+                <h3>Total Amount</h3>
+                <div class="total-amount" id="totalAmount">KSh 0</div>
+                <p>Inclusive of all taxes</p>
+            </div>
+            
+            <div class="price-breakdown">
+                <div class="summary-item">
+                    <span>Room Rate</span>
+                    <span id="roomRate">KSh 0</span>
+                </div>
+                <div class="summary-item">
+                    <span>Taxes & Fees</span>
+                    <span id="taxes">KSh 0</span>
+                </div>
+                <div class="summary-item">
+                    <span>Children Discount</span>
+                    <span id="discount">-KSh 0</span>
+                </div>
+            </div>
+            
+            <div class="important-info">
+                <p><i class="fas fa-info-circle" style="color: var(--primary-orange);"></i> <small>Check-in: 12:00 PM | Check-out: 10:00 AM</small></p>
+                <p><i class="fas fa-info-circle" style="color: var(--primary-orange);"></i> <small>Cancellation policy applies</small></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Success Modal -->
+    <div class="modal" id="successModal">
+        <div class="modal-content">
+            <div class="modal-icon">
+                <i class="fas fa-check"></i>
+            </div>
+            <h2>Booking Confirmed!</h2>
+            <p>Your booking has been successfully submitted.</p>
+            <div class="booking-id" id="modalBookingId">JUM-123456</div>
+            <p>We've sent a confirmation email with all the details. Please check your inbox.</p>
+            <p><strong>Next Steps:</strong></p>
+            <ul style="text-align: left; margin: 15px 0;">
+                <li>Check your email for booking confirmation</li>
+                <li>Complete M-Pesa payment if not done</li>
+                <li>Bring your ID during check-in</li>
+            </ul>
+            <div style="display: flex; gap: 15px; margin-top: 25px;">
+                <button class="btn btn-primary" onclick="printBooking()">
+                    <i class="fas fa-print"></i> Print Receipt
+                </button>
+                <button class="btn btn-secondary" onclick="closeModal()">
+                    <i class="fas fa-times"></i> Close
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-column">
+                    <h3>Jumuia Limuru</h3>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Serene countryside retreat perfect for conferences, church events, and peaceful getaways.</p>
+                    <div class="contact-info" style="color: rgba(255,255,255,0.8);">
+                        <p><i class="fas fa-phone" style="color: var(--primary-orange);"></i> 0759 423 589, 020 2048881</p>
+                        <p><i class="fas fa-envelope" style="color: var(--primary-orange);"></i> reservations.limuru@resortjumuia.com</p>
+                    </div>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="../limuru/index.html">Home</a></li>
+                        <li><a href="../limuru/rooms.html">Rooms & Rates</a></li>
+                        <li><a href="../limuru/conference.html">Conference</a></li>
+                        <li><a href="../limuru/excursions.html">Excursions</a></li>
+                        <li><a href="../limuru/gallery.html">Gallery</a></li>
+                        <li><a href="booking.html">Book Now</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Other Resorts</h3>
+                    <ul class="footer-links">
+                        <li><a href="../kanamai/index.html">Kanamai Beach Resort</a></li>
+                        <li><a href="../kisumu/index.html">Kisumu Hotel</a></li>
+                        <li><a href="../../index.html">Main Website</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-column">
+                    <h3>Need Help?</h3>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Contact our reservations team for assistance:</p>
+                    <a href="mailto:reservations.limuru@resortjumuia.com" class="btn" style="background: var(--primary-orange); color: white; padding: 10px 20px; border-radius: var(--radius); text-decoration: none;">
+                        <i class="fas fa-envelope"></i> Email Us
+                    </a>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p> &copy; 2026 Jumuia Resorts Limited. All rights reserved. | Limuru Country Home</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+    <script src="../../js/main.js"></script>
+
+    <script type="text/javascript">
+        console.log('=== BOOKING SYSTEM STARTING ===');
+        
+        // Initialize EmailJS with error handling
+        (function initEmailJS() {
+            try {
+                if (typeof emailjs !== 'undefined') {
+                    emailjs.init("QABuHzAPilhRW0PTT");
+                    console.log('✓ EmailJS initialized');
+                } else {
+                    console.warn('⚠ EmailJS not loaded');
+                    // Load EmailJS dynamically
+                    const script = document.createElement('script');
+                    script.src = 'https://cdn.emailjs.com/dist/email.min.js';
+                    script.onload = function() {
+                        emailjs.init("QABuHzAPilhRW0PTT");
+                        console.log('✓ EmailJS loaded dynamically');
+                    };
+                    document.head.appendChild(script);
+                }
+            } catch (e) {
+                console.error('EmailJS error:', e);
+            }
+        })();
+
+        // Mobile menu
+        (function setupMobileMenu() {
+            const menuBtn = document.getElementById('mobileMenuBtn');
+            if (menuBtn) {
+                menuBtn.addEventListener('click', function() {
+                    const nav = document.getElementById('mainNav');
+                    if (nav) nav.classList.toggle('active');
+                });
+                console.log('✓ Mobile menu setup');
+            }
+        })();
+
+        // Initialize dates
+        function initializeDates() {
+            const checkIn = document.getElementById('checkIn');
+            const checkOut = document.getElementById('checkOut');
+            
+            if (checkIn && checkOut) {
+                const today = new Date();
+                const tomorrow = new Date(today);
+                tomorrow.setDate(tomorrow.getDate() + 1);
+                
+                const todayStr = today.toISOString().split('T')[0];
+                const tomorrowStr = tomorrow.toISOString().split('T')[0];
+                
+                checkIn.min = todayStr;
+                checkOut.min = todayStr;
+                checkIn.value = todayStr;
+                checkOut.value = tomorrowStr;
+                
+                console.log('✓ Dates initialized:', todayStr, 'to', tomorrowStr);
+            }
+        }
+
+        // Initialize payment methods
+        function initializePaymentMethods() {
+            const methods = document.querySelectorAll('.payment-method');
+            
+            methods.forEach(method => {
+                method.addEventListener('click', function() {
+                    // Remove active from all
+                    methods.forEach(m => m.classList.remove('active'));
+                    // Add active to clicked
+                    this.classList.add('active');
+                    // Update hidden field
+                    document.getElementById('paymentMethod').value = this.dataset.method;
+                    
+                    // Show/hide M-Pesa instructions
+                    const mpesaDiv = document.getElementById('mpesaInstructions');
+                    const mpesaInput = document.getElementById('mpesaNumber');
+                    
+                    if (this.dataset.method === 'mpesa') {
+                        if (mpesaDiv) mpesaDiv.classList.add('active');
+                        if (mpesaInput) mpesaInput.required = true;
+                    } else {
+                        if (mpesaDiv) mpesaDiv.classList.remove('active');
+                        if (mpesaInput) mpesaInput.required = false;
+                    }
+                });
+            });
+            
+            // Set M-Pesa as default
+            const mpesaMethod = document.querySelector('.payment-method.mpesa');
+            if (mpesaMethod) {
+                mpesaMethod.classList.add('active');
+                document.getElementById('paymentMethod').value = 'mpesa';
+            }
+            
+            console.log('✓ Payment methods setup');
+        }
+
+        // Calculate rates
+        function calculateRate(roomType, packageType, nights, adults, children) {
+            const rates = {
+                'standard_single': { 'bnb': 3560, 'hb': 4240, 'fb': 4880, 'conference': 5000 },
+                'standard_double': { 'bnb': 6280, 'hb': 7200, 'fb': 8080, 'conference': 4750 },
+                'executive': { 'bnb': 7200, 'hb': 8080, 'fb': 8960, 'conference': 5500 },
+                'studio_suite': { 'bnb': 11360, 'hb': 12480, 'fb': 13560, 'conference': 8000 },
+                'hostel': { 'bnb': 1500, 'hb': 2000, 'fb': 2500, 'conference': 1500 }
+            };
+            
+            const baseRate = rates[roomType]?.[packageType] || 0;
+            let total = baseRate * adults * nights;
+            
+            if (children > 0) {
+                total += baseRate * 0.5 * children * nights;
+            }
+            
+            const tax = total * 0.16;
+            const grandTotal = total + tax;
+            
+            return { baseRate, total, tax, grandTotal, nights, adults, children };
+        }
+
+        // Format date
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-KE', { 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+        }
+
+        // Update booking summary
+        function updateBookingSummary() {
+            try {
+                const checkIn = document.getElementById('checkIn').value;
+                const checkOut = document.getElementById('checkOut').value;
+                const adults = parseInt(document.getElementById('adults').value) || 0;
+                const children = parseInt(document.getElementById('children').value) || 0;
+                const roomType = document.getElementById('roomType').value;
+                const packageType = document.getElementById('packageType').value;
+                
+                const checkInDate = new Date(checkIn);
+                const checkOutDate = new Date(checkOut);
+                const nights = Math.max(1, Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)));
+                
+                // Update display
+                document.getElementById('summaryCheckIn').textContent = formatDate(checkIn);
+                document.getElementById('summaryCheckOut').textContent = formatDate(checkOut);
+                document.getElementById('summaryNights').textContent = nights;
+                document.getElementById('summaryGuests').textContent = `${adults} Adult${adults !== 1 ? 's' : ''}${children > 0 ? `, ${children} Child${children !== 1 ? 'ren' : ''}` : ''}`;
+                
+                // Calculate and update amounts
+                const rate = calculateRate(roomType, packageType, nights, adults, children);
+                document.getElementById('roomRate').textContent = `KSh ${rate.total.toLocaleString()}`;
+                document.getElementById('taxes').textContent = `KSh ${rate.tax.toLocaleString()}`;
+                document.getElementById('discount').textContent = rate.children > 0 ? `-KSh ${(rate.baseRate * 0.5 * rate.children * rate.nights).toLocaleString()}` : '-KSh 0';
+                document.getElementById('totalAmount').textContent = `KSh ${rate.grandTotal.toLocaleString()}`;
+                
+            } catch (error) {
+                console.error('Summary update error:', error);
+            }
+        }
+
+        // Validate form
+        function validateForm() {
+            const requiredFields = [
+                { id: 'firstName', name: 'First Name' },
+                { id: 'lastName', name: 'Last Name' },
+                { id: 'email', name: 'Email' },
+                { id: 'phone', name: 'Phone' },
+                { id: 'checkIn', name: 'Check-in Date' },
+                { id: 'checkOut', name: 'Check-out Date' },
+                { id: 'roomType', name: 'Room Type' },
+                { id: 'packageType', name: 'Package Type' }
+            ];
+            
+            // Check required fields
+            for (const field of requiredFields) {
+                const element = document.getElementById(field.id);
+                if (!element || !element.value.trim()) {
+                    alert(`Please fill in: ${field.name}`);
+                    if (element) element.focus();
+                    return false;
+                }
+            }
+            
+            // Check email format
+            const email = document.getElementById('email').value;
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                document.getElementById('email').focus();
+                return false;
+            }
+            
+            // Check phone format (simple)
+            const phone = document.getElementById('phone').value.replace(/\s+/g, '');
+            if (!/^[0-9]{10}$/.test(phone)) {
+                alert('Please enter a valid 10-digit phone number (e.g., 0712345678)');
+                document.getElementById('phone').focus();
+                return false;
+            }
+            
+            // Check dates
+            const checkIn = new Date(document.getElementById('checkIn').value);
+            const checkOut = new Date(document.getElementById('checkOut').value);
+            if (checkOut <= checkIn) {
+                alert('Check-out date must be after check-in date');
+                return false;
+            }
+            
+            // Check terms
+            if (!document.getElementById('terms').checked) {
+                alert('Please agree to the Terms & Conditions');
+                return false;
+            }
+            
+            // Check M-Pesa number if M-Pesa selected
+            if (document.getElementById('paymentMethod').value === 'mpesa') {
+                const mpesaNumber = document.getElementById('mpesaNumber').value.replace(/\s+/g, '');
+                if (!/^[0-9]{10}$/.test(mpesaNumber)) {
+                    alert('Please enter a valid 10-digit M-Pesa number');
+                    document.getElementById('mpesaNumber').focus();
+                    return false;
+                }
+            }
+            
+            return true;
+        }
+
+        // Generate booking ID
+        function generateBookingId() {
+            const timestamp = Date.now().toString().slice(-6);
+            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
+            return `JUM-LIM-${timestamp}${random}`;
+        }
+
+        // Calculate nights
+        function calculateNights(checkIn, checkOut) {
+            const checkInDate = new Date(checkIn);
+            const checkOutDate = new Date(checkOut);
+            return Math.max(1, Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)));
+        }
+
+        // Room type display names
+        function getRoomTypeDisplay(roomType) {
+            const types = {
+                'standard_single': 'Standard Single Room',
+                'standard_double': 'Standard Double Room',
+                'executive': 'Executive Room',
+                'studio_suite': 'Studio Suite',
+                'hostel': 'Hostel Bed'
+            };
+            return types[roomType] || roomType;
+        }
+
+        // Package display names
+        function getPackageDisplay(packageType) {
+            const packages = {
+                'bnb': 'Bed & Breakfast',
+                'hb': 'Half Board',
+                'fb': 'Full Board',
+                'conference': 'Conference Package'
+            };
+            return packages[packageType] || packageType;
+        }
+
+        // Payment method display names
+        function getPaymentMethodDisplay(method) {
+            const methods = {
+                'mpesa': 'M-Pesa',
+                'card': 'Credit Card',
+                'bank': 'Bank Transfer',
+                'cash': 'Pay on Arrival'
+            };
+            return methods[method] || method;
+        }
+
+        // Send emails
+        async function sendEmailNotifications(bookingData) {
+            try {
+                if (typeof emailjs === 'undefined') {
+                    console.warn('EmailJS not available, skipping emails');
+                    return true;
+                }
+                
+                const resortEmail = 'reservations.limuru@resortjumuia.com';
+                const resortName = 'Jumuia Conference & Country Home - Limuru';
+                const resortPhone = '0759 423 589, 020 2048881';
+                
+                // Send to guest
+                await emailjs.send('service_9yusqtl', 'booking_confirmation_guest', {
+                    to_email: bookingData.email,
+                    booking_id: bookingData.bookingId,
+                    guest_name: `${bookingData.firstName} ${bookingData.lastName}`,
+                    resort_name: resortName,
+                    resort_email: resortEmail,
+                    resort_phone: resortPhone,
+                    check_in: formatDate(bookingData.checkIn),
+                    check_out: formatDate(bookingData.checkOut),
+                    nights: bookingData.nights,
+                    room_type: bookingData.roomTypeDisplay,
+                    package_type: bookingData.packageTypeDisplay,
+                    total_amount: `KSh ${bookingData.totalAmount.toLocaleString()}`,
+                    payment_status: bookingData.paymentMethod === 'cash' ? 'Pay on Arrival' : 'Awaiting Payment',
+                    booking_date: new Date().toLocaleDateString('en-KE'),
+                    special_requests: bookingData.specialRequests || 'None'
+                });
+                
+                console.log('✓ Guest email sent');
+                
+                // Try to send to resort (may fail if no template)
+                try {
+                    await emailjs.send('service_9yusqtl', 'booking_notification_resort', {
+                        to_email: resortEmail,
+                        booking_id: bookingData.bookingId,
+                        guest_name: `${bookingData.firstName} ${bookingData.lastName}`,
+                        guest_email: bookingData.email,
+                        guest_phone: bookingData.phone,
+                        resort_name: resortName,
+                        check_in: formatDate(bookingData.checkIn),
+                        check_out: formatDate(bookingData.checkOut),
+                        total_amount: `KSh ${bookingData.totalAmount.toLocaleString()}`,
+                        payment_method: bookingData.paymentMethodDisplay
+                    });
+                    console.log('✓ Resort email sent');
+                } catch (emailError) {
+                    console.warn('Resort email failed:', emailError);
+                }
+                
+                return true;
+                
+            } catch (error) {
+                console.error('Email error:', error);
+                return false; // Don't fail booking if emails fail
+            }
+        }
+
+        // MAIN FORM SUBMISSION HANDLER
+        async function handleFormSubmission(e) {
+            console.log('=== FORM SUBMISSION STARTED ===');
+            
+            e.preventDefault();
+            e.stopPropagation();
+            
+            // Validate form
+            if (!validateForm()) {
+                console.log('Form validation failed');
+                return;
+            }
+            
+            // Get submit button
+            const submitBtn = document.getElementById('submitBooking');
+            const originalText = submitBtn.innerHTML;
+            
+            // Show loading
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
+            submitBtn.disabled = true;
+            
+            try {
+                // Collect form data
+                const formData = new FormData(document.getElementById('bookingForm'));
+                const bookingData = {
+                    // Guest Information
+                    firstName: formData.get('firstName'),
+                    lastName: formData.get('lastName'),
+                    email: formData.get('email'),
+                    phone: formData.get('phone'),
+                    nationality: formData.get('nationality'),
+                    idNumber: formData.get('idNumber'),
+                    
+                    // Stay Information
+                    resort: 'limuru',
+                    checkIn: formData.get('checkIn'),
+                    checkOut: formData.get('checkOut'),
+                    adults: parseInt(formData.get('adults')),
+                    children: parseInt(formData.get('children')) || 0,
+                    nights: calculateNights(formData.get('checkIn'), formData.get('checkOut')),
+                    
+                    // Room Information
+                    roomType: formData.get('roomType'),
+                    roomTypeDisplay: getRoomTypeDisplay(formData.get('roomType')),
+                    packageType: formData.get('packageType'),
+                    packageTypeDisplay: getPackageDisplay(formData.get('packageType')),
+                    specialRequests: formData.get('specialRequests') || '',
+                    
+                    // Payment Information
+                    paymentMethod: formData.get('paymentMethod'),
+                    paymentMethodDisplay: getPaymentMethodDisplay(formData.get('paymentMethod')),
+                    mpesaNumber: formData.get('mpesaNumber') || '',
+                    
+                    // System Information
+                    bookingId: generateBookingId(),
+                    status: 'pending',
+                    paymentStatus: formData.get('paymentMethod') === 'cash' ? 'pending' : 'awaiting_payment',
+                    createdAt: new Date().toISOString(),
+                    source: 'website'
+                };
+                
+                // Calculate total amount
+                const rate = calculateRate(
+                    bookingData.roomType,
+                    bookingData.packageType,
+                    bookingData.nights,
+                    bookingData.adults,
+                    bookingData.children
+                );
+                
+                bookingData.totalAmount = rate.grandTotal;
+                
+                console.log('Booking data prepared:', bookingData);
+                
+                // 1. FIRST - Try to save to Firebase if available
+                let firebaseSaved = false;
+                try {
+                    if (window.FirebaseServices && window.FirebaseServices.db) {
+                        console.log('Attempting Firebase save...');
+                        await window.FirebaseServices.db.collection('bookings').add(bookingData);
+                        firebaseSaved = true;
+                        console.log('✓ Saved to Firebase');
+                    } else if (window.FirebaseService) {
+                        console.log('Using FirebaseService...');
+                        await window.FirebaseService.saveBooking(bookingData);
+                        firebaseSaved = true;
+                        console.log('✓ Saved via FirebaseService');
+                    } else {
+                        console.log('⚠ Firebase not available, saving locally');
+                    }
+                } catch (firebaseError) {
+                    console.warn('Firebase save failed:', firebaseError);
+                    // Continue without Firebase
+                }
+                
+                // 2. Send email notifications
+                const emailsSent = await sendEmailNotifications(bookingData);
+                
+                // 3. Show success regardless of Firebase/Email status
+                document.getElementById('modalBookingId').textContent = bookingData.bookingId;
+                document.getElementById('successModal').classList.add('active');
+                
+                // 4. Reset form
+                document.getElementById('bookingForm').reset();
+                initializeDates(); // Reset dates
+                initializePaymentMethods(); // Reset payment
+                
+                console.log('✓ Booking completed successfully!');
+                console.log('Booking ID:', bookingData.bookingId);
+                console.log('Firebase saved:', firebaseSaved);
+                console.log('Emails sent:', emailsSent);
+                
+            } catch (error) {
+                console.error('Booking error:', error);
+                alert('Error: ' + error.message + '\n\nPlease contact us directly at 0759 423 589');
+            } finally {
+                // Restore button
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        // Setup form when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('=== DOM READY ===');
+            
+            // Initialize
+            initializeDates();
+            initializePaymentMethods();
+            
+            // Setup change listeners
+            ['checkIn', 'checkOut', 'adults', 'children', 'roomType', 'packageType'].forEach(id => {
+                const element = document.getElementById(id);
+                if (element) {
+                    element.addEventListener('change', updateBookingSummary);
+                }
+            });
+            
+            // Setup form submission
+            const form = document.getElementById('bookingForm');
+            if (form) {
+                form.addEventListener('submit', handleFormSubmission);
+                console.log('✓ Form event listener added');
+            } else {
+                console.error('❌ Form not found!');
+            }
+            
+            // Initial summary update
+            updateBookingSummary();
+            
+            console.log('✓ Setup complete - Ready for bookings!');
+            
+            // Test: Check Firebase availability
+            console.log('FirebaseServices available:', !!window.FirebaseServices);
+            console.log('FirebaseService available:', !!window.FirebaseService);
+            console.log('EmailJS available:', typeof emailjs !== 'undefined');
+        });
+
+        // Modal functions
+        window.closeModal = function() {
+            document.getElementById('successModal').classList.remove('active');
+        };
+        
+        window.printBooking = function() {
+            const bookingId = document.getElementById('modalBookingId').textContent;
+            const content = `
+                <html>
+                <head><title>Booking Confirmation</title></head>
+                <body style="padding: 20px; font-family: Arial;">
+                    <h2>Jumuia Limuru - Booking Confirmation</h2>
+                    <p><strong>Booking ID:</strong> ${bookingId}</p>
+                    <p><strong>Date:</strong> ${new Date().toLocaleDateString('en-KE')}</p>
+                    <p>Please bring this confirmation and your ID during check-in.</p>
+                    <p>Contact: 0759 423 589 | reservations.limuru@resortjumuia.com</p>
+                </body>
+                </html>
+            `;
+            const printWin = window.open('', '_blank');
+            printWin.document.write(content);
+            printWin.document.close();
+            printWin.print();
+        };
+    </script>
+</body>
+</html>
