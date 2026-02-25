@@ -107,27 +107,31 @@
         }
 
         .resort-logo h1 {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
+            white-space: nowrap;
             margin-bottom: 5px;
             color: var(--primary-green);
         }
 
         .resort-location {
-            font-size: 0.9rem;
+            font-size: 0.75rem;
+            white-space: nowrap;
             color: var(--primary-orange);
             font-weight: 500;
         }
 
         .resort-nav {
             display: flex;
-            gap: 25px;
+            gap: 20px;
+            flex-wrap: nowrap;
         }
 
         .resort-nav a {
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
             transition: color 0.3s;
             position: relative;
         }
@@ -152,14 +156,15 @@
         }
 
         .btn {
-            padding: 10px 25px;
+            padding: 6px 16px;
             border-radius: var(--radius);
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
             font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
             text-decoration: none;
             display: inline-block;
             text-align: center;
@@ -178,7 +183,9 @@
         .btn-secondary {
             background-color: transparent;
             color: var(--primary-green);
-            border: 2px solid var(--primary-green);
+            border: 1px solid var(--primary-green);
+            border-radius: 0;
+            outline: none;
         }
 
         .btn-secondary:hover {
@@ -199,21 +206,21 @@
             background-size: cover;
             background-position: center;
             color: var(--primary-white);
-            padding: 180px 0 100px;
-            margin-top: 120px;
+            padding: 60px 0 40px;
+            margin-top: 125px;
             text-align: center;
         }
 
         .resort-hero h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 2rem;
+            margin-bottom: 8px;
             color: var(--primary-white);
         }
 
         .resort-hero p {
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             max-width: 800px;
-            margin: 0 auto 40px;
+            margin: 0 auto 15px;
             opacity: 0.9;
         }
 
@@ -675,7 +682,7 @@
             display: grid;
             grid-template-columns: 2fr 1fr;
             gap: 0;
-            min-height: 500px;
+            min-height: auto;
         }
 
         .panorama-view {

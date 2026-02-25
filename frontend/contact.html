@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact Us - Jumuia Resorts</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary-green: #22440f;
@@ -35,7 +38,10 @@
             background-color: var(--gray-bg);
         }
 
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             font-family: 'Playfair Display', serif;
             font-weight: 600;
             color: var(--primary-green);
@@ -58,11 +64,50 @@
             z-index: 1000;
         }
 
+        .header-top {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            padding: 8px 0;
+        }
+
+        .header-top-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slogan {
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        .header-top-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .header-top-link {
+            color: var(--primary-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .header-top-link:hover {
+            color: var(--primary-orange);
+        }
+
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
+            padding: 12px 0;
+            /* Slightly thinner header */
         }
 
         .logo {
@@ -73,34 +118,41 @@
         }
 
         .logo-img {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            /* Slightly smaller logo */
+            height: 55px;
         }
 
         .logo-text h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 1.5rem;
+            margin-bottom: 2px;
             color: var(--primary-green);
+            white-space: nowrap;
         }
 
         .logo-text p {
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             color: var(--text-light);
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .main-nav {
             display: flex;
-            gap: 30px;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: nowrap;
         }
 
         .main-nav a {
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.85rem;
             transition: color 0.3s;
             position: relative;
+            padding: 5px 0;
+            white-space: nowrap;
         }
 
         .main-nav a:hover {
@@ -115,31 +167,34 @@
         .main-nav a.active::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -2px;
+            /* Thinner line adjustment */
             left: 0;
             width: 100%;
-            height: 2px;
+            height: 1px;
+            /* 1px thin line */
             background-color: var(--primary-orange);
         }
 
         .header-actions {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
         }
 
         .btn {
-            padding: 10px 25px;
+            padding: 6px 16px;
             border-radius: var(--radius);
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
             font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
+            font-size: 0.85rem;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -155,7 +210,9 @@
         .btn-secondary {
             background-color: transparent;
             color: var(--primary-green);
-            border: 2px solid var(--primary-green);
+            border: 1px solid var(--primary-green);
+            border-radius: 0;
+            outline: none;
         }
 
         .btn-secondary:hover {
@@ -176,21 +233,22 @@
             background-size: cover;
             background-position: center;
             color: var(--primary-white);
-            padding: 180px 0 100px;
-            margin-top: 90px;
+            padding: 60px 0 40px;
+            margin-top: 125px;
+            /* Adjusted for taller header */
             text-align: center;
         }
 
         .page-hero h1 {
-            font-size: 3.5rem;
-            margin-bottom: 20px;
+            font-size: 2rem;
+            margin-bottom: 8px;
             color: var(--primary-white);
         }
 
         .page-hero p {
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             max-width: 800px;
-            margin: 0 auto 40px;
+            margin: 0 auto 15px;
             opacity: 0.9;
         }
 
@@ -305,7 +363,7 @@
             display: inline-block;
             width: 20px;
             height: 20px;
-            border: 3px solid rgba(255,255,255,.3);
+            border: 3px solid rgba(255, 255, 255, .3);
             border-radius: 50%;
             border-top-color: var(--primary-white);
             animation: spin 1s ease-in-out infinite;
@@ -313,7 +371,9 @@
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Contact Info */
@@ -610,11 +670,11 @@
             .page-hero h1 {
                 font-size: 2.8rem;
             }
-            
+
             .main-nav {
                 gap: 20px;
             }
-            
+
             .form-row {
                 grid-template-columns: 1fr;
             }
@@ -624,7 +684,7 @@
             .mobile-menu-btn {
                 display: block;
             }
-            
+
             .main-nav {
                 position: fixed;
                 top: 90px;
@@ -639,23 +699,23 @@
                 transition: left 0.3s;
                 gap: 30px;
             }
-            
+
             .main-nav.active {
                 left: 0;
             }
-            
+
             .page-hero h1 {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
-            
+
             .page-hero p {
                 font-size: 1rem;
             }
-            
+
             .contact-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .resorts-grid {
                 grid-template-columns: 1fr;
             }
@@ -665,20 +725,20 @@
             .page-hero {
                 padding: 150px 0 80px;
             }
-            
+
             .page-hero h1 {
                 font-size: 1.8rem;
             }
-            
+
             .btn {
                 padding: 10px 20px;
                 font-size: 0.9rem;
             }
-            
+
             .section-header h2 {
                 font-size: 2rem;
             }
-            
+
             .contact-form-container,
             .contact-info-container {
                 padding: 25px;
@@ -686,40 +746,67 @@
         }
     </style>
 </head>
+
 <body>
     <!-- Header & Navigation -->
     <header>
+        <div class="header-top">
+            <div class="container header-top-content">
+                <div class="slogan">Hospitality With A Christian Touch</div>
+                <div class="header-top-actions">
+                    <a href="tel:+254759423589" class="header-top-link">
+                        <i class="fas fa-phone"></i>
+                        <span>+254 759 423589</span>
+                    </a>
+                    <a href="mailto:jumuiaresortslimited@gmail.com" class="header-top-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>jumuiaresortslimited@gmail.com</span>
+                    </a>
+                </div>
+            </div>
+        </div>
         <div class="container header-container">
             <a href="index.html" class="logo">
                 <svg class="logo-img" viewBox="0 0 133 78">
-                    <path class="st0" d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
-                    <path class="st0" d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
-                    <path class="st1" d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
-                    <path class="st1" d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
-                    <path class="st1" d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
-                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                    <path class="st0"
+                        d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z"
+                        fill="#FFFFFF" stroke="#024423" stroke-width="0.75" />
+                    <path class="st0"
+                        d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z"
+                        fill="#FFFFFF" stroke="#024423" stroke-width="0.75" />
+                    <path class="st1"
+                        d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z"
+                        fill="#024423" />
+                    <path class="st1"
+                        d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z"
+                        fill="#024423" />
+                    <path class="st1"
+                        d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z"
+                        fill="#024423" />
+                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z"
+                        fill="#f3a435" />
                 </svg>
                 <div class="logo-text">
                     <h1>Jumuia Resorts</h1>
                     <p>Christian Hospitality & Conference Centres</p>
                 </div>
             </a>
-            
+
             <div class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </div>
-            
+
             <nav class="main-nav" id="mainNav">
-                <a href="index.html" class="active">Home</a>
-                <a href="About Us.html" class="active">About Us</a>
-                <a href="resorts.html" class="active">Our Resorts</a>
-                <a href="services.html" class="active">Services</a>
-                <a href="offers.html" class="active">Offers</a>
-                <a href="feedback.html" class="active">Feedback</a>
+                <a href="index.html">Home</a>
+                <a href="About Us.html">About Us</a>
+                <a href="resorts.html">Our Resorts</a>
+                <a href="services.html">Services</a>
+                <a href="offers.html">Offers</a>
+                <a href="feedback.html">Feedback</a>
                 <a href="contact.html" class="active">Contact</a>
                 <a href="admin/index.html" class="btn-secondary">Log In</a>
             </nav>
-            
+
             <div class="header-actions">
                 <a href="booking.html" class="btn btn-primary">Book Now</a>
             </div>
@@ -730,8 +817,10 @@
     <section class="page-hero">
         <div class="container">
             <h1>Contact Jumuia Resorts</h1>
-            <p>We're here to help you plan your perfect stay, conference, or event. Reach out to us through any of our contact channels or visit us at our resorts.</p>
-            <a href="#contact-form" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 40px;">Send Us a Message</a>
+            <p>We're here to help you plan your perfect stay, conference, or event. Reach out to us through any of our
+                contact channels or visit us at our resorts.</p>
+            <a href="#contact-form" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 40px;">Send Us a
+                Message</a>
         </div>
     </section>
 
@@ -740,23 +829,26 @@
         <div class="container">
             <div class="section-header">
                 <h2>Get In Touch With Us</h2>
-                <p>Choose your preferred method of contact. Our team is ready to assist you with any inquiries, reservations, or special requests.</p>
+                <p>Choose your preferred method of contact. Our team is ready to assist you with any inquiries,
+                    reservations, or special requests.</p>
             </div>
-            
+
             <div class="contact-container">
                 <!-- Contact Form -->
                 <div class="contact-form-container">
                     <h3 style="margin-bottom: 25px; font-size: 1.6rem;">Send Us a Message</h3>
-                    
+
                     <!-- Success/Error Messages -->
                     <div id="successMessage" class="message success" style="display: none;">
-                        <i class="fas fa-check-circle"></i> Thank you for your message! We'll get back to you within 24 hours.
+                        <i class="fas fa-check-circle"></i> Thank you for your message! We'll get back to you within 24
+                        hours.
                     </div>
-                    
+
                     <div id="errorMessage" class="message error" style="display: none;">
-                        <i class="fas fa-exclamation-circle"></i> <span id="errorText">There was an error sending your message. Please try again.</span>
+                        <i class="fas fa-exclamation-circle"></i> <span id="errorText">There was an error sending your
+                            message. Please try again.</span>
                     </div>
-                    
+
                     <form id="contactForm">
                         <div class="form-row">
                             <div class="form-group">
@@ -768,17 +860,17 @@
                                 <input type="text" id="lastName" name="lastName" required>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="email">Email Address *</label>
                             <input type="email" id="email" name="email" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
                             <input type="tel" id="phone" name="phone">
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="resort">Select Resort (Optional)</label>
                             <select id="resort" name="resort">
@@ -788,7 +880,7 @@
                                 <option value="kisumu">Jumuia Hotel Kisumu</option>
                             </select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="subject">Subject *</label>
                             <select id="subject" name="subject" required>
@@ -803,23 +895,25 @@
                                 <option value="other">Other Inquiry</option>
                             </select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="message">Your Message *</label>
-                            <textarea id="message" name="message" required placeholder="Please provide details about your inquiry..."></textarea>
+                            <textarea id="message" name="message" required
+                                placeholder="Please provide details about your inquiry..."></textarea>
                         </div>
-                        
-                        <button type="submit" id="submitBtn" class="btn btn-primary" style="width: 100%; font-size: 1.1rem; padding: 15px;">
+
+                        <button type="submit" id="submitBtn" class="btn btn-primary"
+                            style="width: 100%; font-size: 1.1rem; padding: 15px;">
                             <span id="submitText">Send Message</span>
                             <span id="submitLoading" class="loading" style="display: none;"></span>
                         </button>
                     </form>
                 </div>
-                
+
                 <!-- Contact Information -->
                 <div class="contact-info-container">
                     <h3 style="margin-bottom: 25px; font-size: 1.6rem;">Contact Information</h3>
-                    
+
                     <div class="contact-method">
                         <div class="contact-icon">
                             <i class="fas fa-phone"></i>
@@ -831,7 +925,7 @@
                             <p><strong>Emergency:</strong> +254759423589</p>
                         </div>
                     </div>
-                    
+
                     <div class="contact-method">
                         <div class="contact-icon">
                             <i class="fas fa-envelope"></i>
@@ -839,11 +933,13 @@
                         <div class="contact-details">
                             <h4>Email Us</h4>
                             <p>Send us an email for general inquiries</p>
-                            <p><strong>General Inquiries:</strong> <a href="mailto:info@resortjumuia.com">info@resortjumuia.com</a></p>
-                            <p><strong>Reservations:</strong> <a href="mailto:reservations@resortjumuia.com">reservations@resortjumuia.com</a></p>
+                            <p><strong>General Inquiries:</strong> <a
+                                    href="mailto:info@resortjumuia.com">info@resortjumuia.com</a></p>
+                            <p><strong>Reservations:</strong> <a
+                                    href="mailto:reservations@resortjumuia.com">reservations@resortjumuia.com</a></p>
                         </div>
                     </div>
-                    
+
                     <div class="contact-method">
                         <div class="contact-icon">
                             <i class="fas fa-clock"></i>
@@ -854,7 +950,7 @@
                             <p><em>Resort receptions are open 24/7</em></p>
                         </div>
                     </div>
-                    
+
                     <div class="contact-method">
                         <div class="contact-icon">
                             <i class="fas fa-map-marker-alt"></i>
@@ -877,7 +973,7 @@
                 <h2>Contact Our Resorts Directly</h2>
                 <p>Each of our resorts has dedicated contact information for specific inquiries and reservations</p>
             </div>
-            
+
             <div class="resorts-grid">
                 <!-- Kanamai Resort -->
                 <div class="resort-contact-card">
@@ -901,7 +997,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Limuru Resort -->
                 <div class="resort-contact-card">
                     <h3>Limuru Country Home</h3>
@@ -924,7 +1020,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 <!-- Kisumu Resort -->
                 <div class="resort-contact-card">
                     <h3>Kisumu Hotel</h3>
@@ -958,7 +1054,7 @@
                 <h2>Frequently Asked Questions</h2>
                 <p>Find quick answers to common questions about our resorts and services</p>
             </div>
-            
+
             <div class="faq-container">
                 <div class="faq-item">
                     <div class="faq-question">
@@ -966,37 +1062,43 @@
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>Check-in time is 2:00 PM and check-out time is 11:00 AM at all our resorts. Early check-in and late check-out may be available upon request and subject to availability.</p>
+                        <p>Check-in time is 2:00 PM and check-out time is 11:00 AM at all our resorts. Early check-in
+                            and late check-out may be available upon request and subject to availability.</p>
                     </div>
                 </div>
-                
+
                 <div class="faq-item">
                     <div class="faq-question">
                         <span>Do you offer airport transfer services?</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>Yes, we offer airport transfer services at an additional cost. Please contact the resort directly at least 24 hours before your arrival to arrange airport pickup.</p>
+                        <p>Yes, we offer airport transfer services at an additional cost. Please contact the resort
+                            directly at least 24 hours before your arrival to arrange airport pickup.</p>
                     </div>
                 </div>
-                
+
                 <div class="faq-item">
                     <div class="faq-question">
                         <span>Are your resorts child-friendly?</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>Absolutely! All our resorts are family-friendly. We offer family rooms, children's menus, and safe recreational facilities. Children under 5 years stay free when sharing with parents.</p>
+                        <p>Absolutely! All our resorts are family-friendly. We offer family rooms, children's menus, and
+                            safe recreational facilities. Children under 5 years stay free when sharing with parents.
+                        </p>
                     </div>
                 </div>
-                
+
                 <div class="faq-item">
                     <div class="faq-question">
                         <span>What conference facilities do you offer?</span>
                         <i class="fas fa-chevron-down"></i>
                     </div>
                     <div class="faq-answer">
-                        <p>We offer state-of-the-art conference facilities with capacities ranging from 20 to 400 guests. All venues include audio-visual equipment, high-speed internet, and professional support staff.</p>
+                        <p>We offer state-of-the-art conference facilities with capacities ranging from 20 to 400
+                            guests. All venues include audio-visual equipment, high-speed internet, and professional
+                            support staff.</p>
                     </div>
                 </div>
             </div>
@@ -1007,12 +1109,14 @@
     <section class="cta-section">
         <div class="container">
             <h2>Ready to Experience Our Hospitality?</h2>
-            <p>Contact us today to book your stay, plan your event, or simply learn more about what makes Jumuia Resorts special.</p>
+            <p>Contact us today to book your stay, plan your event, or simply learn more about what makes Jumuia Resorts
+                special.</p>
             <div style="display: flex; gap: 20px; justify-content: center; flex-wrap: wrap;">
                 <a href="tel:+254202048881" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 40px;">
                     <i class="fas fa-phone" style="margin-right: 10px;"></i>Call Us Now
                 </a>
-                <a href="booking.html" class="btn btn-secondary" style="font-size: 1.1rem; padding: 15px 40px; background-color: transparent; border: 2px solid var(--primary-white); color: var(--primary-white);">
+                <a href="booking.html" class="btn btn-secondary"
+                    style="font-size: 1.1rem; padding: 15px 40px; background-color: transparent; border: 2px solid var(--primary-white); color: var(--primary-white);">
                     <i class="fas fa-calendar-check" style="margin-right: 10px;"></i>Book Online
                 </a>
             </div>
@@ -1025,7 +1129,8 @@
             <div class="footer-container">
                 <div class="footer-column">
                     <h3>Jumuia Resorts</h3>
-                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">World-class hospitality across Kenya with exceptional facilities and service.</p>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">World-class hospitality across Kenya
+                        with exceptional facilities and service.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -1033,7 +1138,7 @@
                         <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Our Resorts</h3>
                     <ul class="footer-links">
@@ -1042,7 +1147,7 @@
                         <li><a href="resorts/kisumu/index.html">Kisumu Hotel</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
@@ -1053,7 +1158,7 @@
                         <li><a href="contact.html">Contact</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Contact Us</h3>
                     <div class="contact-info">
@@ -1072,7 +1177,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="copyright">
                 <p>&copy; 2026 Jumuia Resorts Limited. All rights reserved.</p>
             </div>
@@ -1159,7 +1264,7 @@
         async function saveContactForm(formData) {
             try {
                 const { db } = await initializeFirebaseServices();
-                
+
                 // Add timestamp and status
                 const contactData = {
                     ...formData,
@@ -1171,7 +1276,7 @@
 
                 // Save to Firestore
                 const docRef = await db.collection('contact_submissions').add(contactData);
-                
+
                 console.log('Contact form saved with ID:', docRef.id);
                 return { success: true, id: docRef.id };
             } catch (error) {
@@ -1181,22 +1286,22 @@
         }
 
         // Form submission handler
-        document.getElementById('contactForm').addEventListener('submit', async function(e) {
+        document.getElementById('contactForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             // Show loading state
             const submitBtn = document.getElementById('submitBtn');
             const submitText = document.getElementById('submitText');
             const submitLoading = document.getElementById('submitLoading');
-            
+
             submitText.textContent = 'Sending...';
             submitLoading.style.display = 'inline-block';
             submitBtn.disabled = true;
-            
+
             // Hide any previous messages
             document.getElementById('successMessage').style.display = 'none';
             document.getElementById('errorMessage').style.display = 'none';
-            
+
             // Get form data
             const formData = {
                 firstName: document.getElementById('firstName').value.trim(),
@@ -1211,28 +1316,28 @@
                 pageUrl: window.location.href,
                 submittedAt: new Date().toISOString()
             };
-            
+
             // Validate form
             if (!validateForm(formData)) {
                 showError('Please fill in all required fields correctly.');
                 resetSubmitButton();
                 return;
             }
-            
+
             try {
                 // Save to Firebase
                 const result = await saveContactForm(formData);
-                
+
                 if (result.success) {
                     // Show success message
                     showSuccess();
-                    
+
                     // Also send email notification (optional)
                     await sendEmailNotification(formData);
-                    
+
                     // Reset form
                     this.reset();
-                    
+
                     // Log to console for debugging
                     console.log('Contact form submitted:', formData);
                 } else {
@@ -1252,18 +1357,18 @@
             if (!data.firstName || !data.lastName || !data.email || !data.subject || !data.message) {
                 return false;
             }
-            
+
             // Email validation
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
             if (!emailRegex.test(data.email)) {
                 return false;
             }
-            
+
             // Message length
             if (data.message.length < 10) {
                 return false;
             }
-            
+
             return true;
         }
 
@@ -1271,10 +1376,10 @@
         function showSuccess() {
             const successMessage = document.getElementById('successMessage');
             successMessage.style.display = 'block';
-            
+
             // Scroll to message
             successMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            
+
             // Hide after 10 seconds
             setTimeout(() => {
                 successMessage.style.display = 'none';
@@ -1285,13 +1390,13 @@
         function showError(message) {
             const errorMessage = document.getElementById('errorMessage');
             const errorText = document.getElementById('errorText');
-            
+
             errorText.textContent = message;
             errorMessage.style.display = 'block';
-            
+
             // Scroll to message
             errorMessage.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-            
+
             // Hide after 10 seconds
             setTimeout(() => {
                 errorMessage.style.display = 'none';
@@ -1303,7 +1408,7 @@
             const submitBtn = document.getElementById('submitBtn');
             const submitText = document.getElementById('submitText');
             const submitLoading = document.getElementById('submitLoading');
-            
+
             submitText.textContent = 'Send Message';
             submitLoading.style.display = 'none';
             submitBtn.disabled = false;
@@ -1326,7 +1431,7 @@
             // This is a placeholder for email functionality
             // In production, you would use a cloud function or email service
             console.log('Email notification would be sent for:', formData.email);
-            
+
             // Example: You could trigger a cloud function here
             // await fetch('https://your-cloud-function-url', {
             //     method: 'POST',
@@ -1335,7 +1440,7 @@
         }
 
         // Mobile menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+        document.getElementById('mobileMenuBtn').addEventListener('click', function () {
             document.getElementById('mainNav').classList.toggle('active');
         });
 
@@ -1351,13 +1456,13 @@
             question.addEventListener('click', () => {
                 const answer = question.nextElementSibling;
                 const isActive = question.classList.contains('active');
-                
+
                 // Close all other FAQ items
                 document.querySelectorAll('.faq-question').forEach(q => {
                     q.classList.remove('active');
                     q.nextElementSibling.classList.remove('active');
                 });
-                
+
                 // Open clicked item if it wasn't active
                 if (!isActive) {
                     question.classList.add('active');
@@ -1367,12 +1472,12 @@
         });
 
         // Initialize when page loads
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             // Pre-initialize Firebase for faster response
             initializeFirebaseServices().catch(error => {
                 console.warn('Firebase pre-initialization failed:', error);
             });
-            
+
             // Auto-hide messages after 10 seconds
             setTimeout(() => {
                 const messages = document.querySelectorAll('.message');
@@ -1386,4 +1491,5 @@
 
     </script>
 </body>
+
 </html>

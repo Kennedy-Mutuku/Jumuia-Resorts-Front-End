@@ -126,18 +126,11 @@ button {
     margin-bottom: var(--space-md);
 }
 
-.jr-logo-circle {
-    width: 64px;
-    height: 64px;
-    background: var(--primary-green);
-    color: var(--primary-white);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+.login-logo-img {
+    width: 80px;
+    height: 80px;
+    display: block;
     margin: 0 auto var(--space-md);
-    font-size: 1.5rem;
-    font-weight: 700;
 }
 
 .login-header-logo h3 {
@@ -268,33 +261,36 @@ button {
 .btn-clear {
     flex: 1;
     padding: 14px;
-    background: #b22222;
-    /* Custom Red */
-    color: white;
+    background: transparent;
+    color: var(--primary-green);
+    border: 2px solid var(--primary-green);
     border-radius: 12px;
     font-weight: 600;
-    transition: opacity 0.3s;
+    transition: all 0.3s;
+}
+
+.btn-clear:hover {
+    background: var(--primary-green);
+    color: white;
 }
 
 .btn-next {
     flex: 1;
     padding: 14px;
-    background: #00bfff;
-    /* Custom Blue */
+    background: var(--primary-orange);
     color: white;
     border-radius: 12px;
     font-weight: 600;
-    transition: transform 0.2s;
+    transition: all 0.3s;
+    border: none;
 }
 
-.btn-clear:hover,
 .btn-next:hover {
-    opacity: 0.9;
+    background: #e5941f;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(243, 164, 53, 0.3);
 }
 
-.btn-next:active {
-    transform: scale(0.98);
-}
 
 /* Alerts & Feedback */
 .alert {

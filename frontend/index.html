@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jumuia Resorts - Christian Hospitality & Conference Centers</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary-green: #22440f;
@@ -34,7 +37,10 @@
             line-height: 1.6;
         }
 
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             font-family: 'Playfair Display', serif;
             font-weight: 600;
             color: var(--primary-green);
@@ -57,11 +63,50 @@
             z-index: 1000;
         }
 
+        .header-top {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            padding: 8px 0;
+        }
+
+        .header-top-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slogan {
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        .header-top-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .header-top-link {
+            color: var(--primary-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .header-top-link:hover {
+            color: var(--primary-orange);
+        }
+
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
+            padding: 12px 0;
+            /* Slightly thinner header */
         }
 
         .logo {
@@ -72,34 +117,47 @@
         }
 
         .logo-img {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            /* Slightly smaller logo */
+            height: 55px;
         }
 
         .logo-text h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 1.5rem;
+            /* Reduced from 1.6rem */
+            margin-bottom: 2px;
             color: var(--primary-green);
+            line-height: 1.1;
+            white-space: nowrap;
         }
 
         .logo-text p {
-            font-size: 0.9rem;
+            font-size: 0.7rem;
+            /* Reduced from 0.8rem */
             color: var(--text-light);
             font-weight: 500;
+            letter-spacing: 0.3px;
+            white-space: nowrap;
         }
 
         .main-nav {
             display: flex;
-            gap: 30px;
+            gap: 20px;
+            /* Reduced from 35px to save horizontal space */
+            align-items: center;
+            flex-wrap: nowrap;
         }
 
         .main-nav a {
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.85rem;
+            /* Reduced from 0.95rem */
             transition: color 0.3s;
             position: relative;
+            padding: 5px 0;
+            white-space: nowrap;
         }
 
         .main-nav a:hover {
@@ -114,31 +172,35 @@
         .main-nav a.active::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -2px;
             left: 0;
             width: 100%;
-            height: 2px;
+            height: 1px;
+            /* Thinner line (1px) */
             background-color: var(--primary-orange);
         }
 
         .header-actions {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
         }
 
         .btn {
-            padding: 10px 25px;
+            padding: 6px 16px;
+            /* Reduced padding from 8px 22px */
             border-radius: var(--radius);
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
             font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
+            font-size: 0.85rem;
+            /* Reduced from 0.9rem */
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -154,7 +216,10 @@
         .btn-secondary {
             background-color: transparent;
             color: var(--primary-green);
-            border: 2px solid var(--primary-green);
+            border: 1px solid var(--primary-green);
+            /* Thinner 1px border */
+            border-radius: 0;
+            outline: none;
         }
 
         .btn-secondary:hover {
@@ -175,7 +240,7 @@
             height: 100vh;
             color: var(--primary-white);
             padding: 180px 0 100px;
-            margin-top: 90px;
+            margin-top: 125px;
             text-align: center;
             overflow: hidden;
             background: linear-gradient(rgba(10, 26, 1, 0.6), rgba(12, 31, 1, 0.6))
@@ -201,12 +266,15 @@
             0% {
                 background-image: url('../../images/resorts/limuru/limuru-front.jpeg');
             }
+
             33% {
                 background-image: url('../../images/resorts/kanamai/front kanamai.jpg');
             }
+
             66% {
                 background-image: url('../../images/resorts/kisumu/resort1.jpg');
             }
+
             100% {
                 background-image: url('../../images/resorts/limuru/limuru-front.jpeg');
             }
@@ -458,7 +526,7 @@
             .hero h1 {
                 font-size: 2.8rem;
             }
-            
+
             .main-nav {
                 gap: 20px;
             }
@@ -468,7 +536,7 @@
             .mobile-menu-btn {
                 display: block;
             }
-            
+
             .main-nav {
                 position: fixed;
                 top: 90px;
@@ -483,19 +551,19 @@
                 transition: left 0.3s;
                 gap: 30px;
             }
-            
+
             .main-nav.active {
                 left: 0;
             }
-            
+
             .hero h1 {
                 font-size: 2.2rem;
             }
-            
+
             .hero p {
                 font-size: 1rem;
             }
-            
+
             .resorts-grid {
                 grid-template-columns: 1fr;
             }
@@ -505,57 +573,84 @@
             .hero {
                 padding: 150px 0 80px;
             }
-            
+
             .hero h1 {
                 font-size: 1.8rem;
             }
-            
+
             .btn {
                 padding: 10px 20px;
                 font-size: 0.9rem;
             }
-            
+
             .section-header h2 {
                 font-size: 2rem;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Header & Navigation -->
     <header>
+        <div class="header-top">
+            <div class="container header-top-content">
+                <div class="slogan">Hospitality With A Christian Touch</div>
+                <div class="header-top-actions">
+                    <a href="tel:+254759423589" class="header-top-link">
+                        <i class="fas fa-phone"></i>
+                        <span>+254 759 423589</span>
+                    </a>
+                    <a href="mailto:jumuiaresortslimited@gmail.com" class="header-top-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>jumuiaresortslimited@gmail.com</span>
+                    </a>
+                </div>
+            </div>
+        </div>
         <div class="container header-container">
             <a href="index.html" class="logo">
                 <svg class="logo-img" viewBox="0 0 133 78">
-                    <path class="st0" d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
-                    <path class="st0" d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
-                    <path class="st1" d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
-                    <path class="st1" d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
-                    <path class="st1" d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
-                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                    <path class="st0"
+                        d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z"
+                        fill="#FFFFFF" stroke="#024423" stroke-width="0.75" />
+                    <path class="st0"
+                        d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z"
+                        fill="#FFFFFF" stroke="#024423" stroke-width="0.75" />
+                    <path class="st1"
+                        d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z"
+                        fill="#024423" />
+                    <path class="st1"
+                        d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z"
+                        fill="#024423" />
+                    <path class="st1"
+                        d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z"
+                        fill="#024423" />
+                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z"
+                        fill="#f3a435" />
                 </svg>
                 <div class="logo-text">
                     <h1>Jumuia Resorts</h1>
                     <p>Christian Hospitality & Conference Centres</p>
                 </div>
             </a>
-            
+
             <div class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </div>
-            
+
             <nav class="main-nav" id="mainNav">
                 <a href="index.html" class="active">Home</a>
-                <a href="About Us.html" class="active">About Us</a>
-                <a href="resorts.html" class="active">Our Resorts</a>
-                <a href="services.html" class="active">Services</a>
-                <a href="offers.html" class="active">Offers</a>
-                <a href="feedback.html" class="active">Feedback</a>
-                <a href="contact.html" class="active">Contact</a>
+                <a href="About Us.html">About Us</a>
+                <a href="resorts.html">Our Resorts</a>
+                <a href="services.html">Services</a>
+                <a href="offers.html">Offers</a>
+                <a href="feedback.html">Feedback</a>
+                <a href="contact.html">Contact</a>
                 <a href="admin/index.html" class="btn-secondary">Log In</a>
-                
+
             </nav>
-            
+
             <div class="header-actions">
                 <a href="booking.html" class="btn btn-primary">Book Now</a>
             </div>
@@ -566,50 +661,73 @@
     <section class="hero" id="home">
         <div class="container">
             <div class="hero-content">
-            <h1>Hospitality With A Christian Touch</h1>
-            <p class="tagline">Christian Values with Great Zeal to Customer Satisfaction</p>
-            <p class="description">Jumuia Resorts offers a distinctive mixed business model across our three ideal locations, providing comprehensive solutions for conferencing, accommodation, youth centres, leisure getaways, meetings, and weekend retreats. Perfect for business travellers, honeymooners, family getaways, religious events, or just a weekend escape.</p>
-            <a href="#resorts" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 40px;">Explore Our Resorts</a>
-        </div>
+                <h1>Hospitality With A Christian Touch</h1>
+                <p class="tagline">Christian Values with Great Zeal to Customer Satisfaction</p>
+                <p class="description">Jumuia Resorts offers a distinctive mixed business model across our three ideal
+                    locations, providing comprehensive solutions for conferencing, accommodation, youth centres, leisure
+                    getaways, meetings, and weekend retreats. Perfect for business travellers, honeymooners, family
+                    getaways, religious events, or just a weekend escape.</p>
+                <a href="#resorts" class="btn btn-primary" style="font-size: 1.1rem; padding: 15px 40px;">Explore Our
+                    Resorts</a>
+            </div>
     </section>
     <!-- Vision & Mission Section -->
     <section class="vision-mission" style="background-color: var(--light-green); padding: 80px 0;">
         <div class="container">
             <div style="max-width: 900px; margin: 0 auto; text-align: center;">
-                <h2 style="font-size: 2.5rem; margin-bottom: 40px; color: var(--primary-green);">Our Vision & Mission</h2>
-                
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-bottom: 50px;">
-                    <div class="vision-card" style="background: var(--primary-white); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow);">
-                        <div style="width: 60px; height: 60px; background-color: var(--primary-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+                <h2 style="font-size: 2.5rem; margin-bottom: 40px; color: var(--primary-green);">Our Vision & Mission
+                </h2>
+
+                <div
+                    style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 40px; margin-bottom: 50px;">
+                    <div class="vision-card"
+                        style="background: var(--primary-white); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow);">
+                        <div
+                            style="width: 60px; height: 60px; background-color: var(--primary-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
                             <i class="fas fa-eye" style="font-size: 1.8rem; color: var(--primary-white);"></i>
                         </div>
                         <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-green);">Our Vision</h3>
-                        <p style="color: var(--text-light); line-height: 1.7;">To be a preferred Christian conferencing and youth centres in the region and beyond.</p>
+                        <p style="color: var(--text-light); line-height: 1.7;">To be a preferred Christian conferencing
+                            and youth centres in the region and beyond.</p>
                     </div>
-                    
-                    <div class="mission-card" style="background: var(--primary-white); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow);">
-                        <div style="width: 60px; height: 60px; background-color: var(--primary-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
+
+                    <div class="mission-card"
+                        style="background: var(--primary-white); padding: 30px; border-radius: var(--radius); box-shadow: var(--shadow);">
+                        <div
+                            style="width: 60px; height: 60px; background-color: var(--primary-orange); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 20px;">
                             <i class="fas fa-bullseye" style="font-size: 1.8rem; color: var(--primary-white);"></i>
                         </div>
-                        <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-green);">Our Mission</h3>
-                        <p style="color: var(--text-light); line-height: 1.7;">To provide quality hospitality services for enhanced comfort and convenience.</p>
+                        <h3 style="font-size: 1.5rem; margin-bottom: 15px; color: var(--primary-green);">Our Mission
+                        </h3>
+                        <p style="color: var(--text-light); line-height: 1.7;">To provide quality hospitality services
+                            for enhanced comfort and convenience.</p>
                     </div>
                 </div>
-                
+
                 <!-- Core Values & Motto -->
-                <div style="background: var(--primary-white); padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow);">
-                    <h3 style="font-size: 1.8rem; margin-bottom: 25px; color: var(--primary-green);">Our Core Values & Motto</h3>
-                    
-                    <div style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px;">
-                        <span style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Stewardship</span>
-                        <span style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Integrity</span>
-                        <span style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Professionalism</span>
-                        <span style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Partnership</span>
-                        <span style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Servanthood</span>
+                <div
+                    style="background: var(--primary-white); padding: 40px; border-radius: var(--radius); box-shadow: var(--shadow);">
+                    <h3 style="font-size: 1.8rem; margin-bottom: 25px; color: var(--primary-green);">Our Core Values &
+                        Motto</h3>
+
+                    <div
+                        style="display: flex; flex-wrap: wrap; justify-content: center; gap: 15px; margin-bottom: 30px;">
+                        <span
+                            style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Stewardship</span>
+                        <span
+                            style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Integrity</span>
+                        <span
+                            style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Professionalism</span>
+                        <span
+                            style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Partnership</span>
+                        <span
+                            style="background-color: var(--light-green); color: var(--primary-green); padding: 8px 18px; border-radius: 20px; font-weight: 500;">Servanthood</span>
                     </div>
-                    
-                    <div style="padding: 20px; background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%); border-radius: var(--radius);">
-                        <p style="font-size: 1.5rem; color: var(--primary-white); font-weight: 600; font-style: italic; margin: 0;">
+
+                    <div
+                        style="padding: 20px; background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%); border-radius: var(--radius);">
+                        <p
+                            style="font-size: 1.5rem; color: var(--primary-white); font-weight: 600; font-style: italic; margin: 0;">
                             <i class="fas fa-quote-left" style="margin-right: 10px; color: var(--primary-orange);"></i>
                             Hospitality with a Christian touch
                             <i class="fas fa-quote-right" style="margin-left: 10px; color: var(--primary-orange);"></i>
@@ -626,58 +744,62 @@
             <h2>Our Resorts</h2>
             <p>Choose from our three unique properties, each offering distinct experiences and amenities</p>
         </div>
-        
+
         <div class="resorts-grid">
             <!-- Limuru Resort Card -->
             <div class="resort-card">
-               <div class="resort-img" style="background-image: url('../../images/resorts/limuru/limuru-front.jpeg');"></div>
+                <div class="resort-img" style="background-image: url('../../images/resorts/limuru/limuru-front.jpeg');">
+                </div>
                 <div class="resort-content">
                     <h3>Jumuia Conference & Country Home</h3>
                     <div class="resort-location">
                         <i class="fas fa-map-marker-alt"></i>
                         <span>Limuru, Kenya</span>
                     </div>
-                    <p>Nestled in the serene Limuru highlands, perfect for conferences, retreats, and church events with breathtaking views and tranquil surroundings.</p>
-                    
+                    <p>Nestled in the serene Limuru highlands, perfect for conferences, retreats, and church events with
+                        breathtaking views and tranquil surroundings.</p>
+
                     <div class="resort-features">
                         <span class="feature-tag">Conference Facilities</span>
                         <span class="feature-tag">Hostel Accommodation</span>
                         <span class="feature-tag">Religious Events</span>
                         <span class="feature-tag">Nature Walks</span>
                     </div>
-                    
+
                     <div style="display: flex; gap: 15px; margin-top: 20px;">
                         <a href="resorts/limuru/index.html" class="btn btn-primary">Explore Resort</a>
                         <a href="resorts/limuru/booking.html" class="btn btn-secondary">Book Now</a>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Kanamai Resort Card -->
             <div class="resort-card">
-                <div class="resort-img" style="background-image: url('../../images/resorts/kanamai/front kanamai.jpg');"></div>
+                <div class="resort-img"
+                    style="background-image: url('../../images/resorts/kanamai/front kanamai.jpg');"></div>
                 <div class="resort-content">
                     <h3>Jumuia Conference & Beach Resort</h3>
                     <div class="resort-location">
                         <i class="fas fa-map-marker-alt"></i>
                         <span>Kanamai Coast, Kenya</span>
                     </div>
-                    <p>Breathtaking beachfront location with conference facilities, swimming pools, and coastal adventure activities for the perfect getaway.</p>
-                    
+                    <p>Breathtaking beachfront location with conference facilities, swimming pools, and coastal
+                        adventure activities for the perfect getaway.</p>
+
                     <div class="resort-features">
                         <span class="feature-tag">Beachfront</span>
                         <span class="feature-tag">Swimming Pool</span>
                         <span class="feature-tag">Water Sports</span>
                         <span class="feature-tag">Beach Events</span>
                     </div>
-                    
+
                     <div style="display: flex; gap: 15px; margin-top: 20px;">
                         <a href="resorts/kanamai/index.html" class="btn btn-primary">Explore Resort</a>
                         <a href="resorts/kanamai/booking.html" class="btn btn-secondary">Book Now</a>
                     </div>
                 </div>
             </div>
-            
+
             <!-- Kisumu Resort Card -->
             <div class="resort-card">
                 <div class="resort-img" style="background-image: url('../../images/resorts/kisumu/resort1.jpg');"></div>
@@ -687,15 +809,16 @@
                         <i class="fas fa-map-marker-alt"></i>
                         <span>Kisumu, Kenya</span>
                     </div>
-                    <p>Experience urban comfort and convenience, perfect for business travel, conferences, and events at the center of Kisumu city.</p>
-                    
+                    <p>Experience urban comfort and convenience, perfect for business travel, conferences, and events at
+                        the center of Kisumu city.</p>
+
                     <div class="resort-features">
                         <span class="feature-tag">City Center</span>
                         <span class="feature-tag">Swimming Pool</span>
                         <span class="feature-tag">Hostel Rooms</span>
                         <span class="feature-tag">Restaurant & Dining</span>
                     </div>
-                    
+
                     <div style="display: flex; gap: 15px; margin-top: 20px;">
                         <a href="resorts/kisumu/index.html" class="btn btn-primary">Explore Resort</a>
                         <a href="resorts/kisumu/booking.html" class="btn btn-secondary">Book Now</a>
@@ -712,7 +835,7 @@
                 <h2>Our Services & Amenities</h2>
                 <p>Each Jumuia resort offers a unique blend of services tailored to meet your needs</p>
             </div>
-            
+
             <div class="services-grid">
                 <div class="service-card">
                     <div class="service-icon">
@@ -721,7 +844,7 @@
                     <h3>Conferencing & Events</h3>
                     <p>State-of-the-art conference facilities for corporate meetings, workshops, and large events.</p>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-bed"></i>
@@ -729,7 +852,7 @@
                     <h3>Accommodation</h3>
                     <p>Comfortable rooms ranging from standard to executive suites with various meal packages.</p>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-utensils"></i>
@@ -737,7 +860,7 @@
                     <h3>Open Restaurant</h3>
                     <p>Round-the-clock dining with local and international cuisine to suit all tastes.</p>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-truck"></i>
@@ -745,7 +868,7 @@
                     <h3>Outside Catering</h3>
                     <p>Professional catering services for events at your preferred location.</p>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-swimming-pool"></i>
@@ -753,7 +876,7 @@
                     <h3>Swimming Pools</h3>
                     <p>Refreshing pools available at Kanamai and Kisumu resorts for guests' enjoyment.</p>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-building"></i>
@@ -761,7 +884,7 @@
                     <h3>Hostel Facilities</h3>
                     <p>Budget-friendly hostel accommodation available at Limuru and Kisumu resorts.</p>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-heart"></i>
@@ -769,15 +892,16 @@
                     <h3>Weddings & Honeymoons</h3>
                     <p>Romantic settings and packages for unforgettable weddings and honeymoons.</p>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-church"></i>
                     </div>
                     <h3>Religious Events</h3>
-                    <p>Special packages and facilities tailored for religious retreats, conferences, prayer meetings, youth camps, and other spiritual gatherings.</p>
+                    <p>Special packages and facilities tailored for religious retreats, conferences, prayer meetings,
+                        youth camps, and other spiritual gatherings.</p>
                 </div>
-                
+
                 <div class="service-card">
                     <div class="service-icon">
                         <i class="fas fa-hiking"></i>
@@ -795,7 +919,8 @@
             <div class="footer-container">
                 <div class="footer-column">
                     <h3>Jumuia Resorts</h3>
-                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">World-class hospitality across Kenya with exceptional facilities and service.</p>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">World-class hospitality across Kenya
+                        with exceptional facilities and service.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -803,7 +928,7 @@
                         <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Our Resorts</h3>
                     <ul class="footer-links">
@@ -812,7 +937,7 @@
                         <li><a href="resorts/kisumu/index.html">Kisumu Hotel</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
@@ -822,7 +947,7 @@
                         <li><a href="admin/index.html">Log In</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Contact Us</h3>
                     <div class="contact-info">
@@ -841,7 +966,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="copyright">
                 <p>&copy; 2026 Jumuia Resorts Limited. All rights reserved.</p>
             </div>
@@ -850,7 +975,7 @@
 
     <script>
         // Mobile menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+        document.getElementById('mobileMenuBtn').addEventListener('click', function () {
             document.getElementById('mainNav').classList.toggle('active');
         });
 
@@ -875,4 +1000,5 @@
     <!-- Load main.js -->
     <script src="js/main.js"></script>
 </body>
+
 </html>

@@ -1,12 +1,15 @@
 <!-- resorts/limuru/booking.html -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Book Your Stay - Jumuia Limuru</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         /* Your existing CSS styles remain exactly the same */
         :root {
@@ -40,7 +43,10 @@
             background-color: var(--gray-bg);
         }
 
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             font-family: 'Playfair Display', serif;
             font-weight: 600;
             color: var(--primary-green);
@@ -66,7 +72,10 @@
             background-color: var(--gray-bg);
         }
 
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             font-family: 'Playfair Display', serif;
             font-weight: 600;
             color: var(--primary-green);
@@ -109,29 +118,32 @@
         }
 
         .logo-text h1 {
-            font-size: 1.8rem;
+            font-size: 1.5rem;
             margin-bottom: 5px;
             color: var(--primary-green);
+            white-space: nowrap;
         }
 
         .logo-text p {
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             color: var(--text-light);
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .main-nav {
             display: flex;
-            gap: 30px;
+            gap: 20px;
         }
 
         .main-nav a {
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.85rem;
             transition: color 0.3s;
             position: relative;
+            white-space: nowrap;
         }
 
         .main-nav a:hover {
@@ -172,13 +184,13 @@
         }
 
         .booking-hero h1 {
-            font-size: 3rem;
+            font-size: 2rem;
             color: var(--primary-white);
             margin-bottom: 15px;
         }
 
         .booking-hero p {
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             opacity: 0.9;
             max-width: 700px;
             margin: 0 auto 30px;
@@ -289,21 +301,24 @@
             resize: vertical;
         }
 
-        .radio-group, .checkbox-group {
+        .radio-group,
+        .checkbox-group {
             display: flex;
             flex-wrap: wrap;
             gap: 15px;
             margin-top: 10px;
         }
 
-        .radio-option, .checkbox-option {
+        .radio-option,
+        .checkbox-option {
             display: flex;
             align-items: center;
             gap: 8px;
             cursor: pointer;
         }
 
-        .radio-option input, .checkbox-option input {
+        .radio-option input,
+        .checkbox-option input {
             cursor: pointer;
         }
 
@@ -371,8 +386,15 @@
         }
 
         @keyframes slideDown {
-            from { opacity: 0; transform: translateY(-10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .mpesa-steps {
@@ -454,12 +476,13 @@
         .btn {
             padding: 12px 30px;
             border-radius: var(--radius);
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
             font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
             text-decoration: none;
             display: inline-flex;
             align-items: center;
@@ -484,7 +507,9 @@
         .btn-secondary {
             background-color: transparent;
             color: var(--primary-green);
-            border: 2px solid var(--primary-green);
+            border: 1px solid var(--primary-green);
+            border-radius: 0;
+            outline: none;
         }
 
         .btn-secondary:hover {
@@ -523,8 +548,13 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         /* Success Modal */
@@ -547,8 +577,13 @@
         }
 
         @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
         }
 
         .modal-content {
@@ -655,7 +690,7 @@
             .booking-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .booking-summary {
                 position: static;
                 margin-top: 40px;
@@ -664,25 +699,25 @@
 
         @media (max-width: 768px) {
             .booking-hero h1 {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
-            
+
             .booking-hero p {
                 font-size: 1rem;
             }
-            
+
             .form-grid {
                 grid-template-columns: 1fr;
             }
-            
+
             .form-group.full-width {
                 grid-column: span 1;
             }
-            
+
             .mobile-menu-btn {
                 display: block;
             }
-            
+
             .main-nav {
                 position: fixed;
                 top: 90px;
@@ -697,11 +732,12 @@
                 transition: left 0.3s;
                 gap: 30px;
             }
-            
+
             .main-nav.active {
                 left: 0;
             }
         }
+
         .error-message {
             background-color: #f8d7da;
             color: #721c24;
@@ -713,11 +749,11 @@
             gap: 10px;
             border-left: 4px solid #dc3545;
         }
-        
+
         .error-message i {
             font-size: 1.2rem;
         }
-        
+
         .error-message button {
             margin-left: auto;
             background: none;
@@ -726,7 +762,7 @@
             cursor: pointer;
             color: #721c24;
         }
-        
+
         .success-message {
             background-color: #d4edda;
             color: #155724;
@@ -738,11 +774,11 @@
             gap: 10px;
             border-left: 4px solid #28a745;
         }
-        
+
         .success-message i {
             font-size: 1.2rem;
         }
-        
+
         .success-message button {
             margin-left: auto;
             background: none;
@@ -751,48 +787,63 @@
             cursor: pointer;
             color: #155724;
         }
-       
+
         /* Add this to your existing CSS */
-        .btn, button {
+        .btn,
+        button {
             cursor: pointer !important;
             position: relative !important;
             z-index: 1 !important;
         }
-        
+
         .btn:disabled {
             opacity: 0.6;
             cursor: not-allowed !important;
         }
-        
+
         /* Make sure nothing is covering the buttons */
-        #submitBooking, .payment-method, .test-button {
+        #submitBooking,
+        .payment-method,
+        .test-button {
             pointer-events: auto !important;
         }
     </style>
 </head>
+
 <body>
     <!-- Header -->
     <header>
         <div class="container header-container">
             <a href="../../index.html" class="logo">
                 <svg class="logo-img" viewBox="0 0 133 78">
-                    <path class="st0" d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
-                    <path class="st0" d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
-                    <path class="st1" d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
-                    <path class="st1" d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
-                    <path class="st1" d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
-                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                    <path class="st0"
+                        d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z"
+                        fill="#FFFFFF" stroke="#024423" stroke-width="0.75" />
+                    <path class="st0"
+                        d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z"
+                        fill="#FFFFFF" stroke="#024423" stroke-width="0.75" />
+                    <path class="st1"
+                        d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z"
+                        fill="#024423" />
+                    <path class="st1"
+                        d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z"
+                        fill="#024423" />
+                    <path class="st1"
+                        d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z"
+                        fill="#024423" />
+                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z"
+                        fill="#f3a435" />
                 </svg>
                 <div class="logo-text">
                     <h1>Jumuia Limuru</h1>
                     <p>Conference & Country Home</p>
                 </div>
             </a>
-            
+
             <div class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </div>
-            
+
             <nav class="resort-nav" id="resortNav">
                 <a href="index.html" class="active">Home</a>
                 <a href="rooms.html" class="active">Rooms & Rates</a>
@@ -814,7 +865,8 @@
                 You're booking at: Jumuia Conference & Country Home - Limuru
             </div>
             <h1>Book Your Stay</h1>
-            <p>Complete the form below to book your accommodation at our serene Limuru country home. All fields marked with * are required.</p>
+            <p>Complete the form below to book your accommodation at our serene Limuru country home. All fields marked
+                with * are required.</p>
         </div>
     </section>
 
@@ -825,7 +877,7 @@
             <form id="bookingForm">
                 <!-- Hidden Resort Field -->
                 <input type="hidden" id="resort" name="resort" value="limuru">
-                
+
                 <!-- Guest Information -->
                 <div class="form-section">
                     <h3><i class="fas fa-user"></i> Guest Information</h3>
@@ -844,7 +896,8 @@
                         </div>
                         <div class="form-group">
                             <label for="phone" class="required">Phone Number</label>
-                            <input type="tel" id="phone" name="phone" class="form-control" required placeholder="e.g., 0712345678">
+                            <input type="tel" id="phone" name="phone" class="form-control" required
+                                placeholder="e.g., 0712345678">
                         </div>
                         <div class="form-group">
                             <label for="nationality" class="required">Nationality</label>
@@ -923,11 +976,12 @@
                             </select>
                         </div>
                     </div>
-                    
+
                     <!-- Special Requests -->
                     <div class="form-group full-width">
                         <label for="specialRequests">Special Requests</label>
-                        <textarea id="specialRequests" name="specialRequests" class="form-control" placeholder="Any special requests, dietary requirements, or additional information..."></textarea>
+                        <textarea id="specialRequests" name="specialRequests" class="form-control"
+                            placeholder="Any special requests, dietary requirements, or additional information..."></textarea>
                     </div>
                 </div>
 
@@ -957,7 +1011,7 @@
                         </div>
                     </div>
                     <input type="hidden" id="paymentMethod" name="paymentMethod" value="mpesa">
-                    
+
                     <!-- M-Pesa Instructions -->
                     <div id="mpesaInstructions" class="mpesa-payment active">
                         <h4><i class="fas fa-info-circle"></i> M-Pesa Payment Instructions</h4>
@@ -969,7 +1023,8 @@
                         </ol>
                         <div class="form-group">
                             <label for="mpesaNumber" class="required">M-Pesa Phone Number</label>
-                            <input type="tel" id="mpesaNumber" name="mpesaNumber" class="form-control" value="" placeholder="e.g., 0712345678">
+                            <input type="tel" id="mpesaNumber" name="mpesaNumber" class="form-control" value=""
+                                placeholder="e.g., 0712345678">
                         </div>
                     </div>
                 </div>
@@ -979,7 +1034,9 @@
                     <div class="form-group full-width">
                         <div class="checkbox-option">
                             <input type="checkbox" id="terms" name="terms" required>
-                            <label for="terms" class="required">I agree to the <a href="#" style="color: var(--primary-green);">Terms & Conditions</a> and <a href="#" style="color: var(--primary-green);">Cancellation Policy</a></label>
+                            <label for="terms" class="required">I agree to the <a href="#"
+                                    style="color: var(--primary-green);">Terms & Conditions</a> and <a href="#"
+                                    style="color: var(--primary-green);">Cancellation Policy</a></label>
                         </div>
                     </div>
                     <div class="form-group full-width">
@@ -994,7 +1051,7 @@
                 <button type="submit" class="btn btn-primary" id="submitBooking">
                     <i class="fas fa-paper-plane"></i> Complete Booking
                 </button>
-                
+
                 <!-- Loading State -->
                 <div class="loading" id="loading">
                     <div class="spinner"></div>
@@ -1009,7 +1066,7 @@
                 <h3>Booking Summary</h3>
                 <p class="summary-resort">Jumuia Limuru</p>
             </div>
-            
+
             <div class="summary-details">
                 <div class="summary-item">
                     <span>Check-in</span>
@@ -1036,13 +1093,13 @@
                     <strong id="summaryPackage">-</strong>
                 </div>
             </div>
-            
+
             <div class="summary-total">
                 <h3>Total Amount</h3>
                 <div class="total-amount" id="totalAmount">KSh 0</div>
                 <p>Inclusive of all taxes</p>
             </div>
-            
+
             <div class="price-breakdown">
                 <div class="summary-item">
                     <span>Room Rate</span>
@@ -1057,10 +1114,12 @@
                     <span id="discount">-KSh 0</span>
                 </div>
             </div>
-            
+
             <div class="important-info">
-                <p><i class="fas fa-info-circle" style="color: var(--primary-orange);"></i> <small>Check-in: 12:00 PM | Check-out: 10:00 AM</small></p>
-                <p><i class="fas fa-info-circle" style="color: var(--primary-orange);"></i> <small>Cancellation policy applies</small></p>
+                <p><i class="fas fa-info-circle" style="color: var(--primary-orange);"></i> <small>Check-in: 12:00 PM |
+                        Check-out: 10:00 AM</small></p>
+                <p><i class="fas fa-info-circle" style="color: var(--primary-orange);"></i> <small>Cancellation policy
+                        applies</small></p>
             </div>
         </div>
     </div>
@@ -1098,13 +1157,16 @@
             <div class="footer-container">
                 <div class="footer-column">
                     <h3>Jumuia Limuru</h3>
-                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Serene countryside retreat perfect for conferences, church events, and peaceful getaways.</p>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Serene countryside retreat perfect for
+                        conferences, church events, and peaceful getaways.</p>
                     <div class="contact-info" style="color: rgba(255,255,255,0.8);">
-                        <p><i class="fas fa-phone" style="color: var(--primary-orange);"></i> 0759 423 589, 020 2048881</p>
-                        <p><i class="fas fa-envelope" style="color: var(--primary-orange);"></i> reservations.limuru@resortjumuia.com</p>
+                        <p><i class="fas fa-phone" style="color: var(--primary-orange);"></i> 0759 423 589, 020 2048881
+                        </p>
+                        <p><i class="fas fa-envelope" style="color: var(--primary-orange);"></i>
+                            reservations.limuru@resortjumuia.com</p>
                     </div>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
@@ -1116,7 +1178,7 @@
                         <li><a href="booking.html">Book Now</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Other Resorts</h3>
                     <ul class="footer-links">
@@ -1125,16 +1187,18 @@
                         <li><a href="../../index.html">Main Website</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Need Help?</h3>
-                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Contact our reservations team for assistance:</p>
-                    <a href="mailto:reservations.limuru@resortjumuia.com" class="btn" style="background: var(--primary-orange); color: white; padding: 10px 20px; border-radius: var(--radius); text-decoration: none;">
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Contact our reservations team for
+                        assistance:</p>
+                    <a href="mailto:reservations.limuru@resortjumuia.com" class="btn"
+                        style="background: var(--primary-orange); color: white; padding: 10px 20px; border-radius: var(--radius); text-decoration: none;">
                         <i class="fas fa-envelope"></i> Email Us
                     </a>
                 </div>
             </div>
-            
+
             <div class="copyright">
                 <p> &copy; 2026 Jumuia Resorts Limited. All rights reserved. | Limuru Country Home</p>
             </div>
@@ -1146,7 +1210,7 @@
 
     <script type="text/javascript">
         console.log('=== BOOKING SYSTEM STARTING ===');
-        
+
         // Initialize EmailJS with error handling
         (function initEmailJS() {
             try {
@@ -1158,7 +1222,7 @@
                     // Load EmailJS dynamically
                     const script = document.createElement('script');
                     script.src = 'https://cdn.emailjs.com/dist/email.min.js';
-                    script.onload = function() {
+                    script.onload = function () {
                         emailjs.init("QABuHzAPilhRW0PTT");
                         console.log('✓ EmailJS loaded dynamically');
                     };
@@ -1173,7 +1237,7 @@
         (function setupMobileMenu() {
             const menuBtn = document.getElementById('mobileMenuBtn');
             if (menuBtn) {
-                menuBtn.addEventListener('click', function() {
+                menuBtn.addEventListener('click', function () {
                     const nav = document.getElementById('mainNav');
                     if (nav) nav.classList.toggle('active');
                 });
@@ -1185,20 +1249,20 @@
         function initializeDates() {
             const checkIn = document.getElementById('checkIn');
             const checkOut = document.getElementById('checkOut');
-            
+
             if (checkIn && checkOut) {
                 const today = new Date();
                 const tomorrow = new Date(today);
                 tomorrow.setDate(tomorrow.getDate() + 1);
-                
+
                 const todayStr = today.toISOString().split('T')[0];
                 const tomorrowStr = tomorrow.toISOString().split('T')[0];
-                
+
                 checkIn.min = todayStr;
                 checkOut.min = todayStr;
                 checkIn.value = todayStr;
                 checkOut.value = tomorrowStr;
-                
+
                 console.log('✓ Dates initialized:', todayStr, 'to', tomorrowStr);
             }
         }
@@ -1206,20 +1270,20 @@
         // Initialize payment methods
         function initializePaymentMethods() {
             const methods = document.querySelectorAll('.payment-method');
-            
+
             methods.forEach(method => {
-                method.addEventListener('click', function() {
+                method.addEventListener('click', function () {
                     // Remove active from all
                     methods.forEach(m => m.classList.remove('active'));
                     // Add active to clicked
                     this.classList.add('active');
                     // Update hidden field
                     document.getElementById('paymentMethod').value = this.dataset.method;
-                    
+
                     // Show/hide M-Pesa instructions
                     const mpesaDiv = document.getElementById('mpesaInstructions');
                     const mpesaInput = document.getElementById('mpesaNumber');
-                    
+
                     if (this.dataset.method === 'mpesa') {
                         if (mpesaDiv) mpesaDiv.classList.add('active');
                         if (mpesaInput) mpesaInput.required = true;
@@ -1229,14 +1293,14 @@
                     }
                 });
             });
-            
+
             // Set M-Pesa as default
             const mpesaMethod = document.querySelector('.payment-method.mpesa');
             if (mpesaMethod) {
                 mpesaMethod.classList.add('active');
                 document.getElementById('paymentMethod').value = 'mpesa';
             }
-            
+
             console.log('✓ Payment methods setup');
         }
 
@@ -1249,27 +1313,27 @@
                 'studio_suite': { 'bnb': 11360, 'hb': 12480, 'fb': 13560, 'conference': 8000 },
                 'hostel': { 'bnb': 1500, 'hb': 2000, 'fb': 2500, 'conference': 1500 }
             };
-            
+
             const baseRate = rates[roomType]?.[packageType] || 0;
             let total = baseRate * adults * nights;
-            
+
             if (children > 0) {
                 total += baseRate * 0.5 * children * nights;
             }
-            
+
             const tax = total * 0.16;
             const grandTotal = total + tax;
-            
+
             return { baseRate, total, tax, grandTotal, nights, adults, children };
         }
 
         // Format date
         function formatDate(dateString) {
             const date = new Date(dateString);
-            return date.toLocaleDateString('en-KE', { 
-                day: 'numeric', 
-                month: 'short', 
-                year: 'numeric' 
+            return date.toLocaleDateString('en-KE', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric'
             });
         }
 
@@ -1282,24 +1346,24 @@
                 const children = parseInt(document.getElementById('children').value) || 0;
                 const roomType = document.getElementById('roomType').value;
                 const packageType = document.getElementById('packageType').value;
-                
+
                 const checkInDate = new Date(checkIn);
                 const checkOutDate = new Date(checkOut);
                 const nights = Math.max(1, Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24)));
-                
+
                 // Update display
                 document.getElementById('summaryCheckIn').textContent = formatDate(checkIn);
                 document.getElementById('summaryCheckOut').textContent = formatDate(checkOut);
                 document.getElementById('summaryNights').textContent = nights;
                 document.getElementById('summaryGuests').textContent = `${adults} Adult${adults !== 1 ? 's' : ''}${children > 0 ? `, ${children} Child${children !== 1 ? 'ren' : ''}` : ''}`;
-                
+
                 // Calculate and update amounts
                 const rate = calculateRate(roomType, packageType, nights, adults, children);
                 document.getElementById('roomRate').textContent = `KSh ${rate.total.toLocaleString()}`;
                 document.getElementById('taxes').textContent = `KSh ${rate.tax.toLocaleString()}`;
                 document.getElementById('discount').textContent = rate.children > 0 ? `-KSh ${(rate.baseRate * 0.5 * rate.children * rate.nights).toLocaleString()}` : '-KSh 0';
                 document.getElementById('totalAmount').textContent = `KSh ${rate.grandTotal.toLocaleString()}`;
-                
+
             } catch (error) {
                 console.error('Summary update error:', error);
             }
@@ -1317,7 +1381,7 @@
                 { id: 'roomType', name: 'Room Type' },
                 { id: 'packageType', name: 'Package Type' }
             ];
-            
+
             // Check required fields
             for (const field of requiredFields) {
                 const element = document.getElementById(field.id);
@@ -1327,7 +1391,7 @@
                     return false;
                 }
             }
-            
+
             // Check email format
             const email = document.getElementById('email').value;
             const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -1336,7 +1400,7 @@
                 document.getElementById('email').focus();
                 return false;
             }
-            
+
             // Check phone format (simple)
             const phone = document.getElementById('phone').value.replace(/\s+/g, '');
             if (!/^[0-9]{10}$/.test(phone)) {
@@ -1344,7 +1408,7 @@
                 document.getElementById('phone').focus();
                 return false;
             }
-            
+
             // Check dates
             const checkIn = new Date(document.getElementById('checkIn').value);
             const checkOut = new Date(document.getElementById('checkOut').value);
@@ -1352,13 +1416,13 @@
                 alert('Check-out date must be after check-in date');
                 return false;
             }
-            
+
             // Check terms
             if (!document.getElementById('terms').checked) {
                 alert('Please agree to the Terms & Conditions');
                 return false;
             }
-            
+
             // Check M-Pesa number if M-Pesa selected
             if (document.getElementById('paymentMethod').value === 'mpesa') {
                 const mpesaNumber = document.getElementById('mpesaNumber').value.replace(/\s+/g, '');
@@ -1368,7 +1432,7 @@
                     return false;
                 }
             }
-            
+
             return true;
         }
 
@@ -1427,11 +1491,11 @@
                     console.warn('EmailJS not available, skipping emails');
                     return true;
                 }
-                
+
                 const resortEmail = 'reservations.limuru@resortjumuia.com';
                 const resortName = 'Jumuia Conference & Country Home - Limuru';
                 const resortPhone = '0759 423 589, 020 2048881';
-                
+
                 // Send to guest
                 await emailjs.send('service_9yusqtl', 'booking_confirmation_guest', {
                     to_email: bookingData.email,
@@ -1450,9 +1514,9 @@
                     booking_date: new Date().toLocaleDateString('en-KE'),
                     special_requests: bookingData.specialRequests || 'None'
                 });
-                
+
                 console.log('✓ Guest email sent');
-                
+
                 // Try to send to resort (may fail if no template)
                 try {
                     await emailjs.send('service_9yusqtl', 'booking_notification_resort', {
@@ -1471,9 +1535,9 @@
                 } catch (emailError) {
                     console.warn('Resort email failed:', emailError);
                 }
-                
+
                 return true;
-                
+
             } catch (error) {
                 console.error('Email error:', error);
                 return false; // Don't fail booking if emails fail
@@ -1483,24 +1547,24 @@
         // MAIN FORM SUBMISSION HANDLER
         async function handleFormSubmission(e) {
             console.log('=== FORM SUBMISSION STARTED ===');
-            
+
             e.preventDefault();
             e.stopPropagation();
-            
+
             // Validate form
             if (!validateForm()) {
                 console.log('Form validation failed');
                 return;
             }
-            
+
             // Get submit button
             const submitBtn = document.getElementById('submitBooking');
             const originalText = submitBtn.innerHTML;
-            
+
             // Show loading
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
             submitBtn.disabled = true;
-            
+
             try {
                 // Collect form data
                 const formData = new FormData(document.getElementById('bookingForm'));
@@ -1512,7 +1576,7 @@
                     phone: formData.get('phone'),
                     nationality: formData.get('nationality'),
                     idNumber: formData.get('idNumber'),
-                    
+
                     // Stay Information
                     resort: 'limuru',
                     checkIn: formData.get('checkIn'),
@@ -1520,19 +1584,19 @@
                     adults: parseInt(formData.get('adults')),
                     children: parseInt(formData.get('children')) || 0,
                     nights: calculateNights(formData.get('checkIn'), formData.get('checkOut')),
-                    
+
                     // Room Information
                     roomType: formData.get('roomType'),
                     roomTypeDisplay: getRoomTypeDisplay(formData.get('roomType')),
                     packageType: formData.get('packageType'),
                     packageTypeDisplay: getPackageDisplay(formData.get('packageType')),
                     specialRequests: formData.get('specialRequests') || '',
-                    
+
                     // Payment Information
                     paymentMethod: formData.get('paymentMethod'),
                     paymentMethodDisplay: getPaymentMethodDisplay(formData.get('paymentMethod')),
                     mpesaNumber: formData.get('mpesaNumber') || '',
-                    
+
                     // System Information
                     bookingId: generateBookingId(),
                     status: 'pending',
@@ -1540,7 +1604,7 @@
                     createdAt: new Date().toISOString(),
                     source: 'website'
                 };
-                
+
                 // Calculate total amount
                 const rate = calculateRate(
                     bookingData.roomType,
@@ -1549,11 +1613,11 @@
                     bookingData.adults,
                     bookingData.children
                 );
-                
+
                 bookingData.totalAmount = rate.grandTotal;
-                
+
                 console.log('Booking data prepared:', bookingData);
-                
+
                 // 1. FIRST - Try to save to Firebase if available
                 let firebaseSaved = false;
                 try {
@@ -1574,24 +1638,24 @@
                     console.warn('Firebase save failed:', firebaseError);
                     // Continue without Firebase
                 }
-                
+
                 // 2. Send email notifications
                 const emailsSent = await sendEmailNotifications(bookingData);
-                
+
                 // 3. Show success regardless of Firebase/Email status
                 document.getElementById('modalBookingId').textContent = bookingData.bookingId;
                 document.getElementById('successModal').classList.add('active');
-                
+
                 // 4. Reset form
                 document.getElementById('bookingForm').reset();
                 initializeDates(); // Reset dates
                 initializePaymentMethods(); // Reset payment
-                
+
                 console.log('✓ Booking completed successfully!');
                 console.log('Booking ID:', bookingData.bookingId);
                 console.log('Firebase saved:', firebaseSaved);
                 console.log('Emails sent:', emailsSent);
-                
+
             } catch (error) {
                 console.error('Booking error:', error);
                 alert('Error: ' + error.message + '\n\nPlease contact us directly at 0759 423 589');
@@ -1603,13 +1667,13 @@
         }
 
         // Setup form when DOM is ready
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             console.log('=== DOM READY ===');
-            
+
             // Initialize
             initializeDates();
             initializePaymentMethods();
-            
+
             // Setup change listeners
             ['checkIn', 'checkOut', 'adults', 'children', 'roomType', 'packageType'].forEach(id => {
                 const element = document.getElementById(id);
@@ -1617,7 +1681,7 @@
                     element.addEventListener('change', updateBookingSummary);
                 }
             });
-            
+
             // Setup form submission
             const form = document.getElementById('bookingForm');
             if (form) {
@@ -1626,12 +1690,12 @@
             } else {
                 console.error('❌ Form not found!');
             }
-            
+
             // Initial summary update
             updateBookingSummary();
-            
+
             console.log('✓ Setup complete - Ready for bookings!');
-            
+
             // Test: Check Firebase availability
             console.log('FirebaseServices available:', !!window.FirebaseServices);
             console.log('FirebaseService available:', !!window.FirebaseService);
@@ -1639,11 +1703,11 @@
         });
 
         // Modal functions
-        window.closeModal = function() {
+        window.closeModal = function () {
             document.getElementById('successModal').classList.remove('active');
         };
-        
-        window.printBooking = function() {
+
+        window.printBooking = function () {
             const bookingId = document.getElementById('modalBookingId').textContent;
             const content = `
                 <html>
@@ -1664,4 +1728,5 @@
         };
     </script>
 </body>
+
 </html>

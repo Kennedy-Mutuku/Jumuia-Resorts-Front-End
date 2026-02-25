@@ -97,14 +97,16 @@
 
         .resort-nav {
             display: flex;
-            gap: 25px;
+            gap: 20px;
+            flex-wrap: nowrap;
         }
 
         .resort-nav a {
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
             transition: color 0.3s;
             position: relative;
         }
@@ -129,14 +131,15 @@
         }
 
         .btn {
-            padding: 10px 25px;
+            padding: 6px 16px;
             border-radius: var(--radius);
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
             font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
+            font-size: 0.85rem;
+            white-space: nowrap;
             text-decoration: none;
             display: inline-block;
             text-align: center;
@@ -155,7 +158,9 @@
         .btn-secondary {
             background-color: transparent;
             color: var(--primary-green);
-            border: 2px solid var(--primary-green);
+            border: 1px solid var(--primary-green);
+            border-radius: 0;
+            outline: none;
         }
 
         .btn-secondary:hover {
@@ -186,7 +191,7 @@
             background-size: cover;
             background-position: center;
             color: var(--primary-white);
-            padding: 180px 0 100px;
+            padding: 60px 0 40px;
             margin-top: 90px;
             text-align: center;
             position: relative;
@@ -203,7 +208,7 @@
         }
 
         .kisumu-hero h1 {
-            font-size: 3.5rem;
+            font-size: 2rem;
             margin-bottom: 20px;
             color: var(--primary-white);
         }
@@ -751,7 +756,7 @@
             }
             
             .kisumu-hero h1 {
-                font-size: 2.2rem;
+                font-size: 1.8rem;
             }
             
             .kisumu-hero p {

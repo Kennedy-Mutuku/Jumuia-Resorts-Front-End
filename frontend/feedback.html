@@ -1,11 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Jumuia Resorts - Feedback & Reviews</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
+        rel="stylesheet">
     <style>
         :root {
             --primary-green: #22440f;
@@ -35,7 +38,10 @@
             background-color: var(--gray-bg);
         }
 
-        h1, h2, h3, h4 {
+        h1,
+        h2,
+        h3,
+        h4 {
             font-family: 'Playfair Display', serif;
             font-weight: 600;
             color: var(--primary-green);
@@ -58,11 +64,50 @@
             z-index: 1000;
         }
 
+        .header-top {
+            background-color: var(--primary-green);
+            color: var(--primary-white);
+            padding: 8px 0;
+        }
+
+        .header-top-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .slogan {
+            font-size: 0.85rem;
+            font-weight: 500;
+            font-style: italic;
+        }
+
+        .header-top-actions {
+            display: flex;
+            gap: 20px;
+            align-items: center;
+        }
+
+        .header-top-link {
+            color: var(--primary-white);
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.85rem;
+            transition: color 0.3s;
+        }
+
+        .header-top-link:hover {
+            color: var(--primary-orange);
+        }
+
         .header-container {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 15px 0;
+            padding: 12px 0;
+            /* Slightly thinner header */
         }
 
         .logo {
@@ -73,34 +118,41 @@
         }
 
         .logo-img {
-            width: 60px;
-            height: 60px;
+            width: 55px;
+            /* Slightly smaller logo */
+            height: 55px;
         }
 
         .logo-text h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
+            font-size: 1.5rem;
+            margin-bottom: 2px;
             color: var(--primary-green);
+            white-space: nowrap;
         }
 
         .logo-text p {
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             color: var(--text-light);
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .main-nav {
             display: flex;
-            gap: 30px;
+            gap: 20px;
+            align-items: center;
+            flex-wrap: nowrap;
         }
 
         .main-nav a {
             text-decoration: none;
             color: var(--text-dark);
             font-weight: 500;
-            font-size: 1rem;
+            font-size: 0.85rem;
             transition: color 0.3s;
             position: relative;
+            padding: 5px 0;
+            white-space: nowrap;
         }
 
         .main-nav a:hover {
@@ -115,31 +167,34 @@
         .main-nav a.active::after {
             content: '';
             position: absolute;
-            bottom: -5px;
+            bottom: -2px;
+            /* Thinner line adjustment */
             left: 0;
             width: 100%;
-            height: 2px;
+            height: 1px;
+            /* 1px thin line */
             background-color: var(--primary-orange);
         }
 
         .header-actions {
             display: flex;
-            gap: 20px;
+            gap: 15px;
             align-items: center;
         }
 
         .btn {
-            padding: 10px 25px;
+            padding: 6px 16px;
             border-radius: var(--radius);
-            font-weight: 600;
+            font-weight: 500;
             cursor: pointer;
             transition: all 0.3s;
             border: none;
             font-family: 'Montserrat', sans-serif;
-            font-size: 1rem;
+            font-size: 0.85rem;
             text-decoration: none;
             display: inline-block;
             text-align: center;
+            white-space: nowrap;
         }
 
         .btn-primary {
@@ -155,7 +210,9 @@
         .btn-secondary {
             background-color: transparent;
             color: var(--primary-green);
-            border: 2px solid var(--primary-green);
+            border: 1px solid var(--primary-green);
+            border-radius: 0;
+            outline: none;
         }
 
         .btn-secondary:hover {
@@ -176,21 +233,21 @@
             background-size: cover;
             background-position: center;
             color: var(--primary-white);
-            padding: 180px 0 100px;
-            margin-top: 90px;
+            padding: 60px 0 40px;
+            margin-top: 125px;
             text-align: center;
         }
 
         .feedback-hero h1 {
-            font-size: 3rem;
-            margin-bottom: 20px;
+            font-size: 2rem;
+            margin-bottom: 8px;
             color: var(--primary-white);
         }
 
         .feedback-hero p {
-            font-size: 1.2rem;
+            font-size: 0.95rem;
             max-width: 800px;
-            margin: 0 auto 40px;
+            margin: 0 auto 15px;
             opacity: 0.9;
         }
 
@@ -291,9 +348,9 @@
             transition: color 0.3s;
         }
 
-        .star-rating input:checked ~ label,
+        .star-rating input:checked~label,
         .star-rating label:hover,
-        .star-rating label:hover ~ label {
+        .star-rating label:hover~label {
             color: var(--primary-orange);
         }
 
@@ -427,7 +484,7 @@
         }
 
         .stat-number {
-            font-size: 3rem;
+            font-size: 2rem;
             font-weight: 700;
             color: var(--primary-green);
             margin-bottom: 10px;
@@ -543,8 +600,15 @@
         }
 
         @keyframes modalFadeIn {
-            from { opacity: 0; transform: translateY(-50px); }
-            to { opacity: 1; transform: translateY(0); }
+            from {
+                opacity: 0;
+                transform: translateY(-50px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
         }
 
         .modal-icon {
@@ -558,7 +622,7 @@
             .feedback-container {
                 grid-template-columns: 1fr;
             }
-            
+
             .feedback-hero h1 {
                 font-size: 2.5rem;
             }
@@ -568,7 +632,7 @@
             .mobile-menu-btn {
                 display: block;
             }
-            
+
             .main-nav {
                 position: fixed;
                 top: 90px;
@@ -583,15 +647,15 @@
                 transition: left 0.3s;
                 gap: 30px;
             }
-            
+
             .main-nav.active {
                 left: 0;
             }
-            
+
             .feedback-hero h1 {
                 font-size: 2rem;
             }
-            
+
             .feedback-hero p {
                 font-size: 1rem;
             }
@@ -601,51 +665,78 @@
             .feedback-hero {
                 padding: 150px 0 80px;
             }
-            
+
             .form-container {
                 padding: 25px;
             }
-            
+
             .review-card {
                 padding: 20px;
             }
         }
     </style>
 </head>
+
 <body>
     <!-- Header & Navigation -->
     <header>
+        <div class="header-top">
+            <div class="container header-top-content">
+                <div class="slogan">Hospitality With A Christian Touch</div>
+                <div class="header-top-actions">
+                    <a href="tel:+254759423589" class="header-top-link">
+                        <i class="fas fa-phone"></i>
+                        <span>+254 759 423589</span>
+                    </a>
+                    <a href="mailto:jumuiaresortslimited@gmail.com" class="header-top-link">
+                        <i class="fas fa-envelope"></i>
+                        <span>jumuiaresortslimited@gmail.com</span>
+                    </a>
+                </div>
+            </div>
+        </div>
         <div class="container header-container">
             <a href="index.html" class="logo">
                 <svg class="logo-img" viewBox="0 0 133 78">
-                    <path class="st0" d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
-                    <path class="st0" d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z" fill="#FFFFFF" stroke="#024423" stroke-width="0.75"/>
-                    <path class="st1" d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z" fill="#024423"/>
-                    <path class="st1" d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z" fill="#024423"/>
-                    <path class="st1" d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z" fill="#024423"/>
-                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z" fill="#f3a435"/>
+                    <path class="st0"
+                        d="M42.4,12.5c0,0,7,5.9-1.3,21.3c0,0-11.1,21.5,24.7,26.8c0,0-13.4-9.1-9.1-24C56.6,36.5,64.5,16.5,42.4,12.5z"
+                        fill="#FFFFFF" stroke="#024423" stroke-width="0.75" />
+                    <path class="st0"
+                        d="M94.4,12.5c0,0-7,5.9,1.3,21.3c0,0,11.1,21.5-24.7,26.8c0,0,13.4-9.1,9.1-24C80,36.5,72.3,16.5,94.4,12.5z"
+                        fill="#FFFFFF" stroke="#024423" stroke-width="0.75" />
+                    <path class="st1"
+                        d="M71.4,7.2c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2C65,5.4,66.5,4,68.2,4C70,4,71.4,5.5,71.4,7.2z"
+                        fill="#024423" />
+                    <path class="st1"
+                        d="M79.7,12.6c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S79.7,10.8,79.7,12.6z"
+                        fill="#024423" />
+                    <path class="st1"
+                        d="M62.9,13c0,1.8-1.5,3.2-3.2,3.2c-1.8,0-3.2-1.5-3.2-3.2c0-1.8,1.5-3.2,3.2-3.2S62.9,11.2,62.9,13z"
+                        fill="#024423" />
+                    <path class="st2" d="M68.2,17.8c0,0-22.3,20.9,0,42.8C68.2,60.6,90.1,41.6,68.2,17.8z"
+                        fill="#f3a435" />
                 </svg>
                 <div class="logo-text">
                     <h1>Jumuia Resorts</h1>
                     <p>Christian Hospitality & Conference Centres</p>
                 </div>
             </a>
-            
+
             <div class="mobile-menu-btn" id="mobileMenuBtn">
                 <i class="fas fa-bars"></i>
             </div>
-            
+
             <nav class="main-nav" id="mainNav">
-                <a href="index.html" class="active">Home</a>
-                <a href="About Us.html" class="active">About Us</a>
-                <a href="resorts.html" class="active">Our Resorts</a>
-                <a href="services.html" class="active">Services</a>
-                <a href="offers.html" class="active">Offers</a>
+                <a href="index.html">Home</a>
+                <a href="About Us.html">About Us</a>
+                <a href="resorts.html">Our Resorts</a>
+                <a href="services.html">Services</a>
+                <a href="offers.html">Offers</a>
                 <a href="feedback.html" class="active">Feedback</a>
-                <a href="contact.html" class="active">Contact</a>
+                <a href="contact.html">Contact</a>
                 <a href="admin/index.html" class="btn-secondary">Log In</a>
             </nav>
-            
+
             <div class="header-actions">
                 <a href="booking.html" class="btn btn-primary">Book Now</a>
             </div>
@@ -656,7 +747,8 @@
     <section class="feedback-hero">
         <div class="container">
             <h1>Share Your Experience</h1>
-            <p>Your feedback helps us improve our services and create better experiences for all our guests. We value your honest opinion about your stay at Jumuia Resorts.</p>
+            <p>Your feedback helps us improve our services and create better experiences for all our guests. We value
+                your honest opinion about your stay at Jumuia Resorts.</p>
         </div>
     </section>
 
@@ -665,9 +757,10 @@
         <div class="container">
             <div class="section-header">
                 <h2>Submit Your Feedback</h2>
-                <p>Tell us about your experience with Jumuia Resorts. We appreciate both positive feedback and constructive criticism.</p>
+                <p>Tell us about your experience with Jumuia Resorts. We appreciate both positive feedback and
+                    constructive criticism.</p>
             </div>
-            
+
             <div class="feedback-container">
                 <div class="form-container">
                     <form id="feedbackForm">
@@ -675,17 +768,17 @@
                             <label for="fullName">Full Name *</label>
                             <input type="text" id="fullName" class="form-control" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="email">Email Address *</label>
                             <input type="email" id="email" class="form-control" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="phone">Phone Number</label>
                             <input type="tel" id="phone" class="form-control">
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="property">Which property did you visit? *</label>
                             <select id="property" class="form-control" required>
@@ -695,12 +788,12 @@
                                 <option value="kisumu">Jumuia Hotel Kisumu</option>
                             </select>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="bookingReference">Booking Reference (Optional)</label>
                             <input type="text" id="bookingReference" class="form-control" placeholder="If you have one">
                         </div>
-                        
+
                         <div class="rating-container">
                             <span class="rating-label">Overall Rating *</span>
                             <div class="star-rating">
@@ -716,39 +809,43 @@
                                 <label for="star1">★</label>
                             </div>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="feedbackTitle">Feedback Title *</label>
-                            <input type="text" id="feedbackTitle" class="form-control" placeholder="Brief summary of your feedback" required>
+                            <input type="text" id="feedbackTitle" class="form-control"
+                                placeholder="Brief summary of your feedback" required>
                         </div>
-                        
+
                         <div class="form-group">
                             <label for="feedbackDetails">Your Feedback Details *</label>
-                            <textarea id="feedbackDetails" class="form-control" placeholder="Please share details about your experience..." required></textarea>
+                            <textarea id="feedbackDetails" class="form-control"
+                                placeholder="Please share details about your experience..." required></textarea>
                         </div>
-                        
+
                         <div class="checkbox-group">
                             <input type="checkbox" id="allowPublish" checked>
-                            <label for="allowPublish">I allow Jumuia Resorts to publish this feedback (name will be displayed as initials)</label>
+                            <label for="allowPublish">I allow Jumuia Resorts to publish this feedback (name will be
+                                displayed as initials)</label>
                         </div>
-                        
+
                         <div class="checkbox-group">
                             <input type="checkbox" id="contactMe" checked>
                             <label for="contactMe">I'd like to be contacted regarding this feedback</label>
                         </div>
-                        
+
                         <button type="submit" class="btn btn-primary" style="width: 100%; padding: 15px;">
                             <i class="fas fa-paper-plane"></i> Submit Feedback
                         </button>
                     </form>
                 </div>
-                
+
                 <div class="guidelines">
                     <h3 style="margin-bottom: 20px; color: var(--primary-green);">Feedback Guidelines</h3>
                     <ul style="list-style: none; padding-left: 0;">
                         <li style="margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;">
                             <i class="fas fa-check-circle" style="color: var(--secondary-green);"></i>
-                            <span>Be specific about your experience - mention staff names, departments, or specific services</span>
+                            <span>Be specific about your experience - mention staff names, departments, or specific
+                                services</span>
                         </li>
                         <li style="margin-bottom: 15px; display: flex; align-items: flex-start; gap: 10px;">
                             <i class="fas fa-check-circle" style="color: var(--secondary-green);"></i>
@@ -767,13 +864,15 @@
                             <span>We respond to all feedback within 48 hours</span>
                         </li>
                     </ul>
-                    
-                    <div style="background-color: var(--light-green); padding: 20px; border-radius: var(--radius); margin-top: 30px;">
+
+                    <div
+                        style="background-color: var(--light-green); padding: 20px; border-radius: var(--radius); margin-top: 30px;">
                         <h4 style="color: var(--primary-green); margin-bottom: 10px;">
                             <i class="fas fa-shield-alt"></i> Privacy Promise
                         </h4>
                         <p style="color: var(--text-light); font-size: 0.9rem;">
-                            Your personal information is secure with us. We never share your details with third parties. Published feedback will only show your initials (e.g., John D. as "J.D.").
+                            Your personal information is secure with us. We never share your details with third parties.
+                            Published feedback will only show your initials (e.g., John D. as "J.D.").
                         </p>
                     </div>
                 </div>
@@ -788,7 +887,7 @@
                 <h2>What Our Guests Say</h2>
                 <p>Read feedback from recent guests who have experienced Jumuia Resorts hospitality</p>
             </div>
-            
+
             <div class="reviews-grid" id="reviewsGrid">
                 <!-- Reviews will be loaded dynamically -->
                 <div class="review-card">
@@ -809,14 +908,15 @@
                         </div>
                     </div>
                     <div class="review-content">
-                        "Exceptional service at Limuru! The conference facilities were top-notch and the staff went above and beyond to ensure our meeting was successful."
+                        "Exceptional service at Limuru! The conference facilities were top-notch and the staff went
+                        above and beyond to ensure our meeting was successful."
                     </div>
                     <div class="review-meta">
                         <span class="property-badge">Limuru</span>
                         <span>2 days ago</span>
                     </div>
                 </div>
-                
+
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-info">
@@ -835,14 +935,15 @@
                         </div>
                     </div>
                     <div class="review-content">
-                        "Kanamai Beach Resort was paradise! The kids loved the pool and the beach activities. The room was spacious and clean with amazing ocean views."
+                        "Kanamai Beach Resort was paradise! The kids loved the pool and the beach activities. The room
+                        was spacious and clean with amazing ocean views."
                     </div>
                     <div class="review-meta">
                         <span class="property-badge">Kanamai</span>
                         <span>1 week ago</span>
                     </div>
                 </div>
-                
+
                 <div class="review-card">
                     <div class="review-header">
                         <div class="reviewer-info">
@@ -861,7 +962,8 @@
                         </div>
                     </div>
                     <div class="review-content">
-                        "Kisumu Hotel provided excellent facilities for our regional conference. The food was delicious and the lake view rooms were breathtaking."
+                        "Kisumu Hotel provided excellent facilities for our regional conference. The food was delicious
+                        and the lake view rooms were breathtaking."
                     </div>
                     <div class="review-meta">
                         <span class="property-badge">Kisumu</span>
@@ -879,23 +981,23 @@
                 <h2>Our Feedback Statistics</h2>
                 <p>Transparent insights from thousands of guest experiences</p>
             </div>
-            
+
             <div class="stats-grid">
                 <div class="stat-card">
                     <div class="stat-number" id="totalReviews">4.8</div>
                     <div class="stat-label">Average Rating</div>
                 </div>
-                
+
                 <div class="stat-card">
                     <div class="stat-number" id="feedbackCount">2,457</div>
                     <div class="stat-label">Total Feedback Received</div>
                 </div>
-                
+
                 <div class="stat-card">
                     <div class="stat-number" id="responseRate">98%</div>
                     <div class="stat-label">Response Rate</div>
                 </div>
-                
+
                 <div class="stat-card">
                     <div class="stat-number" id="recommendationRate">94%</div>
                     <div class="stat-label">Would Recommend</div>
@@ -910,7 +1012,8 @@
             <div class="footer-container">
                 <div class="footer-column">
                     <h3>Jumuia Resorts</h3>
-                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Luxury hospitality across Kenya with world-class facilities and exceptional service.</p>
+                    <p style="color: rgba(255,255,255,0.8); margin-bottom: 20px;">Luxury hospitality across Kenya with
+                        world-class facilities and exceptional service.</p>
                     <div class="social-links">
                         <a href="#"><i class="fab fa-facebook-f"></i></a>
                         <a href="#"><i class="fab fa-twitter"></i></a>
@@ -918,7 +1021,7 @@
                         <a href="#"><i class="fab fa-linkedin-in"></i></a>
                     </div>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Our Resorts</h3>
                     <ul class="footer-links">
@@ -927,7 +1030,7 @@
                         <li><a href="resorts/kisumu/index.html">Kisumu Hotel</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Quick Links</h3>
                     <ul class="footer-links">
@@ -938,7 +1041,7 @@
                         <li><a href="admin/index.html">Log In</a></li>
                     </ul>
                 </div>
-                
+
                 <div class="footer-column">
                     <h3>Contact Us</h3>
                     <div class="contact-info">
@@ -957,7 +1060,7 @@
                     </div>
                 </div>
             </div>
-            
+
             <div class="copyright">
                 <p>&copy; 2026 Jumuia Resorts Limited. All rights reserved.</p>
             </div>
@@ -972,7 +1075,8 @@
             </div>
             <h3 style="margin-bottom: 15px; color: var(--secondary-green);">Thank You!</h3>
             <p style="margin-bottom: 25px; color: var(--text-light);" id="modalMessage">
-                Your feedback has been submitted successfully. We appreciate your time and will review your comments carefully.
+                Your feedback has been submitted successfully. We appreciate your time and will review your comments
+                carefully.
             </p>
             <button class="btn btn-primary" onclick="closeModal()" style="width: 100%;">
                 Continue
@@ -997,7 +1101,7 @@
         const db = firebase.firestore();
 
         // Mobile menu toggle
-        document.getElementById('mobileMenuBtn').addEventListener('click', function() {
+        document.getElementById('mobileMenuBtn').addEventListener('click', function () {
             document.getElementById('mainNav').classList.toggle('active');
         });
 
@@ -1009,17 +1113,17 @@
         });
 
         // Form submission
-        document.getElementById('feedbackForm').addEventListener('submit', async function(e) {
+        document.getElementById('feedbackForm').addEventListener('submit', async function (e) {
             e.preventDefault();
-            
+
             const submitBtn = this.querySelector('button[type="submit"]');
             const originalText = submitBtn.innerHTML;
-            
+
             try {
                 // Disable submit button
                 submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
                 submitBtn.disabled = true;
-                
+
                 // Get form values
                 const feedbackData = {
                     fullName: document.getElementById('fullName').value,
@@ -1036,19 +1140,19 @@
                     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
                     updatedAt: firebase.firestore.FieldValue.serverTimestamp()
                 };
-                
+
                 // Submit to Firebase
                 await db.collection('feedback').add(feedbackData);
-                
+
                 // Show success message
                 showSuccessModal();
-                
+
                 // Reset form
                 this.reset();
-                
+
                 // Update statistics
                 loadFeedbackStatistics();
-                
+
             } catch (error) {
                 console.error('Error submitting feedback:', error);
                 alert('Sorry, there was an error submitting your feedback. Please try again.');
@@ -1063,7 +1167,7 @@
         async function loadRecentReviews() {
             try {
                 const reviewsGrid = document.getElementById('reviewsGrid');
-                
+
                 // Get published reviews from Firebase
                 const querySnapshot = await db.collection('feedback')
                     .where('status', '==', 'published')
@@ -1071,20 +1175,20 @@
                     .orderBy('createdAt', 'desc')
                     .limit(6)
                     .get();
-                
+
                 if (querySnapshot.empty) {
                     reviewsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No reviews available yet. Be the first to share your experience!</p>';
                     return;
                 }
-                
+
                 let reviewsHTML = '';
-                
+
                 querySnapshot.forEach(doc => {
                     const feedback = doc.data();
                     const initials = getInitials(feedback.fullName);
                     const timeAgo = getTimeAgo(feedback.createdAt?.toDate());
                     const propertyName = getPropertyName(feedback.property);
-                    
+
                     let starsHTML = '';
                     const rating = parseInt(feedback.rating);
                     for (let i = 0; i < 5; i++) {
@@ -1096,7 +1200,7 @@
                             starsHTML += '<i class="far fa-star"></i>';
                         }
                     }
-                    
+
                     reviewsHTML += `
                         <div class="review-card">
                             <div class="review-header">
@@ -1121,9 +1225,9 @@
                         </div>
                     `;
                 });
-                
+
                 reviewsGrid.innerHTML = reviewsHTML;
-                
+
             } catch (error) {
                 console.error('Error loading reviews:', error);
             }
@@ -1134,36 +1238,36 @@
             try {
                 // Get all feedback
                 const querySnapshot = await db.collection('feedback').get();
-                
+
                 let totalRating = 0;
                 let totalReviews = 0;
                 let publishedCount = 0;
                 let recommendCount = 0;
-                
+
                 querySnapshot.forEach(doc => {
                     const feedback = doc.data();
                     totalRating += parseInt(feedback.rating);
                     totalReviews++;
-                    
+
                     if (feedback.status === 'published') {
                         publishedCount++;
                     }
-                    
+
                     // For demo, assume 94% recommendation rate
                     if (Math.random() < 0.94) {
                         recommendCount++;
                     }
                 });
-                
+
                 // Update statistics
                 const avgRating = totalReviews > 0 ? (totalRating / totalReviews).toFixed(1) : '4.8';
                 const recommendRate = totalReviews > 0 ? Math.round((recommendCount / totalReviews) * 100) : 94;
-                
+
                 document.getElementById('totalReviews').textContent = avgRating;
                 document.getElementById('feedbackCount').textContent = totalReviews.toLocaleString();
                 document.getElementById('responseRate').textContent = '98%'; // Hardcoded for demo
                 document.getElementById('recommendationRate').textContent = `${recommendRate}%`;
-                
+
             } catch (error) {
                 console.error('Error loading statistics:', error);
             }
@@ -1176,10 +1280,10 @@
 
         function getTimeAgo(date) {
             if (!date) return 'Recently';
-            
+
             const seconds = Math.floor((new Date() - date) / 1000);
             let interval = seconds / 31536000;
-            
+
             if (interval > 1) return Math.floor(interval) + " years ago";
             interval = seconds / 2592000;
             if (interval > 1) return Math.floor(interval) + " months ago";
@@ -1210,7 +1314,7 @@
         }
 
         // Initialize page
-        document.addEventListener('DOMContentLoaded', function() {
+        document.addEventListener('DOMContentLoaded', function () {
             loadRecentReviews();
             loadFeedbackStatistics();
         });
@@ -1218,4 +1322,5 @@
     <!-- Load main.js -->
     <script src="js/main.js"></script>
 </body>
+
 </html>
