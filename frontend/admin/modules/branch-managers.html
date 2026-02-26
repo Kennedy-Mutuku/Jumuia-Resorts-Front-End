@@ -1,0 +1,753 @@
+<!-- Branch Managers Module -->
+<div class="content-header">
+    <div class="breadcrumb">
+        <a href="#dashboard" onclick="window.dashboard.loadModule('dashboard')">
+            <i class="fas fa-tachometer-alt"></i> Dashboard
+        </a>
+        <i class="fas fa-chevron-right"></i>
+        <span>Branch Managers</span>
+    </div>
+</div>
+
+<style>
+    .bm-container {
+        max-width: 1000px;
+    }
+
+    /* Create Manager Card */
+    .bm-create-card {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        margin-bottom: 32px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        border-top: 4px solid #f3a435;
+    }
+
+    .bm-create-card h3 {
+        margin: 0 0 8px 0;
+        color: #22440f;
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .bm-create-card h3 i {
+        color: #f3a435;
+    }
+
+    .bm-create-card .subtitle {
+        color: #666;
+        font-size: 0.9rem;
+        margin-bottom: 28px;
+    }
+
+    .bm-form {
+        display: grid;
+        gap: 20px;
+    }
+
+    .bm-form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+    }
+
+    .bm-field {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .bm-field label {
+        font-weight: 600;
+        font-size: 0.85rem;
+        color: #333;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+    }
+
+    .bm-field input,
+    .bm-field select {
+        padding: 12px 16px;
+        border: 2px solid #e0e0e0;
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: 'Montserrat', sans-serif;
+        transition: all 0.3s ease;
+        background: #fafafa;
+    }
+
+    .bm-field input:focus,
+    .bm-field select:focus {
+        outline: none;
+        border-color: #f3a435;
+        box-shadow: 0 0 0 3px rgba(243, 164, 53, 0.15);
+        background: white;
+    }
+
+    .bm-field .email-preview {
+        font-size: 0.8rem;
+        color: #888;
+        margin-top: 2px;
+        min-height: 18px;
+    }
+
+    .bm-field .email-preview span {
+        color: #22440f;
+        font-weight: 600;
+    }
+
+    .bm-password-wrapper {
+        position: relative;
+    }
+
+    .bm-password-wrapper input {
+        width: 100%;
+        padding-right: 48px;
+    }
+
+    .bm-password-toggle {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        background: none;
+        border: none;
+        color: #888;
+        cursor: pointer;
+        font-size: 1rem;
+        padding: 4px;
+    }
+
+    .bm-submit-row {
+        display: flex;
+        justify-content: flex-end;
+        gap: 12px;
+        margin-top: 8px;
+    }
+
+    .bm-btn {
+        padding: 12px 28px;
+        border-radius: 8px;
+        font-weight: 600;
+        font-size: 0.95rem;
+        cursor: pointer;
+        border: none;
+        font-family: 'Montserrat', sans-serif;
+        transition: all 0.3s ease;
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+    }
+
+    .bm-btn-primary {
+        background: linear-gradient(135deg, #f3a435, #ff9d00);
+        color: white;
+    }
+
+    .bm-btn-primary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 14px rgba(243, 164, 53, 0.4);
+    }
+
+    .bm-btn-primary:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+        transform: none;
+        box-shadow: none;
+    }
+
+    .bm-btn-secondary {
+        background: transparent;
+        color: #22440f;
+        border: 2px solid #22440f;
+    }
+
+    .bm-btn-secondary:hover {
+        background: #22440f;
+        color: white;
+    }
+
+    /* Alert Messages */
+    .bm-alert {
+        padding: 14px 18px;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        font-weight: 500;
+        display: none;
+        align-items: center;
+        gap: 10px;
+        animation: bmSlideDown 0.3s ease;
+    }
+
+    @keyframes bmSlideDown {
+        from {
+            opacity: 0;
+            transform: translateY(-10px);
+        }
+
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    .bm-alert.show {
+        display: flex;
+    }
+
+    .bm-alert-success {
+        background: #f0fff4;
+        color: #28a745;
+        border: 1px solid #28a745;
+    }
+
+    .bm-alert-error {
+        background: #fff5f5;
+        color: #dc3545;
+        border: 1px solid #ff0000;
+    }
+
+    /* Existing Managers Table */
+    .bm-list-card {
+        background: white;
+        border-radius: 12px;
+        overflow: hidden;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .bm-list-header {
+        padding: 24px 32px;
+        border-bottom: 1px solid #e0e0e0;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .bm-list-header h3 {
+        margin: 0;
+        color: #22440f;
+        font-size: 1.2rem;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .bm-list-header .bm-count {
+        background: #22440f;
+        color: white;
+        padding: 4px 12px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .bm-table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .bm-table thead th {
+        background: #f8f9fa;
+        padding: 14px 20px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 0.8rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        border-bottom: 2px solid #e0e0e0;
+    }
+
+    .bm-table tbody td {
+        padding: 16px 20px;
+        border-bottom: 1px solid #f0f0f0;
+        vertical-align: middle;
+    }
+
+    .bm-table tbody tr:hover {
+        background: #fafafa;
+    }
+
+    .bm-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .bm-user-cell {
+        display: flex;
+        align-items: center;
+        gap: 14px;
+    }
+
+    .bm-user-avatar {
+        width: 44px;
+        height: 44px;
+        background: linear-gradient(135deg, #22440f, #1a5c1a);
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 700;
+        font-size: 1rem;
+        flex-shrink: 0;
+    }
+
+    .bm-user-details {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .bm-user-name {
+        font-weight: 600;
+        color: #333;
+        font-size: 0.95rem;
+    }
+
+    .bm-user-email {
+        font-size: 0.8rem;
+        color: #888;
+    }
+
+    .bm-property-badge {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: white;
+    }
+
+    .bm-property-badge.limuru {
+        background: linear-gradient(135deg, #4CAF50, #388E3C);
+    }
+
+    .bm-property-badge.kanamai {
+        background: linear-gradient(135deg, #2196F3, #1976D2);
+    }
+
+    .bm-property-badge.kisumu {
+        background: linear-gradient(135deg, #9C27B0, #7B1FA2);
+    }
+
+    .bm-delete-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: none;
+        background: #fff5f5;
+        color: #dc3545;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    .bm-delete-btn:hover {
+        background: #dc3545;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(220, 53, 69, 0.3);
+    }
+
+    .bm-empty {
+        text-align: center;
+        padding: 60px 20px;
+        color: #888;
+    }
+
+    .bm-empty i {
+        font-size: 48px;
+        color: #ddd;
+        margin-bottom: 16px;
+        display: block;
+    }
+
+    .bm-empty h4 {
+        margin: 0 0 8px 0;
+        color: #666;
+    }
+
+    .bm-loading {
+        text-align: center;
+        padding: 40px;
+        color: #888;
+    }
+
+    .bm-loading i {
+        font-size: 24px;
+        animation: spin 1s linear infinite;
+        margin-bottom: 12px;
+        display: block;
+    }
+
+    @keyframes spin {
+        from {
+            transform: rotate(0deg);
+        }
+
+        to {
+            transform: rotate(360deg);
+        }
+    }
+
+    /* Confirm Delete Modal */
+    .bm-modal-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.5);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 2000;
+    }
+
+    .bm-modal-overlay.show {
+        display: flex;
+    }
+
+    .bm-modal {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 420px;
+        width: 90%;
+        text-align: center;
+        animation: bmSlideDown 0.3s ease;
+    }
+
+    .bm-modal i.warning-icon {
+        font-size: 48px;
+        color: #dc3545;
+        margin-bottom: 16px;
+    }
+
+    .bm-modal h3 {
+        margin: 0 0 12px 0;
+        color: #333;
+    }
+
+    .bm-modal p {
+        color: #666;
+        margin-bottom: 24px;
+        font-size: 0.95rem;
+    }
+
+    .bm-modal-actions {
+        display: flex;
+        gap: 12px;
+        justify-content: center;
+    }
+
+    .bm-cred-row {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 4px 0;
+        font-size: 0.85rem;
+        color: #555;
+    }
+
+    .bm-cred-row i.fa-envelope,
+    .bm-cred-row i.fa-key {
+        width: 16px;
+        color: #888;
+        font-size: 0.75rem;
+    }
+
+    .bm-cred-row .bm-cred-val {
+        flex: 1;
+        font-family: 'Courier New', monospace;
+        font-size: 0.82rem;
+        color: #333;
+    }
+
+    .bm-copy-btn {
+        width: 28px;
+        height: 28px;
+        border: none;
+        background: #f0f0f0;
+        border-radius: 6px;
+        color: #666;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.75rem;
+        transition: all 0.2s;
+        flex-shrink: 0;
+    }
+
+    .bm-copy-btn:hover {
+        background: #22440f;
+        color: white;
+    }
+
+    .bm-copy-btn.copied {
+        background: #28a745;
+        color: white;
+    }
+
+    .bm-action-btns {
+        display: flex;
+        gap: 6px;
+        align-items: center;
+    }
+
+    .bm-reset-btn {
+        width: 36px;
+        height: 36px;
+        border-radius: 8px;
+        border: none;
+        background: #fff8e1;
+        color: #f3a435;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.9rem;
+    }
+
+    .bm-reset-btn:hover {
+        background: #f3a435;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(243, 164, 53, 0.3);
+    }
+
+    /* Credentials Modal */
+    .bm-creds-modal {
+        background: white;
+        border-radius: 12px;
+        padding: 32px;
+        max-width: 480px;
+        width: 90%;
+        animation: bmSlideDown 0.3s ease;
+    }
+
+    .bm-creds-modal i.creds-icon {
+        font-size: 48px;
+        color: #28a745;
+        margin-bottom: 16px;
+    }
+
+    .bm-creds-modal h3 {
+        margin: 0 0 8px 0;
+        color: #22440f;
+    }
+
+    .bm-creds-modal .creds-subtitle {
+        color: #888;
+        font-size: 0.85rem;
+        margin-bottom: 20px;
+    }
+
+    .bm-creds-box {
+        background: #f8f9fa;
+        border: 1px solid #e0e0e0;
+        border-radius: 10px;
+        padding: 18px;
+        margin-bottom: 20px;
+    }
+
+    .bm-creds-box .cred-line {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 10px 0;
+        border-bottom: 1px solid #eee;
+    }
+
+    .bm-creds-box .cred-line:last-child {
+        border-bottom: none;
+    }
+
+    .bm-creds-box .cred-label {
+        font-weight: 600;
+        font-size: 0.8rem;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        width: 80px;
+    }
+
+    .bm-creds-box .cred-value {
+        flex: 1;
+        font-family: 'Courier New', monospace;
+        font-size: 0.9rem;
+        color: #22440f;
+        font-weight: 600;
+    }
+
+    .bm-copy-all-btn {
+        width: 100%;
+        padding: 12px;
+        border-radius: 8px;
+        border: 2px solid #22440f;
+        background: transparent;
+        color: #22440f;
+        font-weight: 600;
+        font-size: 0.9rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        font-family: 'Montserrat', sans-serif;
+    }
+
+    .bm-copy-all-btn:hover {
+        background: #22440f;
+        color: white;
+    }
+
+    .bm-copy-all-btn.copied {
+        background: #28a745;
+        border-color: #28a745;
+        color: white;
+    }
+
+    @media (max-width: 768px) {
+        .bm-form-row {
+            grid-template-columns: 1fr;
+        }
+    }
+</style>
+
+<div class="bm-container">
+    <!-- Alert -->
+    <div class="bm-alert" id="bmAlert">
+        <i class="fas" id="bmAlertIcon"></i>
+        <span id="bmAlertMsg"></span>
+    </div>
+
+    <!-- Create Manager Form -->
+    <div class="bm-create-card">
+        <h3><i class="fas fa-user-tie"></i> Create Branch Manager</h3>
+        <p class="subtitle">Create login credentials for hotel branch managers. Each manager will only have access to
+            their assigned property.</p>
+
+        <form class="bm-form" id="bmCreateForm">
+            <div class="bm-form-row">
+                <div class="bm-field">
+                    <label for="bmFirstName">First Name</label>
+                    <input type="text" id="bmFirstName" placeholder="e.g. John" required>
+                </div>
+                <div class="bm-field">
+                    <label for="bmLastName">Last Name</label>
+                    <input type="text" id="bmLastName" placeholder="e.g. Kamau" required>
+                </div>
+            </div>
+
+            <div class="bm-field">
+                <label>Auto-Generated Email</label>
+                <input type="email" id="bmEmail" placeholder="Email will be generated..." readonly
+                    style="background: #f0f0f0; cursor: not-allowed;">
+                <div class="email-preview" id="bmEmailPreview">Enter first and last name to generate email</div>
+            </div>
+
+            <div class="bm-form-row">
+                <div class="bm-field">
+                    <label for="bmPassword">Password</label>
+                    <div class="bm-password-wrapper">
+                        <input type="password" id="bmPassword" placeholder="Set a secure password" required
+                            minlength="6">
+                        <button type="button" class="bm-password-toggle" id="bmTogglePassword">
+                            <i class="fas fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="bm-field">
+                    <label for="bmProperty">Assigned Branch</label>
+                    <select id="bmProperty" required>
+                        <option value="">— Select a branch —</option>
+                        <option value="limuru">🏔️ Limuru Country Home</option>
+                        <option value="kanamai">🏖️ Kanamai Beach Resort</option>
+                        <option value="kisumu">🏨 Kisumu Hotel</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="bm-submit-row">
+                <button type="reset" class="bm-btn bm-btn-secondary">
+                    <i class="fas fa-times"></i> Clear
+                </button>
+                <button type="submit" class="bm-btn bm-btn-primary" id="bmSubmitBtn">
+                    <i class="fas fa-user-plus"></i> Create Manager
+                </button>
+            </div>
+        </form>
+    </div>
+
+    <!-- Existing Managers List -->
+    <div class="bm-list-card">
+        <div class="bm-list-header">
+            <h3><i class="fas fa-users-cog"></i> Branch Managers</h3>
+            <span class="bm-count" id="bmManagerCount">0</span>
+        </div>
+        <div id="bmManagersBody">
+            <div class="bm-loading">
+                <i class="fas fa-spinner"></i>
+                <p>Loading managers...</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Delete Confirm Modal -->
+<div class="bm-modal-overlay" id="bmDeleteModal">
+    <div class="bm-modal">
+        <i class="fas fa-exclamation-triangle warning-icon"></i>
+        <h3>Delete Branch Manager?</h3>
+        <p>This will permanently remove <strong id="bmDeleteName"></strong>'s account. They will no longer be able to
+            log in.</p>
+        <div class="bm-modal-actions">
+            <button class="bm-btn bm-btn-secondary" id="bmCancelDelete">Cancel</button>
+            <button class="bm-btn" id="bmConfirmDelete" style="background: #dc3545; color: white;">
+                <i class="fas fa-trash-alt"></i> Delete
+            </button>
+        </div>
+    </div>
+</div>
+
+<!-- Credentials Display Modal -->
+<div class="bm-modal-overlay" id="bmCredsModal">
+    <div class="bm-creds-modal">
+        <div style="text-align: center;">
+            <i class="fas fa-user-check creds-icon" id="bmCredsIcon"></i>
+            <h3 id="bmCredsTitle">Manager Created!</h3>
+            <p class="creds-subtitle" id="bmCredsSubtitle">Share these credentials with the branch manager</p>
+        </div>
+        <div class="bm-creds-box">
+            <div class="cred-line">
+                <span class="cred-label">Email</span>
+                <span class="cred-value" id="bmCredsEmail">—</span>
+                <button class="bm-copy-btn" id="bmCopyEmail" title="Copy email"><i class="fas fa-copy"></i></button>
+            </div>
+            <div class="cred-line">
+                <span class="cred-label">Password</span>
+                <span class="cred-value" id="bmCredsPassword">—</span>
+                <button class="bm-copy-btn" id="bmCopyPassword" title="Copy password"><i
+                        class="fas fa-copy"></i></button>
+            </div>
+        </div>
+        <button class="bm-copy-all-btn" id="bmCopyAll">
+            <i class="fas fa-clipboard"></i> Copy Both Email & Password
+        </button>
+        <div style="text-align: center; margin-top: 16px;">
+            <button class="bm-btn bm-btn-primary" id="bmCredsClose">Done</button>
+        </div>
+    </div>
+</div>

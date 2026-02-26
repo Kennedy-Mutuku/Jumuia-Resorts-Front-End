@@ -82,6 +82,9 @@ class AdminDashboard {
         // Update UI based on user role
         this.updateRoleBasedUI();
 
+        // Update user UI
+        this.updateUserUI();
+
         // Update dashboard title
         this.updateDashboardTitle();
     }
@@ -212,27 +215,33 @@ class AdminDashboard {
         // Update user name
         const userName = document.getElementById('userName');
         if (userName) {
-            userName.textContent = this.currentUser.name || this.currentUser.email.split('@')[0];
+            userName.textContent = this.currentUser.name || 'Welcome';
         }
 
         // Update user role
         const userRole = document.getElementById('userRole');
         if (userRole) {
-            const roleNames = {
-                'general-manager': 'General Manager',
-                'manager': 'Property Manager',
-                'staff': 'Staff'
+            const propertyBranchNames = {
+                'limuru': 'Limuru Branch',
+                'kanamai': 'Kanamai Branch',
+                'kisumu': 'Kisumu Branch'
             };
 
-            const roleBadgeClass = {
-                'general-manager': 'badge-general-manager',
-                'manager': 'badge-manager',
-                'staff': 'badge-staff'
-            };
+            let roleName = 'Staff';
+            let roleBadgeClass = 'badge-staff';
+
+            if (this.currentUser.role === 'general-manager') {
+                roleName = 'General Manager';
+                roleBadgeClass = 'badge-general-manager';
+            } else if (this.currentUser.role === 'manager') {
+                const prop = this.currentUser.properties?.[0] || this.currentProperty;
+                roleName = propertyBranchNames[prop] || 'Branch Manager';
+                roleBadgeClass = 'badge-manager';
+            }
 
             userRole.innerHTML = `
-                <span class="role-badge ${roleBadgeClass[this.currentUser.role]}">
-                    ${roleNames[this.currentUser.role]}
+                <span class="role-badge ${roleBadgeClass}">
+                    ${roleName}
                 </span>
             `;
         }
@@ -386,8 +395,19 @@ class AdminDashboard {
         }
 
         // Management
-        if (accessibleModules.includes('offers') || accessibleModules.includes('users') || accessibleModules.includes('properties')) {
+        if (accessibleModules.includes('offers') || accessibleModules.includes('users') || accessibleModules.includes('properties') || accessibleModules.includes('branch-managers')) {
             navHTML += `<div class="nav-divider">Management</div>`;
+
+            if (accessibleModules.includes('branch-managers')) {
+                navHTML += `
+                    <div class="nav-item">
+                        <a href="#branch-managers" class="nav-link" data-module="branch-managers">
+                            <i class="fas fa-user-tie nav-icon"></i>
+                            <span class="nav-text">Branch Managers</span>
+                        </a>
+                    </div>
+                `;
+            }
 
             if (accessibleModules.includes('offers')) {
                 navHTML += `
@@ -460,7 +480,7 @@ class AdminDashboard {
             'general-manager': [
                 'dashboard', 'bookings', 'calendar', 'feedback', 'messages',
                 'transactions', 'reports', 'reconciliation', 'offers',
-                'users', 'properties', 'settings'
+                'users', 'properties', 'branch-managers', 'settings'
             ],
             'manager': [
                 'dashboard', 'bookings', 'calendar', 'feedback', 'messages',
@@ -851,7 +871,7 @@ class AdminDashboard {
                 <div class="content-header">
                     <div class="page-title">
                         <h1>${greeting}, ${this.currentUser.name?.split(' ')[0] || 'Manager'}!</h1>
-                        <p>${propertyName} - Manager Dashboard</p>
+                        <p>${propertyName} - Branch Manager Dashboard</p>
                     </div>
                     <div class="breadcrumb">
                         <a href="#dashboard"><i class="fas fa-home"></i> Home</a>
@@ -1243,7 +1263,7 @@ class AdminDashboard {
             if (this.currentUser.role === 'general-manager') {
                 await this.loadGeneralManagerData();
             } else if (this.currentUser.role === 'manager') {
-                await this.loadManagerData();
+                await this.loadPropertyData(this.currentProperty);
             } else if (this.currentUser.role === 'staff') {
                 await this.loadStaffData();
             }
@@ -1496,7 +1516,7 @@ class AdminDashboard {
             };
 
             const roleNames = {
-                'manager': 'Manager Dashboard',
+                'manager': 'Branch Manager Dashboard',
                 'staff': 'Staff Dashboard'
             };
 

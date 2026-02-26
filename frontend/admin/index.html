@@ -250,13 +250,19 @@
             }
 
             createSession(userData) {
+                // Derive assigned property based on role
+                let assignedProperty = 'all';
+                if (userData.role !== 'general-manager' && userData.properties && userData.properties.length > 0) {
+                    assignedProperty = userData.properties[0];
+                }
+
                 const sessionData = {
                     uid: userData._id,
                     email: userData.email,
                     name: userData.name,
                     role: userData.role,
                     properties: userData.properties || [],
-                    assignedProperty: userData.assignedProperty || 'all',
+                    assignedProperty: assignedProperty,
                     token: userData.token,
                     loginTime: new Date().toISOString(),
                     expiryTime: new Date(Date.now() + 8 * 60 * 60 * 1000).toISOString() // 8 hours
