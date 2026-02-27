@@ -1071,62 +1071,7 @@
                     </form>
                 </div>
 
-                <!-- Step 2: Booking Summary (Hidden initially) -->
-                <div id="step2-summary" style="display: none; padding: 40px; background: #fdfdfd;">
-                    <div style="text-align: center; margin-bottom: 30px;">
-                        <h3 style="font-size: 1.8rem; color: var(--primary-green); margin-bottom: 10px;">Confirm Your
-                            Booking</h3>
-                        <p style="color: var(--text-light);">Please review your details below before submitting.</p>
-                    </div>
 
-                    <div class="booking-summary"
-                        style="position: static; box-shadow: none; padding: 0; background: transparent;">
-                        <p id="summaryResortName"
-                            style="color: var(--primary-orange); font-size: 1.2rem; font-weight: 600; text-align: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
-                            Select a resort</p>
-
-                        <div class="summary-details"
-                            style="background: white; border: 1px solid #eee; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
-                            <div class="summary-item"><span>Guest Name:</span> <strong id="summaryGuestName">-</strong>
-                            </div>
-                            <div class="summary-item"><span>Email:</span> <strong id="summaryEmail">-</strong></div>
-                            <div class="summary-item"><span>Phone:</span> <strong id="summaryPhone">-</strong></div>
-                            <div class="summary-item"><span>Check-in:</span> <strong id="summaryCheckIn">-</strong>
-                            </div>
-                            <div class="summary-item"><span>Check-out:</span> <strong id="summaryCheckOut">-</strong>
-                            </div>
-                            <div class="summary-item"><span>Guests:</span> <strong id="summaryGuests">-</strong></div>
-                            <div class="summary-item"><span>Nights:</span> <strong id="summaryNights">0</strong></div>
-                            <div class="summary-item"
-                                style="border-bottom: none; margin-top: 15px; padding-top: 15px; border-top: 2px dashed #eee;">
-                                <span style="font-size: 1.2rem; font-weight: 600;">Total Payable:</span>
-                                <strong id="totalAmount" class="total-amount">KSh 0</strong>
-                            </div>
-                        </div>
-
-                        <div
-                            style="background: var(--light-green); padding: 15px; border-radius: var(--radius); margin-bottom: 25px; font-size: 0.9rem; color: var(--primary-green); text-align: center;">
-                            <i class="fas fa-info-circle"></i> Rates are inclusive of all taxes and applicable fees.
-                            Payment details will be sent via email.
-                        </div>
-
-                        <div style="display: flex; gap: 15px;">
-                            <button type="button" id="btnBackToEdit" class="btn btn-secondary"
-                                style="flex: 1; padding: 15px; font-size: 1.1rem; background-color: var(--gray-bg); border: 1px solid var(--gray-border); color: var(--text-dark);">
-                                <i class="fas fa-arrow-left"></i> Edit Details
-                            </button>
-                            <button type="button" id="submitFinalBooking" class="btn btn-primary"
-                                style="flex: 2; padding: 15px; background-color: var(--primary-orange); color: white; font-size: 1.1rem; border-radius: 4px; border: none;">
-                                Submit Reservation
-                            </button>
-                        </div>
-                        <div id="loading" style="display: none; text-align: center; margin-top: 15px;">
-                            <div class="spinner"
-                                style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-orange); border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite; margin: auto;">
-                            </div>
-                        </div>
-                    </div>
-                </div>
             </div>
         </div>
     </section>
