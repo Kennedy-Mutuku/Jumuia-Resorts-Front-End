@@ -11,6 +11,8 @@ class AdminDashboard {
         this.db = null;
         this.auth = null;
         this.isInitialized = false;
+        this.apiUrl = 'http://localhost:5000/api';
+        this.pollingInterval = null;
     }
 
     async init() {
@@ -26,7 +28,7 @@ class AdminDashboard {
             // Load initial module
             await this.loadModule('dashboard');
 
-            // Setup real-time listeners
+            // Setup real-time listeners (Polling)
             this.setupRealtimeListeners();
 
             this.isInitialized = true;
@@ -1248,7 +1250,7 @@ class AdminDashboard {
     }
 
     async initializeDashboardComponents() {
-        // Load dashboard data
+        // Load dashboard data immediately
         await this.loadDashboardData();
 
         // Initialize charts
@@ -1258,83 +1260,75 @@ class AdminDashboard {
         this.updateDashboardTitle();
     }
 
+    setupRealtimeListeners() {
+        console.log('Setting up real-time polling (30s interval)...');
+
+        // Clear existing interval if any
+        if (this.pollingInterval) {
+            clearInterval(this.pollingInterval);
+        }
+
+        // Setup 30-second polling for dashboard data
+        this.pollingInterval = setInterval(async () => {
+            if (this.currentModule === 'dashboard') {
+                console.log('Polling dashboard data...');
+                await this.loadDashboardData();
+            }
+        }, 30000);
+    }
+
     async loadDashboardData() {
         try {
-            if (this.currentUser.role === 'general-manager') {
-                await this.loadGeneralManagerData();
-            } else if (this.currentUser.role === 'manager') {
-                await this.loadPropertyData(this.currentProperty);
-            } else if (this.currentUser.role === 'staff') {
-                await this.loadStaffData();
-            }
-        } catch (error) {
-            console.error('Error loading dashboard data:', error);
-            this.showAlert('Error loading dashboard data', 'error');
-        }
-    }
-
-    async loadGeneralManagerData() {
-        // Load data for all properties
-        const properties = ['limuru', 'kanamai', 'kisumu'];
-
-        for (const property of properties) {
-            await this.loadPropertyData(property);
-        }
-
-        // Load overall statistics
-        await this.loadOverallStatistics();
-
-        // Load recent activity
-        await this.loadRecentActivity();
-    }
-
-    async loadPropertyData(property) {
-        if (!this.db) return;
-
-        try {
-            // Get today's date
-            const today = new Date();
-            today.setHours(0, 0, 0, 0);
-
-            const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
-
-            // Get bookings for this property
-            const bookingsQuery = this.db.collection('bookings')
-                .where('resort', '==', property)
-                .where('checkInDate', '>=', monthStart)
-                .limit(100);
-
-            const bookingsSnapshot = await bookingsQuery.get();
-
-            let totalRevenue = 0;
-            let bookingCount = 0;
-            let pendingBookings = 0;
-
-            bookingsSnapshot.forEach(doc => {
-                const booking = doc.data();
-                bookingCount++;
-
-                if (booking.status === 'pending') {
-                    pendingBookings++;
-                }
-
-                if (booking.totalAmount) {
-                    totalRevenue += parseFloat(booking.totalAmount) || 0;
+            const token = this.currentUser.token; // Assuming token is in session
+            const response = await fetch(`${this.apiUrl}/stats`, {
+                headers: {
+                    'Authorization': `Bearer ${token}`
                 }
             });
 
-            // Calculate occupancy (simplified)
-            const totalRooms = 50; // Should come from property config
-            const occupancyRate = Math.min(Math.round((bookingCount / totalRooms) * 100), 100);
+            if (!response.ok) throw new Error('Failed to fetch stats');
 
-            // Update UI
-            document.getElementById(`${property}Revenue`).textContent = `KES ${totalRevenue.toLocaleString()}`;
-            document.getElementById(`${property}Occupancy`).textContent = `${occupancyRate}%`;
-            document.getElementById(`${property}Bookings`).textContent = bookingCount;
+            const stats = await response.json();
+            this.updateDashboardUI(stats);
 
+            // Still load activity separately
+            await this.loadRecentActivity();
         } catch (error) {
-            console.error(`Error loading data for ${property}:`, error);
+            console.error('Error loading dashboard data:', error);
+            // Don't show alert during polling to avoid annoying user
+            if (!this.pollingInterval) {
+                this.showAlert('Error loading dashboard data', 'error');
+            }
         }
+    }
+
+    updateDashboardUI(stats) {
+        // Update Global Stats
+        if (document.getElementById('totalRevenue'))
+            document.getElementById('totalRevenue').textContent = `KES ${stats.global.totalRevenue.toLocaleString()}`;
+        if (document.getElementById('totalBookings'))
+            document.getElementById('totalBookings').textContent = stats.global.totalBookings;
+        if (document.getElementById('totalOccupancy'))
+            document.getElementById('totalOccupancy').textContent = `${stats.global.totalOccupancy}%`;
+        if (document.getElementById('avgRating'))
+            document.getElementById('avgRating').textContent = stats.global.avgRating;
+        if (document.getElementById('pendingActions'))
+            document.getElementById('pendingActions').textContent = stats.global.pendingBookings;
+
+        // Update Property Specific Cards
+        const properties = ['limuru', 'kanamai', 'kisumu'];
+        properties.forEach(p => {
+            const propStats = stats.properties[p];
+            if (propStats) {
+                const venueRev = document.getElementById(`${p}Revenue`);
+                const venueOcc = document.getElementById(`${p}Occupancy`);
+                const venueBook = document.getElementById(`${p}Bookings`);
+
+                if (venueRev) venueRev.textContent = `KES ${propStats.revenue.toLocaleString()}`;
+                if (venueOcc) venueOcc.textContent = `${propStats.occupancy}%`;
+                if (venueBook) venueBook.textContent = propStats.bookings;
+            }
+        });
     }
 
     async loadOverallStatistics() {
@@ -1355,24 +1349,42 @@ class AdminDashboard {
         const activityList = document.getElementById('recentActivity');
         if (!activityList) return;
 
-        // Clear dashboard activity list
-        const activities = [];
+        try {
+            const token = this.currentUser.token;
+            const response = await fetch(`${this.apiUrl}/bookings?limit=5`, {
+                headers: { 'Authorization': `Bearer ${token}` }
+            });
 
-        activityList.innerHTML = activities.length > 0 ? activities.map(activity => `
-            <li class="activity-item">
-                <div class="activity-icon" style="background: ${activity.color};">
-                    <i class="fas ${activity.icon}"></i>
-                </div>
-                <div class="activity-details">
-                    <div class="activity-title">${activity.title}</div>
-                    <div class="activity-time">
-                        <i class="fas fa-user"></i> ${activity.user} • 
-                        <i class="fas fa-clock"></i> ${activity.time}
-                    </div>
-                </div>
-                <span class="badge">${activity.badge}</span>
-            </li>
-        `).join('') : '<li class="activity-item"><div class="activity-details"><div class="activity-title">No recent activity</div></div></li>';
+            if (!response.ok) throw new Error('Failed to fetch recent activity');
+
+            const bookings = await response.json();
+
+            if (bookings.length === 0) {
+                activityList.innerHTML = '<li class="activity-item"><div class="activity-details"><div class="activity-title">No recent activity</div></div></li>';
+                return;
+            }
+
+            activityList.innerHTML = bookings.map(booking => {
+                const date = new Date(booking.createdAt).toLocaleString();
+                return `
+                    <li class="activity-item">
+                        <div class="activity-icon" style="background: var(--primary-green);">
+                            <i class="fas fa-calendar-check"></i>
+                        </div>
+                        <div class="activity-details">
+                            <div class="activity-title">New booking: ${booking.bookingId}</div>
+                            <div class="activity-time">
+                                <i class="fas fa-user"></i> ${booking.fullName} • 
+                                <i class="fas fa-clock"></i> ${date}
+                            </div>
+                        </div>
+                        <span class="badge badge-${booking.status}">${booking.status}</span>
+                    </li>
+                `;
+            }).join('');
+        } catch (error) {
+            console.error('Error loading recent activity:', error);
+        }
     }
 
     initializeCharts() {
@@ -1944,54 +1956,6 @@ class AdminDashboard {
         document.getElementById('pendingReconciliation').textContent = '1';
     }
 
-    setupRealtimeListeners() {
-        // Use fetch polling instead of Firebase snapshots
-        setInterval(async () => {
-            try {
-                const sessionRaw = localStorage.getItem('jumuia_resort_session');
-                if (!sessionRaw) return;
-                const session = JSON.parse(sessionRaw);
-                const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
-                const headers = { 'Authorization': session.token ? `Bearer ${session.token}` : '' };
-
-                // 1. Fetch Bookings count
-                const bRes = await fetch(`${apiUrl}/bookings`, { headers });
-                if (bRes.ok) {
-                    let bookings = await bRes.json();
-                    if (this.currentProperty !== 'all') {
-                        bookings = bookings.filter(b => b.resort === this.currentProperty);
-                    }
-                    bookings = bookings.filter(b => b.status === 'pending');
-
-                    const pendingCount = bookings.length;
-                    const badge = document.getElementById('pendingBookingsBadge');
-                    if (badge) {
-                        badge.textContent = pendingCount;
-                        badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
-                    }
-                }
-
-                // 2. Mock Feedback Count (API not yet built, leave at 0 or query later)
-                const newCount = 0;
-                const fbBadge = document.getElementById('newFeedbackBadge');
-                if (fbBadge) {
-                    fbBadge.textContent = newCount;
-                    fbBadge.style.display = newCount > 0 ? 'inline-block' : 'none';
-                }
-
-                // 3. Mock Messages Count (API not yet built, leave at 0 or query later)
-                const unreadCount = 0;
-                const msgBadge = document.getElementById('unreadMessagesBadge');
-                if (msgBadge) {
-                    msgBadge.textContent = unreadCount;
-                    msgBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
-                }
-
-            } catch (error) {
-                console.error('Error polling dashboard counters:', error);
-            }
-        }, 15000); // Poll every 15 seconds
-    }
 
     switchProperty(property) {
         if (property === this.currentProperty) return;

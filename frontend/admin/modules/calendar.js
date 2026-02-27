@@ -32,11 +32,11 @@ async function loadBookingsData() {
     try {
         CommonUtils.showLoading(true, 'Loading bookings...');
 
-        const sessionRaw = localStorage.getItem('jumuia_resort_session');
-        if (!sessionRaw) throw new Error('Not authenticated');
-        const session = JSON.parse(sessionRaw);
+        const sessionStore = localStorage.getItem('jumuia_resort_session');
+        if (!sessionStore) throw new Error('Not authenticated');
+        const session = JSON.parse(sessionStore);
 
-        const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+        const apiUrl = window.CommonUtils ? window.CommonUtils.API_URL : 'http://localhost:5000/api';
 
         const response = await fetch(`${apiUrl}/bookings`, {
             method: 'GET',

@@ -1,35 +1,14 @@
 // admin/modules/common.js
-// Common utilities and Firebase configuration for all modules
-
-// Firebase configuration
-const firebaseConfig = {
-    apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
-    authDomain: "jumuia-resort-limited.firebaseapp.com",
-    projectId: "jumuia-resort-limited",
-    storageBucket: "jumuia-resort-limited.firebasestorage.app",
-    messagingSenderId: "152170552230",
-    appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
-    measurementId: "G-Q7BWHJ9C3M"
-};
-
-// Initialize Firebase if not already initialized
-let app, auth, db, storage;
-try {
-    if (!firebase.apps.length) {
-        app = firebase.initializeApp(firebaseConfig);
-    } else {
-        app = firebase.app();
-    }
-    auth = firebase.auth();
-    db = firebase.firestore();
-    storage = firebase.storage();
-} catch (error) {
-    console.error("Firebase initialization error:", error);
-}
+// Common utilities for all modules
 
 // Current user data
 let currentUser = null;
 let currentProperty = 'all';
+
+// API Configuration
+const API_URL = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1'
+    ? 'http://localhost:5000/api'
+    : 'https://your-production-api.com/api';
 
 // Collection names
 const COLLECTIONS = {
@@ -47,10 +26,29 @@ const COLLECTIONS = {
 // Initialize current user data
 function initCurrentUser() {
     try {
-        const userData = JSON.parse(localStorage.getItem('jumuiaAdminUser'));
-        if (userData) {
-            currentUser = userData;
-            currentProperty = userData.property === 'all' ? 'all' : userData.property;
+        const sessionStore = localStorage.getItem('jumuia_resort_session');
+        if (sessionStore) {
+            const userData = JSON.parse(sessionStore);
+
+            // Standardize user object for modules
+            currentUser = {
+                ...userData,
+                // Ensure permissions structure exists for legacy code
+                permissions: userData.permissions || {
+                    properties: userData.properties || []
+                }
+            };
+
+            // If permissions is an array (like ['all']), ensure it's handled like the codes expect
+            if (Array.isArray(currentUser.permissions)) {
+                const perms = currentUser.permissions;
+                currentUser.permissions = {
+                    properties: userData.properties || [],
+                    all: perms.includes('all')
+                };
+            }
+
+            currentProperty = userData.assignedProperty || 'all';
             return true;
         }
         return false;
@@ -63,11 +61,11 @@ function initCurrentUser() {
 // Check user permissions
 function checkPermission(requiredPermission) {
     if (!currentUser || !currentUser.permissions) return false;
-    
+
     const permissions = currentUser.permissions;
-    
+
     // Check based on permission type
-    switch(requiredPermission) {
+    switch (requiredPermission) {
         case 'viewAll':
             return permissions.canViewAll;
         case 'editAll':
@@ -86,11 +84,11 @@ function checkPermission(requiredPermission) {
 // Check if user can access property
 function canAccessProperty(property) {
     if (!currentUser || !currentUser.permissions) return false;
-    
+
     if (currentUser.permissions.properties.includes('all')) {
         return true;
     }
-    
+
     return currentUser.permissions.properties.includes(property);
 }
 
@@ -102,10 +100,10 @@ function formatCurrency(amount) {
 // Format date
 function formatDate(date, includeTime = false) {
     if (!date) return 'N/A';
-    
+
     try {
         let dateObj;
-        
+
         // Handle Firestore timestamp
         if (date.toDate) {
             dateObj = date.toDate();
@@ -116,7 +114,7 @@ function formatDate(date, includeTime = false) {
         } else {
             dateObj = new Date(date);
         }
-        
+
         if (includeTime) {
             return dateObj.toLocaleString('en-KE', {
                 day: 'numeric',
@@ -141,7 +139,7 @@ function formatDate(date, includeTime = false) {
 // Get time ago
 function getTimeAgo(date) {
     if (!date) return 'Just now';
-    
+
     let dateObj;
     if (date.toDate) {
         dateObj = date.toDate();
@@ -150,10 +148,10 @@ function getTimeAgo(date) {
     } else {
         dateObj = new Date(date);
     }
-    
+
     const seconds = Math.floor((new Date() - dateObj) / 1000);
     let interval = seconds / 31536000;
-    
+
     if (interval > 1) return Math.floor(interval) + " years ago";
     interval = seconds / 2592000;
     if (interval > 1) return Math.floor(interval) + " months ago";
@@ -177,7 +175,7 @@ function showNotification(message, type = 'info') {
             <i class="fas fa-times"></i>
         </button>
     `;
-    
+
     // Add styles
     notification.style.cssText = `
         position: fixed;
@@ -196,7 +194,7 @@ function showNotification(message, type = 'info') {
         max-width: 400px;
         animation: slideIn 0.3s ease;
     `;
-    
+
     // Add close button styles
     const closeBtn = notification.querySelector('.notification-close');
     closeBtn.style.cssText = `
@@ -207,7 +205,7 @@ function showNotification(message, type = 'info') {
         margin-left: auto;
         padding: 0;
     `;
-    
+
     // Add animation
     const style = document.createElement('style');
     style.textContent = `
@@ -221,9 +219,9 @@ function showNotification(message, type = 'info') {
         }
     `;
     document.head.appendChild(style);
-    
+
     document.body.appendChild(notification);
-    
+
     // Auto-remove after 5 seconds
     setTimeout(() => {
         notification.style.animation = 'slideOut 0.3s ease';
@@ -233,14 +231,14 @@ function showNotification(message, type = 'info') {
             }
         }, 300);
     }, 5000);
-    
+
     return notification;
 }
 
 // Show loading overlay
 function showLoading(show = true, message = 'Loading...') {
     let overlay = document.getElementById('loadingOverlay');
-    
+
     if (show) {
         if (!overlay) {
             overlay = document.createElement('div');
@@ -251,7 +249,7 @@ function showLoading(show = true, message = 'Loading...') {
                     <p>${message}</p>
                 </div>
             `;
-            
+
             // Add styles
             overlay.style.cssText = `
                 position: fixed;
@@ -265,7 +263,7 @@ function showLoading(show = true, message = 'Loading...') {
                 justify-content: center;
                 z-index: 9998;
             `;
-            
+
             const loadingContent = overlay.querySelector('.loading-content');
             loadingContent.style.cssText = `
                 background: white;
@@ -274,7 +272,7 @@ function showLoading(show = true, message = 'Loading...') {
                 text-align: center;
                 box-shadow: var(--shadow);
             `;
-            
+
             const spinner = overlay.querySelector('.loading-spinner');
             spinner.style.cssText = `
                 width: 40px;
@@ -285,7 +283,7 @@ function showLoading(show = true, message = 'Loading...') {
                 animation: spin 1s linear infinite;
                 margin: 0 auto 20px;
             `;
-            
+
             // Add spin animation
             if (!document.querySelector('#loadingStyles')) {
                 const spinStyle = document.createElement('style');
@@ -298,7 +296,7 @@ function showLoading(show = true, message = 'Loading...') {
                 `;
                 document.head.appendChild(spinStyle);
             }
-            
+
             document.body.appendChild(overlay);
         }
     } else {
@@ -324,7 +322,7 @@ function showConfirm(message, onConfirm, onCancel = null) {
             </div>
         </div>
     `;
-    
+
     // Add styles
     dialog.style.cssText = `
         position: fixed;
@@ -339,7 +337,7 @@ function showConfirm(message, onConfirm, onCancel = null) {
         z-index: 9997;
         animation: fadeIn 0.3s ease;
     `;
-    
+
     const content = dialog.querySelector('.confirm-content');
     content.style.cssText = `
         background: white;
@@ -350,14 +348,14 @@ function showConfirm(message, onConfirm, onCancel = null) {
         width: 90%;
         box-shadow: var(--shadow);
     `;
-    
+
     const icon = dialog.querySelector('.confirm-icon');
     icon.style.cssText = `
         font-size: 3rem;
         color: var(--primary-orange);
         margin-bottom: 20px;
     `;
-    
+
     const buttons = dialog.querySelector('.confirm-buttons');
     buttons.style.cssText = `
         display: flex;
@@ -365,9 +363,9 @@ function showConfirm(message, onConfirm, onCancel = null) {
         justify-content: center;
         margin-top: 25px;
     `;
-    
+
     document.body.appendChild(dialog);
-    
+
     // Add event listeners
     dialog.querySelector('#confirmOk').addEventListener('click', () => {
         if (dialog.parentNode) {
@@ -375,14 +373,14 @@ function showConfirm(message, onConfirm, onCancel = null) {
         }
         if (onConfirm) onConfirm();
     });
-    
+
     dialog.querySelector('#confirmCancel').addEventListener('click', () => {
         if (dialog.parentNode) {
             dialog.parentNode.removeChild(dialog);
         }
         if (onCancel) onCancel();
     });
-    
+
     // Close on background click
     dialog.addEventListener('click', (e) => {
         if (e.target === dialog) {
@@ -392,7 +390,7 @@ function showConfirm(message, onConfirm, onCancel = null) {
             if (onCancel) onCancel();
         }
     });
-    
+
     return dialog;
 }
 
@@ -402,15 +400,15 @@ function exportToCSV(data, filename) {
         showNotification('No data to export', 'error');
         return;
     }
-    
+
     try {
         // Get headers from first object
         const headers = Object.keys(data[0]);
-        
+
         // Convert data to CSV rows
         const csvRows = [
             headers.join(','), // Header row
-            ...data.map(row => 
+            ...data.map(row =>
                 headers.map(header => {
                     const value = row[header];
                     // Handle values that might contain commas or quotes
@@ -421,24 +419,24 @@ function exportToCSV(data, filename) {
                 }).join(',')
             )
         ];
-        
+
         const csvContent = csvRows.join('\n');
-        
+
         // Create download link
         const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
         const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
-        
+
         link.setAttribute('href', url);
         link.setAttribute('download', `${filename}_${new Date().toISOString().split('T')[0]}.csv`);
         link.style.display = 'none';
-        
+
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
+
         URL.revokeObjectURL(url);
-        
+
         showNotification('Data exported successfully', 'success');
     } catch (error) {
         console.error('Export error:', error);
@@ -449,9 +447,9 @@ function exportToCSV(data, filename) {
 // Pagination helper
 function createPagination(totalItems, itemsPerPage, currentPage, onPageChange) {
     const totalPages = Math.ceil(totalItems / itemsPerPage);
-    
+
     if (totalPages <= 1) return '';
-    
+
     let paginationHTML = `
         <div class="pagination">
             <button class="page-btn ${currentPage === 1 ? 'disabled' : ''}" 
@@ -460,21 +458,21 @@ function createPagination(totalItems, itemsPerPage, currentPage, onPageChange) {
                 <i class="fas fa-chevron-left"></i>
             </button>
     `;
-    
+
     // Calculate page range to show
     let startPage = Math.max(1, currentPage - 2);
     let endPage = Math.min(totalPages, currentPage + 2);
-    
+
     // Adjust if we're near the beginning
     if (currentPage <= 3) {
         endPage = Math.min(totalPages, 5);
     }
-    
+
     // Adjust if we're near the end
     if (currentPage >= totalPages - 2) {
         startPage = Math.max(1, totalPages - 4);
     }
-    
+
     // Show first page and ellipsis if needed
     if (startPage > 1) {
         paginationHTML += `
@@ -482,7 +480,7 @@ function createPagination(totalItems, itemsPerPage, currentPage, onPageChange) {
             ${startPage > 2 ? '<span class="page-ellipsis">...</span>' : ''}
         `;
     }
-    
+
     // Show page numbers
     for (let i = startPage; i <= endPage; i++) {
         paginationHTML += `
@@ -492,7 +490,7 @@ function createPagination(totalItems, itemsPerPage, currentPage, onPageChange) {
             </button>
         `;
     }
-    
+
     // Show last page and ellipsis if needed
     if (endPage < totalPages) {
         paginationHTML += `
@@ -502,7 +500,7 @@ function createPagination(totalItems, itemsPerPage, currentPage, onPageChange) {
             </button>
         `;
     }
-    
+
     paginationHTML += `
             <button class="page-btn ${currentPage === totalPages ? 'disabled' : ''}" 
                     ${currentPage === totalPages ? 'disabled' : ''}
@@ -511,7 +509,7 @@ function createPagination(totalItems, itemsPerPage, currentPage, onPageChange) {
             </button>
         </div>
     `;
-    
+
     return paginationHTML;
 }
 
@@ -535,7 +533,7 @@ function filterData(data, filters) {
             if (filters[key]) {
                 const filterValue = filters[key].toString().toLowerCase();
                 const itemValue = item[key]?.toString().toLowerCase();
-                
+
                 if (!itemValue || !itemValue.includes(filterValue)) {
                     return false;
                 }
@@ -550,23 +548,23 @@ function sortData(data, field, direction = 'asc') {
     return [...data].sort((a, b) => {
         let aValue = a[field];
         let bValue = b[field];
-        
+
         // Handle dates
         if (field.includes('Date') || field.includes('date')) {
             aValue = aValue?.toDate ? aValue.toDate().getTime() : new Date(aValue).getTime();
             bValue = bValue?.toDate ? bValue.toDate().getTime() : new Date(bValue).getTime();
         }
-        
+
         // Handle numbers
         if (typeof aValue === 'number' && typeof bValue === 'number') {
             return direction === 'asc' ? aValue - bValue : bValue - aValue;
         }
-        
+
         // Handle strings
         aValue = aValue?.toString() || '';
         bValue = bValue?.toString() || '';
-        
-        return direction === 'asc' 
+
+        return direction === 'asc'
             ? aValue.localeCompare(bValue)
             : bValue.localeCompare(aValue);
     });
@@ -600,7 +598,7 @@ function getPropertyColor(property) {
 }
 
 // Initialize common module
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     if (initCurrentUser()) {
         console.log('Current user initialized:', currentUser);
     } else {
@@ -610,11 +608,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
 // Export utilities
 window.CommonUtils = {
-    firebaseConfig,
-    app,
-    auth,
-    db,
-    storage,
+    API_URL,
     currentUser,
     currentProperty,
     COLLECTIONS,
