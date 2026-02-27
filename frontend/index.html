@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -587,6 +587,122 @@
                 font-size: 2rem;
             }
         }
+
+        /* ===== QUICK BOOKING FORM STYLES ===== */
+        .booking-section {
+            padding: 60px 0;
+            background-color: var(--gray-bg);
+        }
+
+        .booking-form-wrapper {
+            background: var(--primary-white);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 1px solid var(--gray-border);
+            border-radius: var(--radius);
+            font-family: 'Montserrat', sans-serif;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-orange);
+            box-shadow: 0 0 0 3px rgba(243, 164, 53, 0.1);
+        }
+
+        .booking-summary {
+            background: var(--primary-white);
+            padding: 30px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 100px;
+        }
+
+        .summary-item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f5f5f5;
+        }
+
+        .total-amount {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .payment-method {
+            border: 2px solid var(--gray-border);
+            border-radius: var(--radius);
+            padding: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .payment-method.active {
+            border-color: var(--primary-green);
+            background-color: var(--light-green);
+        }
+
+        /* Modal Styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 40px;
+            border-radius: var(--radius);
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            text-align: center;
+        }
+
+        /* Spinner */
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        @media (max-width: 992px) {
+            .booking-container {
+                grid-template-columns: 1fr !important;
+            }
+
+            .booking-summary {
+                position: static;
+                margin-top: 30px;
+            }
+        }
     </style>
 </head>
 
@@ -652,7 +768,7 @@
             </nav>
 
             <div class="header-actions">
-                <a href="booking.html" class="btn btn-primary">Book Now</a>
+                <a href="#quick-book" class="btn btn-primary">Book Now</a>
             </div>
         </div>
     </header>
@@ -768,7 +884,8 @@
 
                     <div style="display: flex; gap: 15px; margin-top: 20px;">
                         <a href="resorts/limuru/index.html" class="btn btn-primary">Explore Resort</a>
-                        <a href="resorts/limuru/booking.html" class="btn btn-secondary">Book Now</a>
+                        <a href="#quick-book" class="btn btn-secondary resort-book-btn" data-resort="limuru">Book
+                            Now</a>
                     </div>
                 </div>
             </div>
@@ -795,7 +912,8 @@
 
                     <div style="display: flex; gap: 15px; margin-top: 20px;">
                         <a href="resorts/kanamai/index.html" class="btn btn-primary">Explore Resort</a>
-                        <a href="resorts/kanamai/booking.html" class="btn btn-secondary">Book Now</a>
+                        <a href="#quick-book" class="btn btn-secondary resort-book-btn" data-resort="kanamai">Book
+                            Now</a>
                     </div>
                 </div>
             </div>
@@ -821,7 +939,192 @@
 
                     <div style="display: flex; gap: 15px; margin-top: 20px;">
                         <a href="resorts/kisumu/index.html" class="btn btn-primary">Explore Resort</a>
-                        <a href="resorts/kisumu/booking.html" class="btn btn-secondary">Book Now</a>
+                        <a href="#quick-book" class="btn btn-secondary resort-book-btn" data-resort="kisumu">Book
+                            Now</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Detailed Booking Form Section -->
+    <section class="booking-section" id="quick-book">
+        <div class="container">
+            <div class="section-header">
+                <h2 style="font-size: 2.5rem; margin-bottom: 20px; color: var(--primary-green); text-align: center;">
+                    Book Your Stay</h2>
+                <p style="text-align: center; color: var(--text-light); margin-bottom: 40px;">Complete your booking at
+                    your preferred Jumuia Resort below.</p>
+            </div>
+
+            <div class="booking-container"
+                style="max-width: 800px; margin: 0 auto; background: white; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.05); overflow: hidden;">
+                <!-- Step 1: Booking Form -->
+                <div id="step1-form" style="padding: 40px;">
+                    <form id="bookingForm">
+                        <div class="form-section"
+                            style="margin-bottom: 25px; border-bottom: 1px solid var(--gray-border); padding-bottom: 20px;">
+                            <h3
+                                style="margin-bottom: 15px; font-size: 1.3rem; color: var(--primary-green); display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-user"></i> Guest Details
+                            </h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <input type="text" id="firstName" class="form-control" placeholder="First Name *"
+                                    required>
+                                <input type="text" id="lastName" class="form-control" placeholder="Last Name *"
+                                    required>
+                                <input type="email" id="email" class="form-control" placeholder="Email Address *"
+                                    required style="grid-column: span 2;">
+                                <input type="tel" id="phone" class="form-control" placeholder="Phone Number *" required>
+                                <select id="nationality" class="form-control" required>
+                                    <option value="kenyan" selected>Kenyan Resident</option>
+                                    <option value="ea">EA Resident</option>
+                                    <option value="intl">International</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-section"
+                            style="margin-bottom: 25px; border-bottom: 1px solid var(--gray-border); padding-bottom: 20px;">
+                            <h3
+                                style="margin-bottom: 15px; font-size: 1.3rem; color: var(--primary-green); display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-calendar-alt"></i> Stay Details
+                            </h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <select id="resort" class="form-control" required style="grid-column: span 2;">
+                                    <option value="">Select Resort *</option>
+                                    <option value="limuru">Jumuia Limuru Country Home</option>
+                                    <option value="kanamai">Jumuia Kanamai Beach Resort</option>
+                                    <option value="kisumu">Jumuia Hotel Kisumu</option>
+                                </select>
+                                <div class="form-group">
+                                    <label style="font-size: 0.8rem; color: var(--text-light);">Check-in Date</label>
+                                    <input type="date" id="checkIn" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label style="font-size: 0.8rem; color: var(--text-light);">Check-out Date</label>
+                                    <input type="date" id="checkOut" class="form-control" required>
+                                </div>
+                                <select id="adults" class="form-control" required>
+                                    <option value="1">1 Adult</option>
+                                    <option value="2" selected>2 Adults</option>
+                                    <option value="3">3 Adults</option>
+                                    <option value="4">4 Adults</option>
+                                </select>
+                                <select id="children" class="form-control">
+                                    <option value="0">No Children</option>
+                                    <option value="1">1 Child</option>
+                                    <option value="2">2 Children</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-section" style="margin-bottom: 25px;">
+                            <h3
+                                style="margin-bottom: 15px; font-size: 1.3rem; color: var(--primary-green); display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-bed"></i> Room Type & Package
+                            </h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                                <select id="roomType" class="form-control" required>
+                                    <option value="">Select Resort First</option>
+                                </select>
+                                <select id="packageType" class="form-control" required>
+                                    <option value="bnb" selected>Bed & Breakfast</option>
+                                    <option value="hb">Half Board</option>
+                                    <option value="fb">Full Board</option>
+                                    <option value="conference">Conference</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-section">
+                            <h3
+                                style="margin-bottom: 15px; font-size: 1.3rem; color: var(--primary-green); display: flex; align-items: center; gap: 10px;">
+                                <i class="fas fa-credit-card"></i> Payment Method
+                            </h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 15px;">
+                                <div class="payment-method active" data-method="mpesa">
+                                    <i class="fas fa-mobile-alt"
+                                        style="display: block; font-size: 1.5rem; margin-bottom: 5px;"></i>
+                                    M-Pesa
+                                </div>
+                                <div class="payment-method" data-method="cash">
+                                    <i class="fas fa-money-bill-wave"
+                                        style="display: block; font-size: 1.5rem; margin-bottom: 5px;"></i>
+                                    Pay at Resort
+                                </div>
+                            </div>
+                            <input type="hidden" id="paymentMethod" value="mpesa">
+                            <div id="mpesaInstructions"
+                                style="background: var(--light-green); padding: 15px; border-radius: var(--radius); font-size: 0.9rem;">
+                                <p><strong>Paybill: 865350</strong> | Account: <span
+                                        id="resortAccount">RESERVATIONS</span></p>
+                                <input type="tel" id="mpesaNumber" class="form-control"
+                                    placeholder="M-Pesa Phone Number" style="margin-top: 10px;">
+                            </div>
+                        </div>
+
+                        <button type="button" id="btnReviewBooking" class="btn btn-primary"
+                            style="width: 100%; padding: 15px; margin-top: 30px; background-color: var(--primary-green); color: white; font-size: 1.1rem; border-radius: 4px;">
+                            Review Booking Details <i class="fas fa-arrow-right" style="margin-left: 10px;"></i>
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Step 2: Booking Summary (Hidden initially) -->
+                <div id="step2-summary" style="display: none; padding: 40px; background: #fdfdfd;">
+                    <div style="text-align: center; margin-bottom: 30px;">
+                        <h3 style="font-size: 1.8rem; color: var(--primary-green); margin-bottom: 10px;">Confirm Your
+                            Booking</h3>
+                        <p style="color: var(--text-light);">Please review your details below before submitting.</p>
+                    </div>
+
+                    <div class="booking-summary"
+                        style="position: static; box-shadow: none; padding: 0; background: transparent;">
+                        <p id="summaryResortName"
+                            style="color: var(--primary-orange); font-size: 1.2rem; font-weight: 600; text-align: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                            Select a resort</p>
+
+                        <div class="summary-details"
+                            style="background: white; border: 1px solid #eee; border-radius: 8px; padding: 20px; margin-bottom: 25px;">
+                            <div class="summary-item"><span>Guest Name:</span> <strong id="summaryGuestName">-</strong>
+                            </div>
+                            <div class="summary-item"><span>Email:</span> <strong id="summaryEmail">-</strong></div>
+                            <div class="summary-item"><span>Phone:</span> <strong id="summaryPhone">-</strong></div>
+                            <div class="summary-item"><span>Check-in:</span> <strong id="summaryCheckIn">-</strong>
+                            </div>
+                            <div class="summary-item"><span>Check-out:</span> <strong id="summaryCheckOut">-</strong>
+                            </div>
+                            <div class="summary-item"><span>Guests:</span> <strong id="summaryGuests">-</strong></div>
+                            <div class="summary-item"><span>Nights:</span> <strong id="summaryNights">0</strong></div>
+                            <div class="summary-item"
+                                style="border-bottom: none; margin-top: 15px; padding-top: 15px; border-top: 2px dashed #eee;">
+                                <span style="font-size: 1.2rem; font-weight: 600;">Total Payable:</span>
+                                <strong id="totalAmount" class="total-amount">KSh 0</strong>
+                            </div>
+                        </div>
+
+                        <div
+                            style="background: var(--light-green); padding: 15px; border-radius: var(--radius); margin-bottom: 25px; font-size: 0.9rem; color: var(--primary-green); text-align: center;">
+                            <i class="fas fa-info-circle"></i> Rates are inclusive of all taxes and applicable fees.
+                            Payment details will be sent via email.
+                        </div>
+
+                        <div style="display: flex; gap: 15px;">
+                            <button type="button" id="btnBackToEdit" class="btn btn-secondary"
+                                style="flex: 1; padding: 15px; font-size: 1.1rem; background-color: var(--gray-bg); border: 1px solid var(--gray-border); color: var(--text-dark);">
+                                <i class="fas fa-arrow-left"></i> Edit Details
+                            </button>
+                            <button type="button" id="submitFinalBooking" class="btn btn-primary"
+                                style="flex: 2; padding: 15px; background-color: var(--primary-orange); color: white; font-size: 1.1rem; border-radius: 4px; border: none;">
+                                Submit Reservation
+                            </button>
+                        </div>
+                        <div id="loading" style="display: none; text-align: center; margin-top: 15px;">
+                            <div class="spinner"
+                                style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-orange); border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite; margin: auto;">
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -913,6 +1216,125 @@
         </div>
     </section>
 
+    <!-- Booking Modal -->
+    <div class="modal" id="bookingModal">
+        <div class="modal-content" style="max-width: 600px;">
+            <button class="modal-close" onclick="closeModal()"
+                style="position: absolute; top: 10px; right: 15px; background: none; border: none; font-size: 2rem; cursor: pointer; color: var(--text-light);">&times;</button>
+
+            <!-- Modal State 1: Confirmation Summary -->
+            <div id="modalConfirmationState">
+                <h3 style="font-size: 1.8rem; color: var(--primary-green); margin-bottom: 10px;">Confirm Your Booking
+                </h3>
+                <p style="color: var(--text-light); margin-bottom: 25px;">Please review your details below before
+                    submitting.</p>
+
+                <div class="booking-summary"
+                    style="position: static; box-shadow: none; padding: 0; background: transparent;">
+                    <p id="summaryResortName"
+                        style="color: var(--primary-orange); font-size: 1.2rem; font-weight: 600; text-align: center; margin-bottom: 25px; border-bottom: 1px solid #eee; padding-bottom: 15px;">
+                        Select a resort</p>
+
+                    <div class="summary-details"
+                        style="background: white; border: 1px solid #eee; border-radius: 8px; padding: 20px; margin-bottom: 25px; text-align: left;">
+                        <div class="summary-item"
+                            style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px;">
+                            <span>Guest Name:</span> <strong id="summaryGuestName">-</strong>
+                        </div>
+                        <div class="summary-item"
+                            style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px;">
+                            <span>Email:</span> <strong id="summaryEmail">-</strong>
+                        </div>
+                        <div class="summary-item"
+                            style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px;">
+                            <span>Phone:</span> <strong id="summaryPhone">-</strong>
+                        </div>
+                        <div class="summary-item"
+                            style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px;">
+                            <span>Check-in:</span> <strong id="summaryCheckIn">-</strong>
+                        </div>
+                        <div class="summary-item"
+                            style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px;">
+                            <span>Check-out:</span> <strong id="summaryCheckOut">-</strong>
+                        </div>
+                        <div class="summary-item"
+                            style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px;">
+                            <span>Guests:</span> <strong id="summaryGuests">-</strong>
+                        </div>
+                        <div class="summary-item"
+                            style="display: flex; justify-content: space-between; border-bottom: 1px solid #eee; padding-bottom: 8px; margin-bottom: 8px;">
+                            <span>Nights:</span> <strong id="summaryNights">0</strong>
+                        </div>
+                        <div class="summary-item"
+                            style="display: flex; justify-content: space-between; margin-top: 15px; padding-top: 10px; border-top: 2px dashed #eee;">
+                            <span style="font-size: 1.2rem; font-weight: 600;">Total Payable:</span>
+                            <strong id="totalAmount" class="total-amount"
+                                style="font-size: 1.4rem; color: var(--primary-green);">KSh 0</strong>
+                        </div>
+                    </div>
+
+                    <div
+                        style="background: var(--light-green); padding: 15px; border-radius: var(--radius); margin-bottom: 25px; font-size: 0.9rem; color: var(--primary-green); text-align: center;">
+                        <i class="fas fa-info-circle"></i> Rates are inclusive of all taxes and applicable fees.
+                    </div>
+
+                    <div style="display: flex; gap: 15px;">
+                        <button type="button" id="btnBackToEdit" onclick="closeModal()" class="btn btn-secondary"
+                            style="flex: 1; padding: 15px; font-size: 1.1rem; background-color: var(--gray-bg); border: 1px solid var(--gray-border); color: var(--text-dark);">
+                            <i class="fas fa-arrow-left"></i> Edit Details
+                        </button>
+                        <button type="button" id="submitFinalBooking" class="btn btn-primary"
+                            style="flex: 2; padding: 15px; background-color: var(--primary-orange); color: white; font-size: 1.1rem; border-radius: 4px; border: none;">
+                            Submit Reservation
+                        </button>
+                    </div>
+                    <div id="loading" style="display: none; text-align: center; margin-top: 15px;">
+                        <div class="spinner"
+                            style="border: 4px solid #f3f3f3; border-top: 4px solid var(--primary-orange); border-radius: 50%; width: 25px; height: 25px; animation: spin 1s linear infinite; margin: auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Modal State 2: Success Message (Initially Hidden) -->
+            <div id="modalSuccessState" style="display: none;">
+                <div class="modal-icon"
+                    style="width: 80px; height: 80px; background-color: var(--light-green); border-radius: 50%; display: flex; align-items: center; justify-content: center; margin: 0 auto 25px;">
+                    <i class="fas fa-check" style="font-size: 2.5rem; color: var(--primary-green);"></i>
+                </div>
+                <h2 style="margin-bottom: 15px; color: var(--primary-green);">Inquiry Submitted!</h2>
+                <p style="color: var(--text-light); margin-bottom: 20px;">Thank you for your booking inquiry. Our
+                    reservations team will contact you within 24 hours to confirm availability and provide the best
+                    options
+                    for your stay.</p>
+
+                <div class="booking-id" id="inquiryId"
+                    style="background-color: var(--light-green); padding: 15px; border-radius: var(--radius); font-weight: 700; color: var(--primary-green); margin-bottom: 25px; font-size: 1.2rem; border: 1px dashed var(--primary-green);">
+                    INQ-<span id="inquiryNumber">123456</span>
+                </div>
+
+                <p style="font-weight: 600; margin-bottom: 10px;">What happens next?</p>
+                <ul
+                    style="text-align: left; margin: 0 0 30px 20px; padding: 0; list-style-type: disc; color: var(--text-light); font-size: 0.9rem;">
+                    <li>You'll receive a confirmation email shortly</li>
+                    <li>Our team will check availability at your preferred resorts</li>
+                    <li>We'll contact you with personalized options and pricing</li>
+                </ul>
+
+                <div style="display: flex; gap: 15px;">
+                    <a href="index.html" class="btn btn-primary"
+                        style="flex: 1; padding: 14px; background-color: var(--primary-green); color: white;">
+                        <i class="fas fa-home"></i> Back to Home
+                    </a>
+                    <button class="btn btn-secondary" onclick="closeModal()" style="flex: 1; padding: 14px;">
+                        <i class="fas fa-times"></i> Close
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
     <!-- Footer -->
     <footer id="contact">
         <div class="container">
@@ -985,6 +1407,190 @@
                 document.getElementById('mainNav').classList.remove('active');
             });
         });
+
+        // Booking Logic
+        const resortRates = {
+            limuru: { name: 'Jumuia Limuru Country Home', paybill: '865350', account: 'RESERVATIONS-LIM', roomTypes: { 'standard_single': { name: 'Standard Single', bnb: 3560, hb: 4240, fb: 4880, conference: 5000 }, 'standard_double': { name: 'Standard Double', bnb: 6280, hb: 7200, fb: 8080, conference: 4750 }, 'executive': { name: 'Executive Room', bnb: 7200, hb: 8080, fb: 8960, conference: 5500 }, 'studio_suite': { name: 'Studio Suite', bnb: 11360, hb: 12480, fb: 13560, conference: 8000 }, 'hostel': { name: 'Hostel Bed', bnb: 1500, hb: 2000, fb: 2500, conference: 1500 } } },
+            kanamai: { name: 'Jumuia Kanamai Beach Resort', paybill: '865350', account: 'RESERVATIONS-KAN', roomTypes: { 'standard_single': { name: 'Standard Single', bnb: 4000, hb: 4900, fb: 6000, conference: 4500 }, 'standard_double': { name: 'Standard Double', bnb: 6500, hb: 8000, fb: 9500, conference: 7000 }, 'ocean_front': { name: 'Ocean Front Room', bnb: 7000, hb: 8500, fb: 10000, conference: 7500 }, 'hostel': { name: 'Hostel Bed', bnb: 2000, hb: 2500, fb: 3000, conference: 2000 } } },
+            kisumu: { name: 'Jumuia Hotel Kisumu', paybill: '865350', account: 'RESERVATIONS-KIS', roomTypes: { 'standard_single': { name: 'Standard Single', bnb: 5500, hb: 7500, fb: 6500, conference: 5500 }, 'standard_double': { name: 'Standard Double', bnb: 7500, hb: 11500, fb: 9500, conference: 7500 }, 'junior_suite_single': { name: 'Junior Suite Single', bnb: 8000, hb: 10000, fb: 9000, conference: 8000 }, 'junior_suite_double': { name: 'Junior Suite Double', bnb: 9000, hb: 13000, fb: 11000, conference: 9000 }, 'hostel_bed': { name: 'Hostel Bed', bnb: 2000, hb: 3000, fb: 2500, conference: 2000 } } }
+        };
+
+        const resortSelect = document.getElementById('resort');
+        const roomSelect = document.getElementById('roomType');
+
+        resortSelect.addEventListener('change', function () {
+            const key = this.value;
+            roomSelect.innerHTML = '<option value="">Select Room Type</option>';
+            if (key && resortRates[key]) {
+                const data = resortRates[key];
+                document.getElementById('summaryResortName').textContent = data.name;
+                document.getElementById('resortAccount').textContent = data.account;
+                Object.entries(data.roomTypes).forEach(([id, room]) => {
+                    const opt = document.createElement('option');
+                    opt.value = id; opt.textContent = room.name;
+                    roomSelect.appendChild(opt);
+                });
+            } else {
+                document.getElementById('summaryResortName').textContent = 'Select a resort';
+                roomSelect.innerHTML = '<option value="">Select Resort First</option>';
+            }
+            updateSummary();
+        });
+
+        function updateSummary() {
+            const rKey = resortSelect.value;
+            const rmKey = roomSelect.value;
+            const pKey = document.getElementById('packageType').value;
+            const cin = document.getElementById('checkIn').value;
+            const cout = document.getElementById('checkOut').value;
+            const ads = parseInt(document.getElementById('adults').value) || 1;
+
+            if (!rKey || !rmKey || !cin || !cout) return;
+
+            const start = new Date(cin);
+            const end = new Date(cout);
+            const nights = Math.max(1, Math.ceil((end - start) / (1000 * 60 * 60 * 24)));
+
+            const rate = resortRates[rKey].roomTypes[rmKey][pKey];
+            const total = rate * ads * nights;
+            const grandTotal = Math.round(total * 1.16);
+
+            document.getElementById('summaryCheckIn').textContent = new Date(cin).toLocaleDateString();
+            document.getElementById('summaryCheckOut').textContent = new Date(cout).toLocaleDateString();
+            document.getElementById('summaryNights').textContent = nights;
+            document.getElementById('totalAmount').textContent = `KSh ${grandTotal.toLocaleString()}`;
+        }
+
+        ['checkIn', 'checkOut', 'adults', 'children', 'packageType', 'roomType'].forEach(id => {
+            document.getElementById(id).addEventListener('change', updateSummary);
+        });
+
+        // Auto-selection logic
+        document.querySelectorAll('.resort-book-btn').forEach(btn => {
+            btn.addEventListener('click', function () {
+                resortSelect.value = this.dataset.resort;
+                resortSelect.dispatchEvent(new Event('change'));
+            });
+        });
+
+        // URL Parameter handling
+        const params = new URLSearchParams(window.location.search);
+        const urlResort = params.get('resort');
+        if (urlResort && resortRates[urlResort]) {
+            resortSelect.value = urlResort;
+            resortSelect.dispatchEvent(new Event('change'));
+            setTimeout(() => {
+                document.getElementById('quick-book').scrollIntoView({ behavior: 'smooth' });
+            }, 500);
+        }
+
+        // Payment Toggle
+        document.querySelectorAll('.payment-method').forEach(m => {
+            m.addEventListener('click', function () {
+                document.querySelectorAll('.payment-method').forEach(i => i.classList.remove('active'));
+                this.classList.add('active');
+                const method = this.dataset.method;
+                document.getElementById('paymentMethod').value = method;
+                document.getElementById('mpesaInstructions').style.display = method === 'mpesa' ? 'block' : 'none';
+            });
+        });
+
+        // Modal Flow Logic
+        const bookingForm = document.getElementById('bookingForm');
+        const bookingModal = document.getElementById('bookingModal');
+        const modalConfirmationState = document.getElementById('modalConfirmationState');
+        const modalSuccessState = document.getElementById('modalSuccessState');
+
+        document.getElementById('btnReviewBooking').addEventListener('click', function () {
+            if (bookingForm.checkValidity()) {
+                // Populate summary details in the modal
+                const fname = document.getElementById('firstName').value;
+                const lname = document.getElementById('lastName').value;
+                document.getElementById('summaryGuestName').textContent = `${fname} ${lname}`;
+                document.getElementById('summaryEmail').textContent = document.getElementById('email').value;
+                document.getElementById('summaryPhone').textContent = document.getElementById('phone').value;
+
+                const ads = parseInt(document.getElementById('adults').value) || 1;
+                const kids = parseInt(document.getElementById('children').value) || 0;
+                let guestText = `${ads} Adult(s)`;
+                if (kids > 0) guestText += `, ${kids} Child(ren)`;
+                document.getElementById('summaryGuests').textContent = guestText;
+
+                // Ensure totals are calculated
+                updateSummary();
+
+                // Show modal in Confirmation state
+                modalConfirmationState.style.display = 'block';
+                modalSuccessState.style.display = 'none';
+                bookingModal.classList.add('active');
+            } else {
+                bookingForm.reportValidity();
+            }
+        });
+
+        // Actual Final Submission inside Modal
+        document.getElementById('submitFinalBooking').addEventListener('click', async function () {
+            const btn = document.getElementById('submitFinalBooking');
+            const loading = document.getElementById('loading');
+
+            btn.disabled = true;
+            loading.style.display = 'block';
+
+            try {
+                // Initialize Firebase if needed (assumes main.js or firebase-config.js did it)
+                const db = window.FirebaseServices ? window.FirebaseServices.db : null;
+                if (!db) throw new Error('Firebase not loaded');
+
+                const rKey = resortSelect.value;
+                const data = {
+                    firstName: document.getElementById('firstName').value,
+                    lastName: document.getElementById('lastName').value,
+                    email: document.getElementById('email').value,
+                    phone: document.getElementById('phone').value,
+                    resort: rKey,
+                    resortName: resortRates[rKey].name,
+                    checkIn: document.getElementById('checkIn').value,
+                    checkOut: document.getElementById('checkOut').value,
+                    totalAmount: document.getElementById('totalAmount').textContent,
+                    status: 'pending',
+                    createdAt: new Date().toISOString()
+                };
+
+                await db.collection('bookings').add(data);
+
+                // Transition to success state
+                modalConfirmationState.style.display = 'none';
+                modalSuccessState.style.display = 'block';
+
+                // Keep modal active so success shows, but reset background form
+                bookingForm.reset();
+                document.getElementById('totalAmount').textContent = 'KSh 0';
+                document.getElementById('summaryResortName').textContent = 'Select a resort';
+            } catch (err) {
+                console.error(err);
+                alert('Booking enquiry failed. Please try again.');
+            } finally {
+                btn.disabled = false;
+                loading.style.display = 'none';
+            }
+        });
+
+        function closeModal() {
+            document.getElementById('bookingModal').classList.remove('active');
+            // Reset to confirmation state on close so it's ready for next review
+            setTimeout(() => {
+                document.getElementById('modalConfirmationState').style.display = 'block';
+                document.getElementById('modalSuccessState').style.display = 'none';
+            }, 300);
+        }
+
+        // Set default dates
+        const today = new Date().toISOString().split('T')[0];
+        document.getElementById('checkIn').value = today;
+        document.getElementById('checkIn').min = today;
+        const tomorrow = new Date(); tomorrow.setDate(tomorrow.getDate() + 1);
+        document.getElementById('checkOut').value = tomorrow.toISOString().split('T')[0];
+        document.getElementById('checkOut').min = today;
 
         // Firebase Configuration
         const firebaseConfig = {
