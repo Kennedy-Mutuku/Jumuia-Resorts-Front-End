@@ -38,166 +38,15 @@ async function initializeApplication() {
     }
 }
 
-// Initialize Firebase with your config - FIXED VERSION
+// Initialize Firebase - DISABLED FOR NODE.JS MIGRATION
 async function initializeFirebase() {
-    try {
-        // Check if Firebase is already initialized
-        if (window.FirebaseServices && window.FirebaseServices.db) {
-            console.log('Firebase already initialized');
-            return;
-        }
-
-        // Your Firebase configuration - FIXED AUTH DOMAIN
-        const firebaseConfig = {
-            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
-            authDomain: "jumuia-resort-limited.firebaseapp.com",
-            projectId: "jumuia-resort-limited",
-            storageBucket: "jumuia-resort-limited.firebasestorage.app",
-            messagingSenderId: "152170552230",
-            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
-            measurementId: "G-Q7BWHJ9C3M"
-        };
-
-        // Check if Firebase SDK is loaded
-        if (typeof firebase === 'undefined') {
-            console.log('Firebase SDK not found, loading scripts...');
-            await loadFirebaseScripts();
-        }
-
-        // Initialize Firebase
-        const app = firebase.initializeApp(firebaseConfig);
-
-        // Get Firebase services - USING COMPAT VERSION FOR RELIABILITY
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-        const storage = firebase.storage();
-
-        // Initialize analytics if available
-        let analytics = null;
-        if (firebase.analytics) {
-            analytics = firebase.analytics();
-        }
-
-        // Configure Firestore settings
-        db.settings({
-            timestampsInSnapshots: true
-        });
-
-        // Enable offline persistence
-        db.enablePersistence()
-            .catch((err) => {
-                if (err.code == 'failed-precondition') {
-                    console.warn('Multiple tabs open, persistence can only be enabled in one tab at a time.');
-                } else if (err.code == 'unimplemented') {
-                    console.warn('The current browser doesn\'t support persistence.');
-                }
-            });
-
-        // Store services globally
-        window.FirebaseServices = {
-            app: app,
-            auth: auth,
-            db: db,
-            storage: storage,
-            analytics: analytics,
-            config: firebaseConfig
-        };
-
-        // Also store directly for easy access
-        window.firebaseDb = db;
-        window.firebaseAuth = auth;
-
-        console.log('Firebase initialized successfully');
-
-        // Log analytics event if available
-        if (analytics) {
-            analytics.logEvent('page_view', {
-                page_title: document.title,
-                page_location: window.location.href,
-                page_path: window.location.pathname
-            });
-        }
-
-    } catch (error) {
-        console.error('Firebase initialization error:', error);
-
-        // If Firebase already initialized, get existing services
-        if (error.code === 'app/duplicate-app') {
-            console.log('Firebase app already exists, using existing services');
-            window.FirebaseServices = {
-                app: firebase.app(),
-                auth: firebase.auth(),
-                db: firebase.firestore(),
-                storage: firebase.storage(),
-                analytics: firebase.analytics ? firebase.analytics() : null
-            };
-            window.firebaseDb = window.FirebaseServices.db;
-            window.firebaseAuth = window.FirebaseServices.auth;
-        } else {
-            showErrorToast('Firebase initialization failed. Please refresh.');
-            throw error;
-        }
-    }
+    console.log('Firebase initialization bypassed. Using Node.js API instead.');
+    return;
 }
 
-// Load Firebase scripts dynamically (fallback) - FIXED VERSION
+// Load Firebase scripts dynamically (fallback) - DISABLED
 async function loadFirebaseScripts() {
-    return new Promise((resolve, reject) => {
-        // Check if already loaded
-        if (typeof firebase !== 'undefined') {
-            console.log('Firebase already loaded');
-            resolve();
-            return;
-        }
-
-        const scripts = [
-            'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js',
-            'https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js',
-            'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js',
-            'https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js',
-            'https://www.gstatic.com/firebasejs/10.7.1/firebase-analytics-compat.js'
-        ];
-
-        let loadedCount = 0;
-
-        function loadScript(index) {
-            if (index >= scripts.length) {
-                console.log('All Firebase scripts loaded successfully');
-                resolve();
-                return;
-            }
-
-            const scriptUrl = scripts[index];
-            const script = document.createElement('script');
-            script.src = scriptUrl;
-            script.async = true;
-
-            script.onload = () => {
-                loadedCount++;
-                console.log(`Firebase script ${index + 1}/${scripts.length} loaded`);
-                loadScript(index + 1);
-            };
-
-            script.onerror = (error) => {
-                console.error(`Failed to load Firebase script: ${scriptUrl}`, error);
-                // Continue loading other scripts even if one fails
-                loadedCount++;
-                loadScript(index + 1);
-            };
-
-            document.head.appendChild(script);
-        }
-
-        loadScript(0);
-
-        // Timeout after 10 seconds
-        setTimeout(() => {
-            if (loadedCount < scripts.length) {
-                console.warn('Firebase scripts loading timeout, continuing anyway');
-                resolve();
-            }
-        }, 10000);
-    });
+    return Promise.resolve();
 }
 
 // Initialize UI components - NO CHANGES
@@ -272,18 +121,7 @@ function initializeBookingButtons() {
 function initializeResortButtons() {
     document.querySelectorAll('a[href*="resorts/"]:not([href*="booking"])').forEach(link => {
         link.addEventListener('click', function () {
-            const resortName = this.closest('.resort-card') ?
-                this.closest('.resort-card').querySelector('h3')?.textContent :
-                'Unknown Resort';
-
-            // Track resort view
-            if (window.FirebaseServices && window.FirebaseServices.analytics) {
-                window.FirebaseServices.analytics.logEvent('resort_click', {
-                    resort_name: resortName,
-                    page_location: this.href,
-                    button_text: this.textContent?.trim()
-                });
-            }
+            // Track resort view locally or to Node API if analytics exist
         });
     });
 }
@@ -416,15 +254,9 @@ async function handleLogout() {
     }
 }
 
-// Load offers from Firestore - FIXED VERSION
+// Load offers via API
 async function loadOffers() {
     try {
-        // Ensure Firebase is initialized
-        if (!window.FirebaseServices || !window.FirebaseServices.db) {
-            await initializeFirebase();
-        }
-
-        const db = window.FirebaseServices.db;
         const offersContainer = document.getElementById('offersContainer');
 
         if (!offersContainer) return;
@@ -432,27 +264,25 @@ async function loadOffers() {
         // Show loading state
         offersContainer.innerHTML = '<div class="loading" style="text-align: center; padding: 40px; color: var(--text-light);">Loading offers...</div>';
 
-        // Get offers from Firestore
-        const offersSnapshot = await db.collection('offers')
-            .where('active', '==', true)
-            .orderBy('createdAt', 'desc')
-            .limit(10)
-            .get()
-            .catch(error => {
-                console.error('Error getting offers:', error);
-                throw error;
-            });
+        const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+        const response = await fetch(`${apiUrl}/offers`);
 
-        if (offersSnapshot.empty) {
+        let offersList = [];
+        if (response.ok) {
+            offersList = await response.json();
+            offersList = offersList.filter(o => o.status === 'active').slice(0, 10);
+            offersList.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
+        }
+
+        if (offersList.length === 0) {
             offersContainer.innerHTML = '<div class="no-offers" style="text-align: center; padding: 40px; color: var(--text-light);">No current offers available. Check back soon!</div>';
             return;
         }
 
         // Render offers
         let offersHTML = '';
-        offersSnapshot.forEach(doc => {
-            const offer = doc.data();
-            const offerId = doc.id;
+        offersList.forEach(offer => {
+            const offerId = offer._id || offer.id;
 
             offersHTML += `
                 <div class="offer-card" style="background: white; border-radius: 8px; padding: 20px; margin-bottom: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.1);">
@@ -525,14 +355,17 @@ function setupFeedbackForm() {
             submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
             submitBtn.disabled = true;
 
-            // Ensure Firebase is initialized
-            if (!window.FirebaseServices || !window.FirebaseServices.db) {
-                await initializeFirebase();
-            }
+            // Submit to Node API
+            const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+            const response = await fetch(`${apiUrl}/feedback`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(feedbackData)
+            });
 
-            // Save to Firestore
-            const db = window.FirebaseServices.db;
-            await db.collection('feedback').add(feedbackData);
+            if (!response.ok) {
+                throw new Error('Failed to submit feedback');
+            }
 
             // Reset form
             this.reset();
@@ -540,13 +373,8 @@ function setupFeedbackForm() {
             // Show success
             showSuccessToast('Thank you for your feedback!');
 
-            // Track analytics
-            if (window.FirebaseServices.analytics) {
-                window.FirebaseServices.analytics.logEvent('feedback_submitted', {
-                    resort: feedbackData.resort,
-                    rating: feedbackData.rating
-                });
-            }
+            // Analytics tracked server-side typically
+
 
         } catch (error) {
             console.error('Error submitting feedback:', error);
@@ -564,36 +392,7 @@ function setupFeedbackForm() {
 
 // Track booking button clicks - NO CHANGES
 function trackBookingClick(button) {
-    // Determine resort from button context
-    let resort = 'general';
-    const resortCard = button.closest('.resort-card');
-    if (resortCard) {
-        const resortTitle = resortCard.querySelector('h3');
-        if (resortTitle) {
-            const title = resortTitle.textContent;
-            if (title.includes('Limuru')) resort = 'limuru';
-            else if (title.includes('Kanamai')) resort = 'kanamai';
-            else if (title.includes('Kisumu')) resort = 'kisumu';
-        }
-    }
-
-    // Also check from URL
-    const currentPath = window.location.pathname;
-    if (currentPath.includes('/resorts/')) {
-        if (currentPath.includes('/limuru/')) resort = 'limuru';
-        else if (currentPath.includes('/kanamai/')) resort = 'kanamai';
-        else if (currentPath.includes('/kisumu/')) resort = 'kisumu';
-    }
-
-    // Track in analytics
-    if (window.FirebaseServices && window.FirebaseServices.analytics) {
-        window.FirebaseServices.analytics.logEvent('booking_click', {
-            resort: resort,
-            button_text: button.textContent?.trim() || 'Book Now',
-            page_location: window.location.pathname,
-            timestamp: new Date().toISOString()
-        });
-    }
+    // Analytics removed here, handled server-side / locally
 }
 
 // Share offer function - NO CHANGES
@@ -755,262 +554,55 @@ function addToastStyles() {
     document.head.appendChild(styles);
 }
 
-// Firebase Service Helper Functions (for booking pages) - FIXED VERSION
+// Firebase Service Helper Functions (for booking pages) - MIGRATED TO NODE API
 window.FirebaseBookingService = {
     saveBooking: async function (bookingData) {
         try {
-            // Ensure Firebase is initialized
-            if (!window.FirebaseServices || !window.FirebaseServices.db) {
-                await initializeFirebase();
-            }
-
-            const db = window.FirebaseServices.db;
-
-            // Generate booking ID
-            const timestamp = Date.now().toString().slice(-6);
-            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-            const resortCode = bookingData.resort ? bookingData.resort.toUpperCase().slice(0, 3) : 'GEN';
-            bookingData.bookingId = `JUM-${resortCode}-${timestamp}${random}`;
-
-            // Add metadata
-            bookingData.createdAt = new Date().toISOString();
-            bookingData.updatedAt = new Date().toISOString();
-            bookingData.status = 'pending';
-            bookingData.paymentStatus = 'awaiting_payment';
-            bookingData.source = 'website';
-
-            // Save to Firestore
-            const docRef = await db.collection('bookings').add(bookingData);
-
-            console.log('Booking saved:', docRef.id);
-
-            // Track analytics
-            if (window.FirebaseServices && window.FirebaseServices.analytics) {
-                window.FirebaseServices.analytics.logEvent('booking_created', {
-                    booking_id: bookingData.bookingId,
-                    resort: bookingData.resort,
-                    room_type: bookingData.roomType,
-                    amount: bookingData.totalAmount || 0,
-                    nights: bookingData.nights || 1
-                });
-            }
-
-            return {
-                success: true,
-                bookingId: bookingData.bookingId,
-                firestoreId: docRef.id,
-                data: bookingData
-            };
-
-        } catch (error) {
-            console.error('Error saving booking:', error);
-            return {
-                success: false,
-                error: error.message,
-                code: error.code
-            };
-        }
-    },
-
-    checkBookingAvailability: async function (resort, checkIn, checkOut, roomType) {
-        try {
-            // Ensure Firebase is initialized
-            if (!window.FirebaseServices || !window.FirebaseServices.db) {
-                await initializeFirebase();
-            }
-
-            const db = window.FirebaseServices.db;
-
-            // Convert dates to strings for Firestore query
-            const checkInStr = typeof checkIn === 'string' ? checkIn : checkIn.toISOString().split('T')[0];
-            const checkOutStr = typeof checkOut === 'string' ? checkOut : checkOut.toISOString().split('T')[0];
-
-            // Query for conflicting bookings
-            const bookingsSnapshot = await db.collection('bookings')
-                .where('resort', '==', resort)
-                .where('status', 'in', ['confirmed', 'pending'])
-                .where('roomType', '==', roomType)
-                .get();
-
-            // Filter bookings that conflict with our dates
-            const conflictingBookings = [];
-            bookingsSnapshot.forEach(doc => {
-                const booking = doc.data();
-                const bookingCheckIn = booking.checkIn;
-                const bookingCheckOut = booking.checkOut;
-
-                // Check for date overlap
-                if (!(checkOutStr <= bookingCheckIn || checkInStr >= bookingCheckOut)) {
-                    conflictingBookings.push(booking);
-                }
+            const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+            const response = await fetch(`${apiUrl}/bookings`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookingData)
             });
 
-            // For demo: assume max 5 rooms of each type
-            const maxRooms = 5;
-            const available = conflictingBookings.length < maxRooms;
-
-            return {
-                available: available,
-                conflictingBookings: conflictingBookings.length,
-                maxRooms: maxRooms,
-                availableRooms: maxRooms - conflictingBookings.length
-            };
-
-        } catch (error) {
-            console.error('Availability check error:', error);
-            return {
-                available: false,
-                error: error.message
-            };
-        }
-    },
-
-    getBooking: async function (bookingId) {
-        try {
-            // Ensure Firebase is initialized
-            if (!window.FirebaseServices || !window.FirebaseServices.db) {
-                await initializeFirebase();
+            if (!response.ok) {
+                throw new Error('Failed to create booking over API');
             }
 
-            const db = window.FirebaseServices.db;
-
-            // Query by booking ID
-            const querySnapshot = await db.collection('bookings')
-                .where('bookingId', '==', bookingId)
-                .limit(1)
-                .get();
-
-            if (querySnapshot.empty) {
-                return { success: false, error: 'Booking not found' };
-            }
-
-            const doc = querySnapshot.docs[0];
-            return {
-                success: true,
-                booking: { id: doc.id, ...doc.data() }
-            };
-
-        } catch (error) {
-            console.error('Error getting booking:', error);
-            return {
-                success: false,
-                error: error.message
-            };
-        }
-    },
-
-    // NEW: Get all bookings for admin dashboard
-    getBookings: async function (limit = 50, resort = null) {
-        try {
-            // Ensure Firebase is initialized
-            if (!window.FirebaseServices || !window.FirebaseServices.db) {
-                await initializeFirebase();
-            }
-
-            const db = window.FirebaseServices.db;
-            let query = db.collection('bookings').orderBy('createdAt', 'desc').limit(limit);
-
-            if (resort) {
-                query = query.where('resort', '==', resort);
-            }
-
-            const snapshot = await query.get();
-            const bookings = [];
-
-            snapshot.forEach(doc => {
-                bookings.push({
-                    id: doc.id,
-                    ...doc.data()
-                });
-            });
+            const savedBooking = await response.json();
 
             return {
                 success: true,
-                bookings: bookings,
-                count: bookings.length
+                bookingId: savedBooking.bookingId || bookingData.bookingId,
+                firestoreId: savedBooking._id || savedBooking.id,
+                data: savedBooking
             };
-
         } catch (error) {
-            console.error('Error getting bookings:', error);
-            return {
-                success: false,
-                error: error.message,
-                bookings: []
-            };
+            console.error('API save failed', error);
+            throw error;
         }
     }
 };
 
-// Simple Firebase initialization function for booking pages
-window.initializeFirebaseSimple = async function () {
-    try {
-        // If already initialized, return
-        if (window.firebaseDb) {
-            return window.firebaseDb;
-        }
-
-        // Load Firebase if not loaded
-        if (typeof firebase === 'undefined') {
-            await new Promise((resolve, reject) => {
-                const script = document.createElement('script');
-                script.src = 'https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js';
-                script.onload = () => {
-                    const firestoreScript = document.createElement('script');
-                    firestoreScript.src = 'https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js';
-                    firestoreScript.onload = resolve;
-                    firestoreScript.onerror = reject;
-                    document.head.appendChild(firestoreScript);
-                };
-                script.onerror = reject;
-                document.head.appendChild(script);
-            });
-        }
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
-            authDomain: "jumuia-resort-limited.firebaseapp.com",
-            projectId: "jumuia-resort-limited",
-            storageBucket: "jumuia-resort-limited.firebasestorage.app",
-            messagingSenderId: "152170552230",
-            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67"
-        };
-
-        if (!firebase.apps.length) {
-            firebase.initializeApp(firebaseConfig);
-        }
-
-        const db = firebase.firestore();
-        window.firebaseDb = db;
-        window.firebaseAuth = firebase.auth();
-
-        return db;
-
-    } catch (error) {
-        console.error('Simple Firebase init error:', error);
-        throw error;
-    }
-};
-
-// Expose necessary functions globally
 window.shareOffer = shareOffer;
 window.handleLogout = handleLogout;
 window.copyToClipboard = copyToClipboard;
 window.initializeFirebase = initializeFirebase;
 
-// Add a global error handler
 window.addEventListener('error', function (e) {
     console.error('Global error:', e.error);
 });
 
-// Make sure Firebase is initialized on all pages
 console.log('Jumuia Resorts Main JS loaded successfully');
 
-// Export for module systems (if needed)
 if (typeof module !== 'undefined' && module.exports) {
     module.exports = {
         initializeApplication,
         FirebaseBookingService,
         showSuccessToast,
-        showErrorToast
+        showErrorToast,
+        getResortName
     };
 }

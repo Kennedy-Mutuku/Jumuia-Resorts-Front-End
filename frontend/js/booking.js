@@ -2,113 +2,86 @@
 
 // Booking Service Object
 const BookingService = {
-    // Save booking to Firebase
+    // Save booking to API
     async saveBooking(bookingData) {
         try {
-            if (!window.FirebaseServices || !window.FirebaseServices.db) {
-                throw new Error('Firebase not initialized');
+            const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+            const response = await fetch(`${apiUrl}/bookings`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(bookingData)
+            });
+
+            if (!response.ok) {
+                const errBody = await response.json();
+                throw new Error(errBody.error || errBody.message || 'Failed to create booking');
             }
-            
-            const db = window.FirebaseServices.db;
-            
-            // Generate booking ID
-            const timestamp = Date.now().toString().slice(-6);
-            const random = Math.floor(Math.random() * 1000).toString().padStart(3, '0');
-            const resortCode = bookingData.resort ? bookingData.resort.toUpperCase().slice(0, 3) : 'GEN';
-            bookingData.bookingId = `JUM-${resortCode}-${timestamp}${random}`;
-            
-            // Add metadata
-            bookingData.createdAt = new Date().toISOString();
-            bookingData.updatedAt = new Date().toISOString();
-            bookingData.status = 'pending';
-            bookingData.paymentStatus = bookingData.paymentMethod === 'cash' ? 'pending' : 'awaiting_payment';
-            bookingData.source = 'website';
-            
-            // Calculate number of nights
-            if (bookingData.checkIn && bookingData.checkOut) {
-                const checkInDate = new Date(bookingData.checkIn);
-                const checkOutDate = new Date(bookingData.checkOut);
-                bookingData.nights = Math.ceil((checkOutDate - checkInDate) / (1000 * 60 * 60 * 24));
-            }
-            
-            // Save to Firestore
-            const docRef = await db.collection('bookings').add(bookingData);
-            console.log('Booking saved:', docRef.id);
-            
-            // Track analytics
-            if (window.FirebaseServices.analytics) {
-                window.FirebaseServices.analytics.logEvent('booking_created', {
-                    booking_id: bookingData.bookingId,
-                    resort: bookingData.resort,
-                    room_type: bookingData.roomType,
-                    amount: bookingData.totalAmount || 0,
-                    nights: bookingData.nights || 1
-                });
-            }
-            
+
+            const savedBooking = await response.json();
+
+            // Track analytics locally
+            console.log('Booking saved remotely:', savedBooking);
+
             return {
                 success: true,
-                bookingId: bookingData.bookingId,
-                firestoreId: docRef.id,
-                data: bookingData
+                bookingId: savedBooking.bookingId || bookingData.bookingId,
+                firestoreId: savedBooking._id || savedBooking.id, // For backward compatibility
+                data: savedBooking
             };
-            
+
         } catch (error) {
-            console.error('Error saving booking:', error);
+            console.error('Error saving booking via API:', error);
             return {
                 success: false,
                 error: error.message
             };
         }
     },
-    
-    // Get booking by ID
+
+    // Get booking by ID via API
     async getBooking(bookingId) {
         try {
-            if (!window.FirebaseServices || !window.FirebaseServices.db) {
-                throw new Error('Firebase not initialized');
+            const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+            // Wait, our backend endpoint might not support GET /bookings by bookingId yet, 
+            // but we can query GET /bookings and filter, or use an endpoint if it exists.
+            const response = await fetch(`${apiUrl}/bookings`);
+
+            if (!response.ok) {
+                throw new Error('Failed to retrieve bookings list');
             }
-            
-            const db = window.FirebaseServices.db;
-            
-            // Query by booking ID
-            const querySnapshot = await db.collection('bookings')
-                .where('bookingId', '==', bookingId)
-                .limit(1)
-                .get();
-            
-            if (querySnapshot.empty) {
+
+            const list = await response.json();
+            const foundBooking = list.find(b => b.bookingId === bookingId || b._id === bookingId || b.id === bookingId);
+
+            if (!foundBooking) {
                 return { success: false, error: 'Booking not found' };
             }
-            
-            const doc = querySnapshot.docs[0];
+
             return {
                 success: true,
-                booking: { id: doc.id, ...doc.data() }
+                booking: { id: foundBooking._id, ...foundBooking }
             };
-            
+
         } catch (error) {
-            console.error('Error getting booking:', error);
+            console.error('Error getting booking API:', error);
             return {
                 success: false,
                 error: error.message
             };
         }
     },
-    
-    // Check availability
+
+    // Check availability via API
     async checkAvailability(resort, checkIn, checkOut, roomType) {
         try {
-            if (!window.FirebaseServices || !window.FirebaseServices.db) {
-                throw new Error('Firebase not initialized');
-            }
-            
-            const db = window.FirebaseServices.db;
-            
-            // Convert dates to strings for Firestore query
+            const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+
+            // Convert dates to strings
             const checkInStr = typeof checkIn === 'string' ? checkIn : checkIn.toISOString().split('T')[0];
             const checkOutStr = typeof checkOut === 'string' ? checkOut : checkOut.toISOString().split('T')[0];
-            
+
             // Get room capacity for the resort
             const roomCapacities = {
                 'limuru': {
@@ -132,45 +105,46 @@ const BookingService = {
                     'suite': 6
                 }
             };
-            
+
             const maxRooms = roomCapacities[resort]?.[roomType] || 5;
-            
-            // Query for conflicting bookings
-            const bookingsSnapshot = await db.collection('bookings')
-                .where('resort', '==', resort)
-                .where('roomType', '==', roomType)
-                .where('status', 'in', ['confirmed', 'pending'])
-                .get();
-            
+
+            // Query for conflicting bookings list
+            const response = await fetch(`${apiUrl}/bookings`);
+            if (!response.ok) {
+                throw new Error('Failed to retrieve bookings list');
+            }
+
+            const bookingsList = await response.json();
+
             // Count conflicting bookings
             let conflictingCount = 0;
-            bookingsSnapshot.forEach(doc => {
-                const booking = doc.data();
-                
-                // Check for date overlap
-                if (!(checkOutStr <= booking.checkIn || checkInStr >= booking.checkOut)) {
-                    conflictingCount++;
+            bookingsList.forEach(booking => {
+                if (booking.resort === resort && booking.roomType === roomType && ['confirmed', 'pending'].includes(booking.status)) {
+                    // Check for date overlap
+                    if (!(checkOutStr <= booking.checkIn || checkInStr >= booking.checkOut)) {
+                        conflictingCount++;
+                    }
                 }
             });
-            
+
             const available = conflictingCount < maxRooms;
-            
+
             return {
                 available: available,
                 conflictingBookings: conflictingCount,
                 maxRooms: maxRooms,
                 availableRooms: Math.max(0, maxRooms - conflictingCount)
             };
-            
+
         } catch (error) {
-            console.error('Availability check error:', error);
+            console.error('Availability check error API:', error);
             return {
                 available: false,
                 error: error.message
             };
         }
     },
-    
+
     // Calculate rates
     calculateRate(resort, roomType, packageType, nights, adults, children = 0) {
         // Resort-specific rates
@@ -266,10 +240,10 @@ const BookingService = {
                 }
             }
         };
-        
+
         const resortRates = rates[resort] || rates['limuru'];
         const roomRates = resortRates[roomType] || resortRates['standard_single'] || resortRates['standard'];
-        
+
         if (!roomRates) {
             console.error('No rates found for:', resort, roomType);
             return {
@@ -282,23 +256,23 @@ const BookingService = {
                 children: children
             };
         }
-        
+
         const baseRate = roomRates[packageType] || roomRates['bnb'] || 0;
-        
+
         // Calculate total for adults
         let total = baseRate * adults * nights;
-        
+
         // Calculate children discount (50% for sharing, 75% for hostel)
         const childDiscountRate = roomType === 'hostel' ? 0.75 : 0.5;
         if (children > 0) {
             const childRate = baseRate * childDiscountRate * children * nights;
             total += childRate;
         }
-        
+
         // Add taxes (16% VAT)
         const tax = total * 0.16;
         const grandTotal = total + tax;
-        
+
         return {
             baseRate: baseRate,
             total: total,
@@ -309,7 +283,7 @@ const BookingService = {
             children: children
         };
     },
-    
+
     // Send email notifications
     async sendBookingEmails(bookingData) {
         try {
@@ -318,10 +292,10 @@ const BookingService = {
                 console.log('EmailJS not available');
                 return false;
             }
-            
+
             // Initialize EmailJS with your public key
             emailjs.init('QABuHzAPilhRW0PTT');
-            
+
             // Get resort details
             const resortDetails = {
                 'limuru': {
@@ -340,9 +314,9 @@ const BookingService = {
                     phone: '0713 576969, 0115 994486'
                 }
             };
-            
+
             const resort = resortDetails[bookingData.resort] || resortDetails['limuru'];
-            
+
             // Format dates
             const formatDate = (dateStr) => {
                 const date = new Date(dateStr);
@@ -352,7 +326,7 @@ const BookingService = {
                     year: 'numeric'
                 });
             };
-            
+
             // Get room type display name
             const roomTypeNames = {
                 'standard_single': 'Standard Single Room',
@@ -365,7 +339,7 @@ const BookingService = {
                 'suite': 'Suite',
                 'villa': 'Beach Villa'
             };
-            
+
             // Get package display name
             const packageNames = {
                 'bnb': 'Bed & Breakfast',
@@ -373,7 +347,7 @@ const BookingService = {
                 'fb': 'Full Board',
                 'conference': 'Conference Package'
             };
-            
+
             // Get payment method display name
             const paymentMethods = {
                 'mpesa': 'M-Pesa',
@@ -381,7 +355,7 @@ const BookingService = {
                 'bank': 'Bank Transfer',
                 'cash': 'Pay on Arrival'
             };
-            
+
             // Prepare template parameters
             const templateParams = {
                 to_email: bookingData.email,
@@ -403,11 +377,11 @@ const BookingService = {
                 adults: bookingData.adults || 1,
                 children: bookingData.children || 0
             };
-            
+
             // Send confirmation email to guest
             await emailjs.send('service_9yusqtl', 'booking_confirmation_guest', templateParams);
             console.log('Confirmation email sent to guest');
-            
+
             // Send notification to resort
             await emailjs.send('service_9yusqtl', 'booking_notification_resort', {
                 to_email: resort.email,
@@ -429,7 +403,7 @@ const BookingService = {
                 booking_date: templateParams.booking_date
             });
             console.log('Notification email sent to resort');
-            
+
             // Send notification to admin
             await emailjs.send('service_9yusqtl', 'booking_notification_admin', {
                 to_email: 'admin@resortjumuia.com',
@@ -442,9 +416,9 @@ const BookingService = {
                 payment_method: templateParams.payment_method
             });
             console.log('Notification email sent to admin');
-            
+
             return true;
-            
+
         } catch (error) {
             console.error('Email sending failed:', error);
             return false;
@@ -456,6 +430,6 @@ const BookingService = {
 window.BookingService = BookingService;
 
 // Initialize on page load
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     console.log('Booking service initialized');
 });

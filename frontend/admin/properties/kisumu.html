@@ -3377,69 +3377,7 @@
         </div>
     </div>
 
-    <!-- Firebase SDK -->
-    <script type="module">
-        // Use the same Firebase version as your main dashboard
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
-        import { 
-            getFirestore, 
-            collection, 
-            query, 
-            where, 
-            orderBy, 
-            limit, 
-            getDocs, 
-            onSnapshot,
-            doc,
-            getDoc,
-            updateDoc,
-            addDoc,
-            serverTimestamp,
-            Timestamp 
-        } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
-
-        // Use the same Firebase configuration as your main dashboard
-        const firebaseConfig = {
-            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
-            authDomain: "jumuia-resort-limited.firebaseapp.com",
-            projectId: "jumuia-resort-limited",
-            storageBucket: "jumuia-resort-limited.firebasestorage.app",
-            messagingSenderId: "152170552230",
-            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
-            measurementId: "G-Q7BWHJ9C3M"
-        };
-
-        // Initialize Firebase
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        // Make available globally
-        window.firebase = {
-            auth: auth,
-            db: db,
-            firestore: {
-                collection: collection,
-                query: query,
-                where: where,
-                orderBy: orderBy,
-                limit: limit,
-                getDocs: getDocs,
-                onSnapshot: onSnapshot,
-                doc: doc,
-                getDoc: getDoc,
-                updateDoc: updateDoc,
-                addDoc: addDoc,
-                serverTimestamp: serverTimestamp,
-                Timestamp: Timestamp
-            },
-            authFunctions: {
-                onAuthStateChanged: onAuthStateChanged,
-                signOut: signOut
-            }
-        };
-    </script>
+    
 
     <script>
         // Global variables

@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -531,7 +531,7 @@
         }
 
         .process-step:not(:last-child)::after {
-            content: 'âžœ';
+            content: '➜';
             position: absolute;
             top: 40px;
             right: -15px;
@@ -1740,7 +1740,7 @@
                 
                 // Toggle current answer
                 answer.classList.toggle('active');
-                toggle.textContent = answer.classList.contains('active') ? 'âˆ’' : '+';
+                toggle.textContent = answer.classList.contains('active') ? '−' : '+';
             });
         });
 

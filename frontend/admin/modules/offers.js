@@ -11,65 +11,57 @@ let sortDirection = 'desc';
 // Initialize offers module
 function initOffersModule() {
     console.log('Initializing Offers module...');
-    
+
     // Initialize common utilities
     if (!window.CommonUtils || !window.CommonUtils.initCurrentUser()) {
         console.error('Common utilities not available');
         return;
     }
-    
+
     // Load offers data
     loadOffers();
-    
+
     // Setup event listeners
     setupEventListeners();
-    
+
     // Setup real-time listener
     setupRealtimeListener();
 }
 
-// Load offers from Firebase
+// Load offers from API
 async function loadOffers() {
     try {
         CommonUtils.showLoading(true, 'Loading offers...');
-        
-        const { db, COLLECTIONS, currentUser, currentProperty } = CommonUtils;
-        
+
+        const { currentUser, currentProperty } = CommonUtils;
+
         // Build query based on user permissions
-        let offersQuery;
-        
-        if (currentUser.permissions.properties.includes('all')) {
-            offersQuery = firebase.firestore()
-                .collection(COLLECTIONS.OFFERS)
-                .orderBy(sortField, sortDirection);
-        } else {
-            offersQuery = firebase.firestore()
-                .collection(COLLECTIONS.OFFERS)
-                .where('property', '==', currentProperty)
-                .orderBy(sortField, sortDirection);
+        let url = `${CommonUtils.API_URL}/offers`;
+        if (!currentUser.permissions.properties.includes('all')) {
+            url += `?property=${currentProperty}`;
         }
-        
-        const snapshot = await offersQuery.get();
-        offersData = [];
-        
-        snapshot.forEach(doc => {
-            offersData.push({
-                id: doc.id,
-                ...doc.data()
-            });
-        });
-        
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to load offers');
+
+        const data = await response.json();
+
+        offersData = data.map(doc => ({
+            id: doc._id || doc.id,
+            ...doc
+        }));
+
         // Apply filters
         applyFilters();
-        
+
         // Render offers
         renderOffers();
-        
+
         // Update stats
         updateStats();
-        
+
         CommonUtils.showLoading(false);
-        
+
     } catch (error) {
         console.error('Error loading offers:', error);
         CommonUtils.showNotification('Failed to load offers', 'error');
@@ -87,7 +79,7 @@ function setupEventListeners() {
             element.addEventListener('input', debounce(applyFilters, 300));
         }
     });
-    
+
     // Date filters
     const dateFilters = ['dateFrom', 'dateTo'];
     dateFilters.forEach(id => {
@@ -96,28 +88,28 @@ function setupEventListeners() {
             element.addEventListener('change', applyFilters);
         }
     });
-    
+
     // Create offer button
     const createBtn = document.getElementById('createOfferBtn');
     if (createBtn) {
         createBtn.addEventListener('click', showOfferModal);
     }
-    
+
     // Export button
     const exportBtn = document.getElementById('exportOffersBtn');
     if (exportBtn) {
         exportBtn.addEventListener('click', exportOffers);
     }
-    
+
     // Refresh button
     const refreshBtn = document.getElementById('refreshOffersBtn');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', refreshOffers);
     }
-    
+
     // Sort buttons
     document.querySelectorAll('.sort-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const field = this.dataset.field;
             if (sortField === field) {
                 sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
@@ -125,48 +117,46 @@ function setupEventListeners() {
                 sortField = field;
                 sortDirection = 'desc';
             }
-            
+
             // Update sort indicators
             updateSortIndicators();
-            
+
             // Reload offers with new sort
             loadOffers();
         });
     });
 }
 
-// Setup real-time listener
+// Setup polling listener
 function setupRealtimeListener() {
-    const { db, COLLECTIONS, currentUser, currentProperty } = CommonUtils;
-    
-    let offersQuery;
-    
-    if (currentUser.permissions.properties.includes('all')) {
-        offersQuery = firebase.firestore()
-            .collection(COLLECTIONS.OFFERS)
-            .orderBy('createdAt', 'desc');
-    } else {
-        offersQuery = firebase.firestore()
-            .collection(COLLECTIONS.OFFERS)
-            .where('property', '==', currentProperty)
-            .orderBy('createdAt', 'desc');
-    }
-    
-    offersQuery.onSnapshot((snapshot) => {
-        offersData = [];
-        snapshot.forEach(doc => {
-            offersData.push({
-                id: doc.id,
-                ...doc.data()
-            });
-        });
-        
-        applyFilters();
-        renderOffers();
-        updateStats();
-    }, (error) => {
-        console.error('Realtime listener error:', error);
-    });
+    const pollInterval = setInterval(async () => {
+        try {
+            const { currentUser, currentProperty } = CommonUtils;
+
+            let url = `${CommonUtils.API_URL}/offers`;
+            if (!currentUser.permissions.properties.includes('all')) {
+                url += `?property=${currentProperty}`;
+            }
+
+            const response = await fetch(url);
+            if (!response.ok) return;
+
+            const data = await response.json();
+
+            offersData = data.map(doc => ({
+                id: doc._id || doc.id,
+                ...doc
+            }));
+
+            applyFilters();
+            renderOffers();
+            updateStats();
+        } catch (error) {
+            console.error('Polling error:', error);
+        }
+    }, 15000);
+
+    window.offersPollingInterval = pollInterval;
 }
 
 // Apply filters
@@ -177,13 +167,13 @@ function applyFilters() {
     const searchInput = document.getElementById('searchInput')?.value.toLowerCase() || '';
     const dateFrom = document.getElementById('dateFrom')?.value;
     const dateTo = document.getElementById('dateTo')?.value;
-    
+
     filteredOffers = offersData.filter(offer => {
         // Property filter
         if (propertyFilter !== 'all' && offer.property !== propertyFilter) {
             return false;
         }
-        
+
         // Status filter
         if (statusFilter !== 'all') {
             const status = getOfferStatus(offer);
@@ -191,12 +181,12 @@ function applyFilters() {
                 return false;
             }
         }
-        
+
         // Category filter
         if (categoryFilter !== 'all' && offer.category !== categoryFilter) {
             return false;
         }
-        
+
         // Search filter
         if (searchInput) {
             const searchStr = searchInput.toLowerCase();
@@ -206,42 +196,42 @@ function applyFilters() {
                 offer.offerCode,
                 offer.property
             ].join(' ').toLowerCase();
-            
+
             if (!offerText.includes(searchStr)) {
                 return false;
             }
         }
-        
+
         // Date range filter
         if (dateFrom && offer.startDate) {
-            const startDate = offer.startDate.toDate ? 
+            const startDate = offer.startDate.toDate ?
                 offer.startDate.toDate() : new Date(offer.startDate);
             const filterFrom = new Date(dateFrom);
-            
+
             if (startDate < filterFrom) {
                 return false;
             }
         }
-        
+
         if (dateTo && offer.endDate) {
-            const endDate = offer.endDate.toDate ? 
+            const endDate = offer.endDate.toDate ?
                 offer.endDate.toDate() : new Date(offer.endDate);
             const filterTo = new Date(dateTo);
-            
+
             if (endDate > filterTo) {
                 return false;
             }
         }
-        
+
         return true;
     });
-    
+
     // Sort filtered offers
     filteredOffers = CommonUtils.sortData(filteredOffers, sortField, sortDirection);
-    
+
     // Reset to first page
     currentPage = 1;
-    
+
     // Update display
     updatePagination();
     renderOffersTable();
@@ -257,12 +247,12 @@ function renderOffers() {
 function renderOffersTable() {
     const tableBody = document.getElementById('offersTableBody');
     if (!tableBody) return;
-    
+
     // Calculate pagination
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const paginatedOffers = filteredOffers.slice(startIndex, endIndex);
-    
+
     if (paginatedOffers.length === 0) {
         tableBody.innerHTML = `
             <tr>
@@ -275,12 +265,12 @@ function renderOffersTable() {
         `;
         return;
     }
-    
+
     let html = '';
     paginatedOffers.forEach((offer, index) => {
         const status = getOfferStatus(offer);
         const statusClass = `status-${status}`;
-        
+
         html += `
             <tr>
                 <td>${startIndex + index + 1}</td>
@@ -308,9 +298,9 @@ function renderOffersTable() {
                 <td>
                     <div class="price-display">
                         <div class="current-price">${CommonUtils.formatCurrency(offer.currentPrice)}</div>
-                        ${offer.originalPrice > offer.currentPrice ? 
-                            `<div class="original-price">${CommonUtils.formatCurrency(offer.originalPrice)}</div>` : ''
-                        }
+                        ${offer.originalPrice > offer.currentPrice ?
+                `<div class="original-price">${CommonUtils.formatCurrency(offer.originalPrice)}</div>` : ''
+            }
                     </div>
                 </td>
                 <td>
@@ -327,17 +317,17 @@ function renderOffersTable() {
                         <button class="action-btn btn-toggle" onclick="toggleOfferStatus('${offer.id}')" title="Toggle Status">
                             <i class="fas fa-power-off"></i>
                         </button>
-                        ${CommonUtils.checkPermission('delete') ? 
-                            `<button class="action-btn btn-delete" onclick="deleteOffer('${offer.id}')" title="Delete">
+                        ${CommonUtils.checkPermission('delete') ?
+                `<button class="action-btn btn-delete" onclick="deleteOffer('${offer.id}')" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>` : ''
-                        }
+            }
                     </div>
                 </td>
             </tr>
         `;
     });
-    
+
     tableBody.innerHTML = html;
 }
 
@@ -345,14 +335,14 @@ function renderOffersTable() {
 function updatePagination() {
     const paginationContainer = document.getElementById('offersPagination');
     if (!paginationContainer) return;
-    
+
     const totalPages = Math.ceil(filteredOffers.length / itemsPerPage);
-    
+
     if (totalPages <= 1) {
         paginationContainer.innerHTML = '';
         return;
     }
-    
+
     paginationContainer.innerHTML = CommonUtils.createPagination(
         filteredOffers.length,
         itemsPerPage,
@@ -375,33 +365,33 @@ function updateStats() {
         upcoming: 0,
         expiring: 0
     };
-    
+
     const now = new Date();
-    
+
     offersData.forEach(offer => {
         const status = getOfferStatus(offer);
-        
+
         if (status === 'active') stats.active++;
         if (status === 'upcoming') stats.upcoming++;
-        
+
         // Check if expiring soon (within 7 days)
         if (offer.endDate) {
-            const endDate = offer.endDate.toDate ? 
+            const endDate = offer.endDate.toDate ?
                 offer.endDate.toDate() : new Date(offer.endDate);
             const daysToEnd = Math.ceil((endDate - now) / (1000 * 60 * 60 * 24));
-            
+
             if (daysToEnd <= 7 && daysToEnd > 0 && status === 'active') {
                 stats.expiring++;
             }
         }
     });
-    
+
     // Update DOM elements
     document.getElementById('totalOffersCount')?.textContent = stats.total;
     document.getElementById('activeOffersCount')?.textContent = stats.active;
     document.getElementById('upcomingOffersCount')?.textContent = stats.upcoming;
     document.getElementById('expiringOffersCount')?.textContent = stats.expiring;
-    
+
     // Update navigation badge
     document.getElementById('activeOffersCount')?.textContent = stats.active;
 }
@@ -409,18 +399,18 @@ function updateStats() {
 // Get offer status
 function getOfferStatus(offer) {
     if (!offer.isActive) return 'inactive';
-    
+
     const now = new Date();
-    const startDate = offer.startDate?.toDate ? 
+    const startDate = offer.startDate?.toDate ?
         offer.startDate.toDate() : new Date(offer.startDate);
-    const endDate = offer.endDate?.toDate ? 
+    const endDate = offer.endDate?.toDate ?
         offer.endDate.toDate() : new Date(offer.endDate);
-    
+
     if (!startDate || !endDate) return 'inactive';
-    
+
     if (now < startDate) return 'upcoming';
     if (now > endDate) return 'expired';
-    
+
     return 'active';
 }
 
@@ -428,7 +418,7 @@ function getOfferStatus(offer) {
 function viewOffer(offerId) {
     const offer = offersData.find(o => o.id === offerId);
     if (!offer) return;
-    
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.innerHTML = `
@@ -468,10 +458,10 @@ function viewOffer(offerId) {
                         <div class="detail-value">
                             <div class="price-display">
                                 <div class="current-price">${CommonUtils.formatCurrency(offer.currentPrice)}</div>
-                                ${offer.originalPrice > offer.currentPrice ? 
-                                    `<div class="original-price">${CommonUtils.formatCurrency(offer.originalPrice)}</div>
+                                ${offer.originalPrice > offer.currentPrice ?
+            `<div class="original-price">${CommonUtils.formatCurrency(offer.originalPrice)}</div>
                                      <div class="discount">Save ${offer.discountPercentage || 0}%</div>` : ''
-                                }
+        }
                             </div>
                         </div>
                     </div>
@@ -548,14 +538,14 @@ function viewOffer(offerId) {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
 }
 
 // Show offer modal for create/edit
 function showOfferModal(offerId = null) {
     const offer = offerId ? offersData.find(o => o.id === offerId) : null;
-    
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.innerHTML = `
@@ -700,19 +690,19 @@ function showOfferModal(offerId = null) {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
 }
 
 // Save offer
 async function saveOffer(event, offerId = null) {
     event.preventDefault();
-    
+
     try {
         CommonUtils.showLoading(true, 'Saving offer...');
-        
-        const { db, COLLECTIONS, currentUser } = CommonUtils;
-        
+
+        const { currentUser } = CommonUtils;
+
         // Get form values
         const formData = {
             title: document.getElementById('offerTitle').value,
@@ -726,23 +716,18 @@ async function saveOffer(event, offerId = null) {
             termsConditions: document.getElementById('termsConditions').value || null,
             isActive: document.getElementById('isActive').checked,
             featured: document.getElementById('featured').checked,
-            startDate: firebase.firestore.Timestamp.fromDate(
-                new Date(document.getElementById('startDate').value)
-            ),
-            endDate: firebase.firestore.Timestamp.fromDate(
-                new Date(document.getElementById('endDate').value)
-            ),
-            updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
+            startDate: new Date(document.getElementById('startDate').value).toISOString(),
+            endDate: new Date(document.getElementById('endDate').value).toISOString(),
             updatedBy: currentUser.name || 'Admin'
         };
-        
+
         // Calculate discount
         if (formData.originalPrice > 0 && formData.currentPrice > 0) {
             formData.discountPercentage = Math.round(
                 ((formData.originalPrice - formData.currentPrice) / formData.originalPrice) * 100
             );
         }
-        
+
         // Get features
         const featureInputs = document.querySelectorAll('.feature-input');
         const features = [];
@@ -752,27 +737,38 @@ async function saveOffer(event, offerId = null) {
             }
         });
         formData.features = features;
-        
+
+        let response;
         if (offerId) {
             // Update existing offer
-            await db.collection(COLLECTIONS.OFFERS).doc(offerId).update(formData);
+            response = await fetch(`${CommonUtils.API_URL}/offers/${offerId}`, {
+                method: 'PUT',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            if (!response.ok) throw new Error('Failed to update offer');
             CommonUtils.showNotification('Offer updated successfully!', 'success');
         } else {
             // Create new offer
-            formData.createdAt = firebase.firestore.FieldValue.serverTimestamp();
             formData.createdBy = currentUser.name || 'Admin';
             formData.views = 0;
             formData.bookings = 0;
-            
-            await db.collection(COLLECTIONS.OFFERS).add(formData);
+
+            response = await fetch(`${CommonUtils.API_URL}/offers`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(formData)
+            });
+            if (!response.ok) throw new Error('Failed to create offer');
             CommonUtils.showNotification('Offer created successfully!', 'success');
         }
-        
+
         // Close modal
         document.querySelector('.modal')?.remove();
-        
+
         CommonUtils.showLoading(false);
-        
+        loadOffers(); // Refresh the list
+
     } catch (error) {
         console.error('Error saving offer:', error);
         CommonUtils.showNotification('Failed to save offer', 'error');
@@ -784,27 +780,31 @@ async function saveOffer(event, offerId = null) {
 async function toggleOfferStatus(offerId) {
     const offer = offersData.find(o => o.id === offerId);
     if (!offer) return;
-    
+
     const newStatus = !offer.isActive;
     const action = newStatus ? 'activate' : 'deactivate';
-    
+
     CommonUtils.showConfirm(
         `Are you sure you want to ${action} this offer?`,
         async () => {
             try {
                 CommonUtils.showLoading(true, `${action === 'activate' ? 'Activating' : 'Deactivating'} offer...`);
-                
-                const { db, COLLECTIONS, currentUser } = CommonUtils;
-                
-                await db.collection(COLLECTIONS.OFFERS).doc(offerId).update({
-                    isActive: newStatus,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedBy: currentUser.name || 'Admin'
+
+                const response = await fetch(`${CommonUtils.API_URL}/offers/${offerId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        isActive: newStatus,
+                        updatedBy: CommonUtils.currentUser.name || 'Admin'
+                    })
                 });
-                
+
+                if (!response.ok) throw new Error(`Failed to ${action} offer`);
+
                 CommonUtils.showNotification(`Offer ${action}d successfully!`, 'success');
                 CommonUtils.showLoading(false);
-                
+                loadOffers(); // Refresh the list
+
             } catch (error) {
                 console.error('Error toggling offer status:', error);
                 CommonUtils.showNotification('Failed to update offer status', 'error');
@@ -821,14 +821,17 @@ async function deleteOffer(offerId) {
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Deleting offer...');
-                
-                const { db, COLLECTIONS } = CommonUtils;
-                
-                await db.collection(COLLECTIONS.OFFERS).doc(offerId).delete();
-                
+
+                const response = await fetch(`${CommonUtils.API_URL}/offers/${offerId}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) throw new Error('Failed to delete offer');
+
                 CommonUtils.showNotification('Offer deleted successfully!', 'success');
                 CommonUtils.showLoading(false);
-                
+                loadOffers(); // Refresh the list
+
             } catch (error) {
                 console.error('Error deleting offer:', error);
                 CommonUtils.showNotification('Failed to delete offer', 'error');
@@ -842,7 +845,7 @@ async function deleteOffer(offerId) {
 function addFeature() {
     const container = document.getElementById('featuresContainer');
     if (!container) return;
-    
+
     const div = document.createElement('div');
     div.className = 'feature-item';
     div.innerHTML = `
@@ -894,7 +897,7 @@ function exportOffers() {
         'Created Date': CommonUtils.formatDate(offer.createdAt, true),
         'Created By': offer.createdBy || 'System'
     }));
-    
+
     CommonUtils.exportToCSV(exportData, 'jumuia_offers');
 }
 
@@ -903,7 +906,7 @@ function updateSortIndicators() {
     document.querySelectorAll('.sort-btn').forEach(btn => {
         const field = btn.dataset.field;
         const icon = btn.querySelector('i');
-        
+
         if (field === sortField) {
             icon.className = sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
         } else {
@@ -926,7 +929,7 @@ function debounce(func, wait) {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Check if we're on the offers module
     if (document.querySelector('[data-module="offers"]')) {
         setTimeout(() => {

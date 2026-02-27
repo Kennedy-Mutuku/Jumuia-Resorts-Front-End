@@ -36,23 +36,23 @@ const CHART_COLORS = {
 // Initialize reports module
 function initReportsModule() {
     console.log('Initializing Reports module...');
-    
+
     // Initialize common utilities
     if (!window.CommonUtils || !window.CommonUtils.initCurrentUser()) {
         console.error('Common utilities not available');
         CommonUtils.showNotification('Reports module failed to initialize', 'error');
         return;
     }
-    
+
     // Setup UI based on user permissions
     setupPermissions();
-    
+
     // Setup event listeners
     setupEventListeners();
-    
+
     // Set default dates
     setDefaultDates();
-    
+
     // Load reports data
     loadReportsData();
 }
@@ -60,7 +60,7 @@ function initReportsModule() {
 // Setup permissions
 function setupPermissions() {
     const { currentUser } = CommonUtils;
-    
+
     // Hide property filter if user can only see their property
     if (!currentUser.permissions.properties.includes('all')) {
         const propertyFilter = document.getElementById('reportProperty');
@@ -77,10 +77,10 @@ function setupEventListeners() {
     // Period selector
     const periodSelect = document.getElementById('reportPeriod');
     if (periodSelect) {
-        periodSelect.addEventListener('change', function() {
+        periodSelect.addEventListener('change', function () {
             const value = this.value;
             const customRange = document.getElementById('customDateRange');
-            
+
             if (value === 'custom') {
                 customRange.style.display = 'block';
             } else {
@@ -91,42 +91,42 @@ function setupEventListeners() {
             }
         });
     }
-    
+
     // Property filter
     const propertySelect = document.getElementById('reportProperty');
     if (propertySelect) {
-        propertySelect.addEventListener('change', function() {
+        propertySelect.addEventListener('change', function () {
             currentFilters.property = this.value;
         });
     }
-    
+
     // Report type
     const reportTypeSelect = document.getElementById('reportType');
     if (reportTypeSelect) {
-        reportTypeSelect.addEventListener('change', function() {
+        reportTypeSelect.addEventListener('change', function () {
             currentFilters.reportType = this.value;
         });
     }
-    
+
     // Custom date range
     const dateFrom = document.getElementById('dateFrom');
     const dateTo = document.getElementById('dateTo');
     if (dateFrom && dateTo) {
-        dateFrom.addEventListener('change', function() {
+        dateFrom.addEventListener('change', function () {
             currentFilters.dateFrom = this.value;
             currentFilters.period = 'custom';
         });
-        
-        dateTo.addEventListener('change', function() {
+
+        dateTo.addEventListener('change', function () {
             currentFilters.dateTo = this.value;
             currentFilters.period = 'custom';
         });
     }
-    
+
     // Apply filters button
     const applyBtn = document.getElementById('applyFiltersBtn');
     if (applyBtn) {
-        applyBtn.addEventListener('click', function() {
+        applyBtn.addEventListener('click', function () {
             if (currentFilters.period === 'custom' && (!currentFilters.dateFrom || !currentFilters.dateTo)) {
                 CommonUtils.showNotification('Please select both start and end dates for custom range', 'warning');
                 return;
@@ -134,38 +134,38 @@ function setupEventListeners() {
             loadReportsData();
         });
     }
-    
+
     // Clear filters button
     const clearBtn = document.getElementById('clearFiltersBtn');
     if (clearBtn) {
-        clearBtn.addEventListener('click', function() {
+        clearBtn.addEventListener('click', function () {
             clearFilters();
         });
     }
-    
+
     // Refresh button
     const refreshBtn = document.getElementById('refreshReportsBtn');
     if (refreshBtn) {
-        refreshBtn.addEventListener('click', function() {
+        refreshBtn.addEventListener('click', function () {
             loadReportsData();
             CommonUtils.showNotification('Reports refreshed', 'info');
         });
     }
-    
+
     // Export all button
     const exportAllBtn = document.getElementById('exportAllBtn');
     if (exportAllBtn) {
-        exportAllBtn.addEventListener('click', function() {
+        exportAllBtn.addEventListener('click', function () {
             exportAllReports();
         });
     }
-    
+
     // Chart period selectors
     const chartSelectors = ['revenueChartPeriod', 'occupancyChartPeriod', 'sourcesChartPeriod', 'roomsChartPeriod'];
     chartSelectors.forEach(id => {
         const selector = document.getElementById(id);
         if (selector) {
-            selector.addEventListener('change', function() {
+            selector.addEventListener('change', function () {
                 if (reportsData.bookings) {
                     updateCharts();
                 }
@@ -179,8 +179,8 @@ function setDefaultDates() {
     const today = new Date();
     const yesterday = new Date(today);
     yesterday.setDate(yesterday.getDate() - 1);
-    
-    switch(currentFilters.period) {
+
+    switch (currentFilters.period) {
         case 'today':
             currentFilters.dateFrom = today.toISOString().split('T')[0];
             currentFilters.dateTo = today.toISOString().split('T')[0];
@@ -218,7 +218,7 @@ function setDefaultDates() {
             currentFilters.dateTo = today.toISOString().split('T')[0];
             break;
     }
-    
+
     // Update date inputs if they exist
     const dateFromInput = document.getElementById('dateFrom');
     const dateToInput = document.getElementById('dateTo');
@@ -235,76 +235,77 @@ function clearFilters() {
         dateFrom: null,
         dateTo: null
     };
-    
+
     // Reset UI
     document.getElementById('reportPeriod').value = 'last7days';
     document.getElementById('reportProperty').value = 'all';
     document.getElementById('reportType').value = 'overview';
     document.getElementById('customDateRange').style.display = 'none';
-    
+
     setDefaultDates();
     loadReportsData();
-    
+
     CommonUtils.showNotification('Filters cleared', 'info');
 }
 
 // Load reports data
 async function loadReportsData() {
     try {
-        showLoading(true);
-        
-        const { db, COLLECTIONS, currentUser } = CommonUtils;
-        
+        CommonUtils.showLoading(true, 'Loading reports...');
+
+        const { currentUser } = CommonUtils;
+
         // Determine property filter
         let propertyFilter = currentFilters.property;
         if (propertyFilter === 'all' && !currentUser.permissions.properties.includes('all')) {
             propertyFilter = currentUser.property;
         }
-        
-        // Get bookings within date range
-        let bookingsQuery = db.collection(COLLECTIONS.BOOKINGS);
-        
-        // Apply property filter
+
+        // Build query string
+        let url = `${CommonUtils.API_URL}/bookings?`;
+
         if (propertyFilter !== 'all') {
-            bookingsQuery = bookingsQuery.where('property', '==', propertyFilter);
+            url += `property=${propertyFilter}&`;
         }
-        
+
         // Apply date range
         if (currentFilters.dateFrom && currentFilters.dateTo) {
-            bookingsQuery = bookingsQuery.where('createdAt', '>=', new Date(currentFilters.dateFrom))
-                                         .where('createdAt', '<=', new Date(currentFilters.dateTo + 'T23:59:59'));
+            url += `startDate=${currentFilters.dateFrom}&endDate=${currentFilters.dateTo}`;
         } else {
             // Default to last 7 days
             const last7 = new Date();
             last7.setDate(last7.getDate() - 7);
-            bookingsQuery = bookingsQuery.where('createdAt', '>=', last7);
+            url += `startDate=${last7.toISOString().split('T')[0]}`;
         }
-        
-        const bookingsSnapshot = await bookingsQuery.get();
-        
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to load report data');
+
+        const bookingsData = await response.json();
+
         // Process bookings data
-        reportsData = processBookingsData(bookingsSnapshot);
-        
+        reportsData = processBookingsData(bookingsData);
+
         // Get previous period data for comparison
         const previousData = await getPreviousPeriodData();
-        
+
         // Update UI
         updateKPISummary(reportsData, previousData);
         updateReportCards(reportsData, previousData);
         createCharts();
         updateTables();
-        
-        showLoading(false);
-        
+
+        CommonUtils.showLoading(false);
+
     } catch (error) {
         console.error('Error loading reports data:', error);
         CommonUtils.showNotification('Failed to load reports data', 'error');
-        showLoading(false);
+        CommonUtils.showLoading(false);
     }
 }
 
 // Process bookings data
-function processBookingsData(snapshot) {
+function processBookingsData(bookingsData) {
     const data = {
         bookings: [],
         revenue: 0,
@@ -315,23 +316,26 @@ function processBookingsData(snapshot) {
         dailyData: {},
         statusCounts: {}
     };
-    
-    snapshot.forEach(doc => {
+
+    // Check if bookingsData is directly an array (API response) or snapshot
+    const items = Array.isArray(bookingsData) ? bookingsData : [];
+
+    items.forEach(doc => {
         const booking = {
-            id: doc.id,
-            ...doc.data()
+            id: doc._id || doc.id,
+            ...doc
         };
-        
+
         data.bookings.push(booking);
-        
+
         // Calculate revenue
         if (booking.totalAmount && booking.status !== 'cancelled') {
             data.revenue += booking.totalAmount;
         }
-        
+
         // Count bookings
         data.totalBookings++;
-        
+
         // Group by property
         const property = booking.property || 'unknown';
         if (!data.properties[property]) {
@@ -343,7 +347,7 @@ function processBookingsData(snapshot) {
         }
         data.properties[property].revenue += booking.totalAmount || 0;
         data.properties[property].bookings++;
-        
+
         // Group by source
         const source = booking.source || 'website';
         if (!data.sources[source]) {
@@ -354,7 +358,7 @@ function processBookingsData(snapshot) {
         }
         data.sources[source].revenue += booking.totalAmount || 0;
         data.sources[source].bookings++;
-        
+
         // Group by room type
         const roomType = booking.roomType || 'standard';
         if (!data.roomTypes[roomType]) {
@@ -365,9 +369,9 @@ function processBookingsData(snapshot) {
         }
         data.roomTypes[roomType].revenue += booking.totalAmount || 0;
         data.roomTypes[roomType].bookings++;
-        
+
         // Daily data
-        const date = booking.createdAt ? new Date(booking.createdAt.toDate ? booking.createdAt.toDate() : booking.createdAt).toISOString().split('T')[0] : 'unknown';
+        const date = booking.createdAt ? new Date(booking.createdAt).toISOString().split('T')[0] : 'unknown';
         if (!data.dailyData[date]) {
             data.dailyData[date] = {
                 revenue: 0,
@@ -376,7 +380,7 @@ function processBookingsData(snapshot) {
         }
         data.dailyData[date].revenue += booking.totalAmount || 0;
         data.dailyData[date].bookings++;
-        
+
         // Status counts
         const status = booking.status || 'pending';
         if (!data.statusCounts[status]) {
@@ -384,12 +388,12 @@ function processBookingsData(snapshot) {
         }
         data.statusCounts[status]++;
     });
-    
+
     // Calculate averages
     data.avgOccupancy = calculateAverageOccupancy(data.bookings);
     data.avgDailyRate = data.totalBookings > 0 ? data.revenue / data.totalBookings : 0;
     data.avgBookingValue = data.totalBookings > 0 ? data.revenue / data.totalBookings : 0;
-    
+
     return data;
 }
 
@@ -398,43 +402,42 @@ function calculateAverageOccupancy(bookings) {
     // This is a simplified calculation
     // In a real system, you'd calculate based on total rooms available
     const totalRooms = 30; // Assuming 30 rooms per property
-    const occupiedRooms = bookings.filter(b => 
+    const occupiedRooms = bookings.filter(b =>
         ['confirmed', 'checked-in'].includes(b.status)
     ).reduce((sum, b) => sum + (b.rooms || 1), 0);
-    
+
     return Math.min(100, (occupiedRooms / totalRooms) * 100);
 }
 
 // Get previous period data for comparison
 async function getPreviousPeriodData() {
     try {
-        const { db, COLLECTIONS } = CommonUtils;
-        
         // Calculate previous period dates
         const fromDate = new Date(currentFilters.dateFrom);
         const toDate = new Date(currentFilters.dateTo);
         const periodDays = Math.ceil((toDate - fromDate) / (1000 * 60 * 60 * 24)) + 1;
-        
+
         const prevFromDate = new Date(fromDate);
         prevFromDate.setDate(prevFromDate.getDate() - periodDays);
         const prevToDate = new Date(toDate);
         prevToDate.setDate(prevToDate.getDate() - periodDays);
-        
-        // Get previous period bookings
-        let prevQuery = db.collection(COLLECTIONS.BOOKINGS);
-        
+
+        let url = `${CommonUtils.API_URL}/bookings?`;
+
         if (currentFilters.property !== 'all') {
-            prevQuery = prevQuery.where('property', '==', currentFilters.property);
+            url += `property=${currentFilters.property}&`;
         }
-        
-        prevQuery = prevQuery.where('createdAt', '>=', prevFromDate)
-                             .where('createdAt', '<=', prevToDate);
-        
-        const snapshot = await prevQuery.get();
-        
+
+        url += `startDate=${prevFromDate.toISOString().split('T')[0]}&endDate=${prevToDate.toISOString().split('T')[0]}`;
+
+        const response = await fetch(url);
+        if (!response.ok) return null;
+
+        const bookingsData = await response.json();
+
         // Process previous data
-        return processBookingsData(snapshot);
-        
+        return processBookingsData(bookingsData);
+
     } catch (error) {
         console.error('Error getting previous period data:', error);
         return null;
@@ -445,7 +448,7 @@ async function getPreviousPeriodData() {
 function updateKPISummary(data, previousData) {
     const kpiContainer = document.getElementById('kpiSummary');
     if (!kpiContainer) return;
-    
+
     const kpis = [
         {
             label: 'Confirmed',
@@ -484,13 +487,13 @@ function updateKPISummary(data, previousData) {
             icon: 'fa-star'
         }
     ];
-    
+
     let html = '';
     kpis.forEach(kpi => {
         const change = kpi.previous ? ((kpi.value - kpi.previous) / kpi.previous * 100) : 0;
         const changeClass = change > 0 ? 'trend-up' : change < 0 ? 'trend-down' : 'trend-neutral';
         const changeIcon = change > 0 ? 'fa-arrow-up' : change < 0 ? 'fa-arrow-down' : 'fa-minus';
-        
+
         html += `
             <div class="kpi-card">
                 <i class="fas ${kpi.icon}"></i>
@@ -505,7 +508,7 @@ function updateKPISummary(data, previousData) {
             </div>
         `;
     });
-    
+
     kpiContainer.innerHTML = html;
 }
 
@@ -514,53 +517,53 @@ function updateReportCards(data, previousData) {
     // Update total revenue
     const revenueElement = document.getElementById('totalRevenue');
     const revenueChangeElement = document.getElementById('revenueChange');
-    
+
     if (revenueElement) {
         revenueElement.textContent = `KES ${data.revenue.toLocaleString()}`;
     }
-    
+
     if (revenueChangeElement && previousData) {
         const change = previousData.revenue ? ((data.revenue - previousData.revenue) / previousData.revenue * 100) : 100;
         revenueChangeElement.innerHTML = formatChange(change, data.revenue - previousData.revenue);
         revenueChangeElement.className = `report-card-change ${change >= 0 ? 'positive' : 'negative'}`;
     }
-    
+
     // Update average occupancy
     const occupancyElement = document.getElementById('avgOccupancy');
     const occupancyChangeElement = document.getElementById('occupancyChange');
-    
+
     if (occupancyElement) {
         occupancyElement.textContent = `${data.avgOccupancy.toFixed(1)}%`;
     }
-    
+
     if (occupancyChangeElement && previousData) {
         const change = previousData.avgOccupancy ? (data.avgOccupancy - previousData.avgOccupancy) : data.avgOccupancy;
         occupancyChangeElement.innerHTML = formatChange(change, change, '%');
         occupancyChangeElement.className = `report-card-change ${change >= 0 ? 'positive' : 'negative'}`;
     }
-    
+
     // Update total bookings
     const bookingsElement = document.getElementById('totalBookings');
     const bookingsChangeElement = document.getElementById('bookingsChange');
-    
+
     if (bookingsElement) {
         bookingsElement.textContent = data.totalBookings;
     }
-    
+
     if (bookingsChangeElement && previousData) {
         const change = previousData.totalBookings ? ((data.totalBookings - previousData.totalBookings) / previousData.totalBookings * 100) : 100;
         bookingsChangeElement.innerHTML = formatChange(change, data.totalBookings - previousData.totalBookings);
         bookingsChangeElement.className = `report-card-change ${change >= 0 ? 'positive' : 'negative'}`;
     }
-    
+
     // Update average daily rate
     const adrElement = document.getElementById('avgDailyRate');
     const adrChangeElement = document.getElementById('adrChange');
-    
+
     if (adrElement) {
         adrElement.textContent = `KES ${data.avgDailyRate.toFixed(0)}`;
     }
-    
+
     if (adrChangeElement && previousData) {
         const change = previousData.avgDailyRate ? ((data.avgDailyRate - previousData.avgDailyRate) / previousData.avgDailyRate * 100) : 100;
         adrChangeElement.innerHTML = formatChange(change, data.avgDailyRate - previousData.avgDailyRate, 'KES');
@@ -572,7 +575,7 @@ function updateReportCards(data, previousData) {
 function formatChange(percentage, absolute, prefix = '') {
     const trend = percentage >= 0 ? 'up' : 'down';
     const icon = percentage >= 0 ? 'fa-arrow-up' : 'fa-arrow-down';
-    
+
     return `
         <i class="fas ${icon}"></i>
         ${Math.abs(percentage).toFixed(1)}% (${prefix}${Math.abs(absolute).toFixed(0)})
@@ -591,16 +594,16 @@ function createCharts() {
 function createRevenueChart() {
     const ctx = document.getElementById('revenueChart');
     if (!ctx) return;
-    
+
     // Destroy existing chart
     if (revenueChart) {
         revenueChart.destroy();
     }
-    
+
     // Prepare data
     const period = document.getElementById('revenueChartPeriod')?.value || 'weekly';
     const { labels, datasets } = prepareRevenueData(period);
-    
+
     revenueChart = new Chart(ctx, {
         type: 'line',
         data: {
@@ -618,7 +621,7 @@ function createRevenueChart() {
                     mode: 'index',
                     intersect: false,
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             return `${context.dataset.label}: KES ${context.raw.toLocaleString()}`;
                         }
                     }
@@ -633,7 +636,7 @@ function createRevenueChart() {
                 y: {
                     beginAtZero: true,
                     ticks: {
-                        callback: function(value) {
+                        callback: function (value) {
                             return 'KES ' + value.toLocaleString();
                         }
                     }
@@ -641,7 +644,7 @@ function createRevenueChart() {
             }
         }
     });
-    
+
     // Update legend
     updateChartLegend('revenueLegend', datasets);
 }
@@ -650,16 +653,16 @@ function createRevenueChart() {
 function createOccupancyChart() {
     const ctx = document.getElementById('occupancyChart');
     if (!ctx) return;
-    
+
     // Destroy existing chart
     if (occupancyChart) {
         occupancyChart.destroy();
     }
-    
+
     // Prepare data
     const period = document.getElementById('occupancyChartPeriod')?.value || 'weekly';
     const { labels, datasets } = prepareOccupancyData(period);
-    
+
     occupancyChart = new Chart(ctx, {
         type: 'bar',
         data: {
@@ -675,7 +678,7 @@ function createOccupancyChart() {
                 },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             return `${context.dataset.label}: ${context.raw}%`;
                         }
                     }
@@ -691,7 +694,7 @@ function createOccupancyChart() {
                     beginAtZero: true,
                     max: 100,
                     ticks: {
-                        callback: function(value) {
+                        callback: function (value) {
                             return value + '%';
                         }
                     }
@@ -699,7 +702,7 @@ function createOccupancyChart() {
             }
         }
     });
-    
+
     // Update legend
     updateChartLegend('occupancyLegend', datasets);
 }
@@ -708,15 +711,15 @@ function createOccupancyChart() {
 function createSourcesChart() {
     const ctx = document.getElementById('sourcesChart');
     if (!ctx) return;
-    
+
     // Destroy existing chart
     if (sourcesChart) {
         sourcesChart.destroy();
     }
-    
+
     // Prepare data
     const { labels, data, colors } = prepareSourcesData();
-    
+
     sourcesChart = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -737,7 +740,7 @@ function createSourcesChart() {
                 },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             const label = context.label || '';
                             const value = context.raw || 0;
                             const total = data.reduce((a, b) => a + b, 0);
@@ -749,7 +752,7 @@ function createSourcesChart() {
             }
         }
     });
-    
+
     // Update legend
     updatePieChartLegend('sourcesLegend', labels, colors);
 }
@@ -758,15 +761,15 @@ function createSourcesChart() {
 function createRoomsChart() {
     const ctx = document.getElementById('roomsChart');
     if (!ctx) return;
-    
+
     // Destroy existing chart
     if (roomsChart) {
         roomsChart.destroy();
     }
-    
+
     // Prepare data
     const { labels, data, colors } = prepareRoomsData();
-    
+
     roomsChart = new Chart(ctx, {
         type: 'pie',
         data: {
@@ -786,7 +789,7 @@ function createRoomsChart() {
                 },
                 tooltip: {
                     callbacks: {
-                        label: function(context) {
+                        label: function (context) {
                             const label = context.label || '';
                             const value = context.raw || 0;
                             const total = data.reduce((a, b) => a + b, 0);
@@ -798,7 +801,7 @@ function createRoomsChart() {
             }
         }
     });
-    
+
     // Update legend
     updatePieChartLegend('roomsLegend', labels, colors);
 }
@@ -807,10 +810,10 @@ function createRoomsChart() {
 function prepareRevenueData(period) {
     const dailyData = reportsData.dailyData;
     const dates = Object.keys(dailyData).sort();
-    
+
     let labels = [];
     let revenueData = [];
-    
+
     if (period === 'daily') {
         // Last 7 days
         const last7Dates = dates.slice(-7);
@@ -826,7 +829,7 @@ function prepareRevenueData(period) {
             }
             weeklyData[week] += dailyData[date]?.revenue || 0;
         });
-        
+
         labels = Object.keys(weeklyData).map(week => `Week ${week}`);
         revenueData = Object.values(weeklyData);
     } else if (period === 'monthly') {
@@ -839,11 +842,11 @@ function prepareRevenueData(period) {
             }
             monthlyData[month] += dailyData[date]?.revenue || 0;
         });
-        
+
         labels = Object.keys(monthlyData);
         revenueData = Object.values(monthlyData);
     }
-    
+
     return {
         labels: labels,
         datasets: [{
@@ -861,16 +864,16 @@ function prepareRevenueData(period) {
 function prepareOccupancyData(period) {
     // Simplified occupancy calculation
     // In a real system, you'd calculate actual occupancy rates
-    
+
     const sampleDates = Array.from({ length: 7 }, (_, i) => {
         const date = new Date();
         date.setDate(date.getDate() - (6 - i));
         return date.toISOString().split('T')[0];
     });
-    
+
     const labels = sampleDates.map(date => formatDateLabel(date, 'daily'));
     const occupancyData = sampleDates.map(() => Math.floor(Math.random() * 30) + 70); // Random between 70-100%
-    
+
     return {
         labels: labels,
         datasets: [{
@@ -889,7 +892,7 @@ function prepareSourcesData() {
     const labels = Object.keys(sources).map(key => key.charAt(0).toUpperCase() + key.slice(1));
     const data = Object.values(sources).map(s => s.bookings);
     const colors = Object.keys(sources).map(key => CHART_COLORS[key] || getRandomColor());
-    
+
     return { labels, data, colors };
 }
 
@@ -899,7 +902,7 @@ function prepareRoomsData() {
     const labels = Object.keys(roomTypes).map(key => key.charAt(0).toUpperCase() + key.slice(1));
     const data = Object.values(roomTypes).map(r => r.bookings);
     const colors = Object.keys(roomTypes).map(key => CHART_COLORS[key] || getRandomColor());
-    
+
     return { labels, data, colors };
 }
 
@@ -912,7 +915,7 @@ function updateCharts() {
 function updateChartLegend(legendId, datasets) {
     const legendContainer = document.getElementById(legendId);
     if (!legendContainer) return;
-    
+
     let html = '';
     datasets.forEach(dataset => {
         html += `
@@ -922,7 +925,7 @@ function updateChartLegend(legendId, datasets) {
             </div>
         `;
     });
-    
+
     legendContainer.innerHTML = html;
 }
 
@@ -930,7 +933,7 @@ function updateChartLegend(legendId, datasets) {
 function updatePieChartLegend(legendId, labels, colors) {
     const legendContainer = document.getElementById(legendId);
     if (!legendContainer) return;
-    
+
     let html = '';
     labels.forEach((label, index) => {
         html += `
@@ -940,7 +943,7 @@ function updatePieChartLegend(legendId, labels, colors) {
             </div>
         `;
     });
-    
+
     legendContainer.innerHTML = html;
 }
 
@@ -954,9 +957,9 @@ function updateTables() {
 function updatePropertiesTable() {
     const tableBody = document.getElementById('propertiesTableBody');
     if (!tableBody) return;
-    
+
     const properties = reportsData.properties;
-    
+
     if (Object.keys(properties).length === 0) {
         tableBody.innerHTML = `
             <tr>
@@ -968,12 +971,12 @@ function updatePropertiesTable() {
         `;
         return;
     }
-    
+
     let html = '';
     Object.entries(properties).forEach(([property, data]) => {
         const propertyName = CommonUtils.PROPERTY_NAMES[property] || property;
         const adr = data.bookings > 0 ? data.revenue / data.bookings : 0;
-        
+
         html += `
             <tr>
                 <td>
@@ -989,7 +992,7 @@ function updatePropertiesTable() {
             </tr>
         `;
     });
-    
+
     tableBody.innerHTML = html;
 }
 
@@ -997,10 +1000,10 @@ function updatePropertiesTable() {
 function updateSourcesTable() {
     const tableBody = document.getElementById('sourcesTableBody');
     if (!tableBody) return;
-    
+
     const sources = reportsData.sources;
     const totalBookings = reportsData.totalBookings;
-    
+
     if (Object.keys(sources).length === 0) {
         tableBody.innerHTML = `
             <tr>
@@ -1012,12 +1015,12 @@ function updateSourcesTable() {
         `;
         return;
     }
-    
+
     let html = '';
     Object.entries(sources).forEach(([source, data]) => {
         const conversionRate = totalBookings > 0 ? (data.bookings / totalBookings * 100).toFixed(1) : 0;
         const sourceName = source.charAt(0).toUpperCase() + source.slice(1);
-        
+
         html += `
             <tr>
                 <td>
@@ -1032,7 +1035,7 @@ function updateSourcesTable() {
             </tr>
         `;
     });
-    
+
     tableBody.innerHTML = html;
 }
 
@@ -1052,11 +1055,11 @@ function getSourceIcon(source) {
 // Format date label
 function formatDateLabel(dateString, format) {
     const date = new Date(dateString);
-    
+
     if (format === 'daily') {
         return date.toLocaleDateString('en-US', { weekday: 'short', day: 'numeric' });
     }
-    
+
     return dateString;
 }
 
@@ -1070,7 +1073,7 @@ function getWeekNumber(date) {
 // Get random color
 function getRandomColor() {
     const colors = [
-        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', 
+        '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0',
         '#9966FF', '#FF9F40', '#8AC926', '#1982C4',
         '#6A4C93', '#F15BB5'
     ];
@@ -1079,7 +1082,7 @@ function getRandomColor() {
 
 // Export report
 function exportReport(type) {
-    switch(type) {
+    switch (type) {
         case 'revenue':
             exportRevenueReport();
             break;
@@ -1104,17 +1107,17 @@ function exportReport(type) {
 // Export revenue report
 function exportRevenueReport() {
     const data = [];
-    
+
     // Add header
     data.push(['Date', 'Property', 'Booking ID', 'Guest Name', 'Amount (KES)', 'Status']);
-    
+
     // Add data
     reportsData.bookings.forEach(booking => {
         if (booking.totalAmount) {
-            const date = booking.createdAt ? 
-                new Date(booking.createdAt.toDate ? booking.createdAt.toDate() : booking.createdAt).toLocaleDateString() : 
+            const date = booking.createdAt ?
+                new Date(booking.createdAt.toDate ? booking.createdAt.toDate() : booking.createdAt).toLocaleDateString() :
                 'N/A';
-            
+
             data.push([
                 date,
                 CommonUtils.PROPERTY_NAMES[booking.property] || booking.property,
@@ -1125,17 +1128,17 @@ function exportRevenueReport() {
             ]);
         }
     });
-    
-    CommonUtils.exportToCSV(data, `revenue_report_${new Date().toISOString().slice(0,10)}`);
+
+    CommonUtils.exportToCSV(data, `revenue_report_${new Date().toISOString().slice(0, 10)}`);
 }
 
 // Export bookings report
 function exportBookingsReport() {
     const data = [];
-    
+
     // Add header
     data.push(['Booking ID', 'Guest Name', 'Email', 'Phone', 'Property', 'Room Type', 'Check-in', 'Check-out', 'Status', 'Amount (KES)']);
-    
+
     // Add data
     reportsData.bookings.forEach(booking => {
         data.push([
@@ -1151,24 +1154,24 @@ function exportBookingsReport() {
             booking.totalAmount || 0
         ]);
     });
-    
-    CommonUtils.exportToCSV(data, `bookings_report_${new Date().toISOString().slice(0,10)}`);
+
+    CommonUtils.exportToCSV(data, `bookings_report_${new Date().toISOString().slice(0, 10)}`);
 }
 
 // Export occupancy report
 function exportOccupancyReport() {
     const data = [];
-    
+
     // Add header
     data.push(['Date', 'Property', 'Occupancy Rate (%)', 'Available Rooms', 'Occupied Rooms', 'Revenue (KES)']);
-    
+
     // Add data (simplified)
     Object.entries(reportsData.dailyData).forEach(([date, daily]) => {
         // This is simplified - in a real system you'd have actual occupancy data
         const occupancy = Math.floor(Math.random() * 30) + 70;
         const totalRooms = 30;
         const occupied = Math.round((occupancy / 100) * totalRooms);
-        
+
         data.push([
             date,
             'All Properties',
@@ -1178,45 +1181,45 @@ function exportOccupancyReport() {
             daily.revenue || 0
         ]);
     });
-    
-    CommonUtils.exportToCSV(data, `occupancy_report_${new Date().toISOString().slice(0,10)}`);
+
+    CommonUtils.exportToCSV(data, `occupancy_report_${new Date().toISOString().slice(0, 10)}`);
 }
 
 // Export financial report
 function exportFinancialReport() {
     const data = [];
-    
+
     // Add header
     data.push(['Metric', 'Value', 'Previous Period', 'Change (%)']);
-    
+
     // Calculate metrics
     const totalRevenue = reportsData.revenue;
     const avgDailyRate = reportsData.avgDailyRate;
     const avgOccupancy = reportsData.avgOccupancy;
     const totalBookings = reportsData.totalBookings;
-    
+
     // This would come from previous period data
     const prevTotalRevenue = totalRevenue * 0.9; // Example
     const prevADR = avgDailyRate * 0.95; // Example
     const prevOccupancy = avgOccupancy * 0.98; // Example
     const prevBookings = totalBookings * 0.92; // Example
-    
+
     // Add data
     data.push(['Total Revenue', `KES ${totalRevenue.toLocaleString()}`, `KES ${prevTotalRevenue.toLocaleString()}`, ((totalRevenue - prevTotalRevenue) / prevTotalRevenue * 100).toFixed(1)]);
     data.push(['Average Daily Rate', `KES ${avgDailyRate.toFixed(0)}`, `KES ${prevADR.toFixed(0)}`, ((avgDailyRate - prevADR) / prevADR * 100).toFixed(1)]);
     data.push(['Average Occupancy', `${avgOccupancy.toFixed(1)}%`, `${prevOccupancy.toFixed(1)}%`, ((avgOccupancy - prevOccupancy) / prevOccupancy * 100).toFixed(1)]);
     data.push(['Total Bookings', totalBookings, prevBookings.toFixed(0), ((totalBookings - prevBookings) / prevBookings * 100).toFixed(1)]);
-    
-    CommonUtils.exportToCSV(data, `financial_report_${new Date().toISOString().slice(0,10)}`);
+
+    CommonUtils.exportToCSV(data, `financial_report_${new Date().toISOString().slice(0, 10)}`);
 }
 
 // Export guest report
 function exportGuestReport() {
     const data = [];
-    
+
     // Add header
     data.push(['Guest Name', 'Email', 'Phone', 'Total Bookings', 'Total Nights', 'Total Spent (KES)', 'Last Booking']);
-    
+
     // Group bookings by guest (simplified)
     const guests = {};
     reportsData.bookings.forEach(booking => {
@@ -1232,30 +1235,30 @@ function exportGuestReport() {
                 lastBooking: booking.createdAt
             };
         }
-        
+
         guests[guestKey].bookings++;
         guests[guestKey].nights += booking.nights || 1;
         guests[guestKey].spent += booking.totalAmount || 0;
-        
+
         // Update last booking if this one is newer
-        const currentDate = booking.createdAt ? 
-            new Date(booking.createdAt.toDate ? booking.createdAt.toDate() : booking.createdAt) : 
+        const currentDate = booking.createdAt ?
+            new Date(booking.createdAt.toDate ? booking.createdAt.toDate() : booking.createdAt) :
             new Date(0);
-        const lastDate = guests[guestKey].lastBooking ? 
-            new Date(guests[guestKey].lastBooking.toDate ? guests[guestKey].lastBooking.toDate() : guests[guestKey].lastBooking) : 
+        const lastDate = guests[guestKey].lastBooking ?
+            new Date(guests[guestKey].lastBooking.toDate ? guests[guestKey].lastBooking.toDate() : guests[guestKey].lastBooking) :
             new Date(0);
-        
+
         if (currentDate > lastDate) {
             guests[guestKey].lastBooking = booking.createdAt;
         }
     });
-    
+
     // Add data
     Object.values(guests).forEach(guest => {
-        const lastBooking = guest.lastBooking ? 
-            new Date(guest.lastBooking.toDate ? guest.lastBooking.toDate() : guest.lastBooking).toLocaleDateString() : 
+        const lastBooking = guest.lastBooking ?
+            new Date(guest.lastBooking.toDate ? guest.lastBooking.toDate() : guest.lastBooking).toLocaleDateString() :
             'N/A';
-        
+
         data.push([
             guest.name,
             guest.email,
@@ -1266,8 +1269,8 @@ function exportGuestReport() {
             lastBooking
         ]);
     });
-    
-    CommonUtils.exportToCSV(data, `guest_report_${new Date().toISOString().slice(0,10)}`);
+
+    CommonUtils.exportToCSV(data, `guest_report_${new Date().toISOString().slice(0, 10)}`);
 }
 
 // Show custom export modal
@@ -1342,32 +1345,32 @@ function showCustomExport() {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
-    
+
     // Handle form submission
     const form = modal.querySelector('#customExportForm');
-    form.addEventListener('submit', function(e) {
+    form.addEventListener('submit', function (e) {
         e.preventDefault();
-        
+
         const format = document.getElementById('exportFormat').value;
         const fromDate = document.getElementById('customExportFrom').value;
         const toDate = document.getElementById('customExportTo').value;
-        
+
         // Get selected fields
         const selectedFields = Array.from(form.querySelectorAll('input[name="fields"]:checked'))
-                                   .map(input => input.value);
-        
+            .map(input => input.value);
+
         if (selectedFields.length === 0) {
             CommonUtils.showNotification('Please select at least one field', 'warning');
             return;
         }
-        
+
         if (!fromDate || !toDate) {
             CommonUtils.showNotification('Please select date range', 'warning');
             return;
         }
-        
+
         generateCustomReport(format, selectedFields, fromDate, toDate);
         modal.remove();
     });
@@ -1377,16 +1380,16 @@ function showCustomExport() {
 async function generateCustomReport(format, fields, fromDate, toDate) {
     try {
         CommonUtils.showNotification('Generating custom report...', 'info');
-        
+
         // In a real system, you would:
         // 1. Fetch data based on selected fields and date range
         // 2. Format according to selected format
         // 3. Generate download
-        
+
         // For now, we'll simulate with a delay
         setTimeout(() => {
             const data = [];
-            
+
             // Create header based on selected fields
             const headers = fields.map(field => {
                 const fieldNames = {
@@ -1402,12 +1405,12 @@ async function generateCustomReport(format, fields, fromDate, toDate) {
                 return fieldNames[field] || field;
             });
             data.push(headers);
-            
+
             // Add sample data
             reportsData.bookings.slice(0, 10).forEach(booking => {
                 const row = [];
                 fields.forEach(field => {
-                    switch(field) {
+                    switch (field) {
                         case 'booking_id':
                             row.push(booking.bookingId || 'N/A');
                             break;
@@ -1415,8 +1418,8 @@ async function generateCustomReport(format, fields, fromDate, toDate) {
                             row.push(`${booking.firstName} ${booking.lastName}`);
                             break;
                         case 'dates':
-                            const date = booking.createdAt ? 
-                                new Date(booking.createdAt.toDate ? booking.createdAt.toDate() : booking.createdAt).toLocaleDateString() : 
+                            const date = booking.createdAt ?
+                                new Date(booking.createdAt.toDate ? booking.createdAt.toDate() : booking.createdAt).toLocaleDateString() :
                                 'N/A';
                             row.push(date);
                             break;
@@ -1441,10 +1444,10 @@ async function generateCustomReport(format, fields, fromDate, toDate) {
                 });
                 data.push(row);
             });
-            
+
             // Export based on format
             if (format === 'csv') {
-                CommonUtils.exportToCSV(data, `custom_report_${new Date().toISOString().slice(0,10)}`);
+                CommonUtils.exportToCSV(data, `custom_report_${new Date().toISOString().slice(0, 10)}`);
             } else if (format === 'json') {
                 const jsonData = data.slice(1).map(row => {
                     const obj = {};
@@ -1453,13 +1456,13 @@ async function generateCustomReport(format, fields, fromDate, toDate) {
                     });
                     return obj;
                 });
-                
+
                 const jsonString = JSON.stringify(jsonData, null, 2);
                 const blob = new Blob([jsonString], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `custom_report_${new Date().toISOString().slice(0,10)}.json`;
+                a.download = `custom_report_${new Date().toISOString().slice(0, 10)}.json`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
@@ -1467,11 +1470,11 @@ async function generateCustomReport(format, fields, fromDate, toDate) {
             } else {
                 CommonUtils.showNotification('PDF export requires additional setup', 'warning');
             }
-            
+
             CommonUtils.showNotification('Custom report generated', 'success');
-            
+
         }, 1000);
-        
+
     } catch (error) {
         console.error('Error generating custom report:', error);
         CommonUtils.showNotification('Failed to generate custom report', 'error');
@@ -1501,7 +1504,7 @@ function showLoading(show) {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Check if we're on the reports module
     if (document.querySelector('[data-module="reports"]')) {
         setTimeout(() => {

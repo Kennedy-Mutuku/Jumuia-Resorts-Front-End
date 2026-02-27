@@ -8,13 +8,13 @@ let currentSection = 'general';
 // Initialize settings module
 function initSettingsModule() {
     console.log('Initializing Settings module...');
-    
+
     // Initialize common utilities
     if (!window.CommonUtils || !CommonUtils.initCurrentUser()) {
         console.error('Common utilities not available');
         return;
     }
-    
+
     // Check if user has permission to manage settings
     if (!CommonUtils.checkPermission('manageSettings')) {
         CommonUtils.showNotification('You do not have permission to access settings', 'error');
@@ -23,47 +23,45 @@ function initSettingsModule() {
         }, 2000);
         return;
     }
-    
+
     // Load settings data
     loadSettings();
-    
+
     // Setup event listeners
     setupEventListeners();
-    
+
     // Setup auto-save
     setupAutoSave();
-    
+
     // Load system info
     loadSystemInfo();
 }
 
-// Load settings from Firebase
+// Load settings from storage
 async function loadSettings() {
     try {
         CommonUtils.showLoading(true, 'Loading settings...');
-        
-        const { db, COLLECTIONS } = CommonUtils;
-        
-        // Load settings from Firestore
-        const settingsDoc = await db.collection(COLLECTIONS.SETTINGS).doc('system').get();
-        
-        if (settingsDoc.exists()) {
-            settingsData = settingsDoc.data();
+
+        // Load settings from localStorage
+        const settingsCache = localStorage.getItem('jumuia_system_settings');
+
+        if (settingsCache) {
+            settingsData = JSON.parse(settingsCache);
             console.log('Settings loaded:', settingsData);
         } else {
             // Initialize with default settings
             settingsData = getDefaultSettings();
-            await saveSettingsToFirebase();
+            await saveSettingsToStorage();
         }
-        
+
         // Populate all forms with loaded settings
         populateSettingsForms();
-        
+
         // Update last saved time
         updateLastSavedTime();
-        
+
         CommonUtils.showLoading(false);
-        
+
     } catch (error) {
         console.error('Error loading settings:', error);
         CommonUtils.showNotification('Failed to load settings', 'error');
@@ -90,7 +88,7 @@ function getDefaultSettings() {
             requireDeposit: true,
             autoConfirm: true
         },
-        
+
         // Appearance Settings
         appearance: {
             theme: 'default',
@@ -102,7 +100,7 @@ function getDefaultSettings() {
             bodyFont: "'Montserrat', sans-serif",
             fontSize: '16px'
         },
-        
+
         // Email Settings
         email: {
             smtpHost: '',
@@ -119,7 +117,7 @@ function getDefaultSettings() {
             sendReminderEmails: false,
             sendAdminNotifications: true
         },
-        
+
         // Notification Settings
         notifications: {
             notifyNewBookings: true,
@@ -133,7 +131,7 @@ function getDefaultSettings() {
             enablePush: true,
             pushSound: 'default'
         },
-        
+
         // Properties
         properties: {
             defaultProperty: 'limuru',
@@ -168,7 +166,7 @@ function getDefaultSettings() {
                 }
             ]
         },
-        
+
         // Security Settings
         security: {
             sessionTimeout: 30,
@@ -184,7 +182,7 @@ function getDefaultSettings() {
             enableIPRestrictions: false,
             allowedIPs: ''
         },
-        
+
         // Integration Settings
         integrations: {
             enableMpesa: true,
@@ -201,14 +199,14 @@ function getDefaultSettings() {
             smsApiKey: '',
             smsSenderId: 'JUMUIA'
         },
-        
+
         // Backup Settings
         backup: {
             autoBackup: true,
             backupFrequency: 'weekly',
             backupRetention: 30
         },
-        
+
         // Metadata
         metadata: {
             lastUpdated: new Date().toISOString(),
@@ -222,49 +220,49 @@ function getDefaultSettings() {
 function setupEventListeners() {
     // Sidebar navigation
     document.querySelectorAll('.nav-item').forEach(item => {
-        item.addEventListener('click', function() {
+        item.addEventListener('click', function () {
             const section = this.dataset.section;
             switchSection(section);
         });
     });
-    
+
     // Refresh button
-    document.getElementById('refreshSettingsBtn').addEventListener('click', function() {
+    document.getElementById('refreshSettingsBtn').addEventListener('click', function () {
         loadSettings();
         CommonUtils.showNotification('Settings refreshed', 'info');
     });
-    
+
     // Save all button
-    document.getElementById('saveAllSettingsBtn').addEventListener('click', function() {
+    document.getElementById('saveAllSettingsBtn').addEventListener('click', function () {
         saveAllSettings();
     });
-    
+
     // Form submissions
     document.querySelectorAll('form').forEach(form => {
-        form.addEventListener('submit', function(e) {
+        form.addEventListener('submit', function (e) {
             e.preventDefault();
             saveSectionSettings(this.id.replace('SettingsForm', ''));
         });
     });
-    
+
     // Color pickers
     setupColorPickers();
-    
+
     // Theme selection
     document.querySelectorAll('.theme-card').forEach(card => {
-        card.addEventListener('click', function() {
+        card.addEventListener('click', function () {
             const theme = this.dataset.theme;
             selectTheme(theme);
         });
     });
-    
+
     // Input change tracking
     setupChangeTracking();
-    
+
     // Backup file input
     const backupFileInput = document.getElementById('backupFile');
     if (backupFileInput) {
-        backupFileInput.addEventListener('change', function(e) {
+        backupFileInput.addEventListener('change', function (e) {
             if (e.target.files.length > 0) {
                 restoreBackup(e.target.files[0]);
             }
@@ -275,7 +273,7 @@ function setupEventListeners() {
 // Switch between settings sections
 function switchSection(section) {
     currentSection = section;
-    
+
     // Update active nav item
     document.querySelectorAll('.nav-item').forEach(item => {
         item.classList.remove('active');
@@ -283,7 +281,7 @@ function switchSection(section) {
             item.classList.add('active');
         }
     });
-    
+
     // Show active section
     document.querySelectorAll('.settings-section').forEach(sec => {
         sec.classList.remove('active');
@@ -295,28 +293,28 @@ function switchSection(section) {
 function populateSettingsForms() {
     // General Settings
     populateGeneralSettings();
-    
+
     // Appearance Settings
     populateAppearanceSettings();
-    
+
     // Email Settings
     populateEmailSettings();
-    
+
     // Notification Settings
     populateNotificationSettings();
-    
+
     // Properties
     populateProperties();
-    
+
     // Security Settings
     populateSecuritySettings();
-    
+
     // Integration Settings
     populateIntegrationSettings();
-    
+
     // Backup Settings
     populateBackupSettings();
-    
+
     // Clear unsaved changes
     unsavedChanges = {};
     updateUnsavedCount();
@@ -325,7 +323,7 @@ function populateSettingsForms() {
 // Populate general settings
 function populateGeneralSettings() {
     const general = settingsData.general || {};
-    
+
     setInputValue('companyName', general.companyName);
     setInputValue('companyEmail', general.companyEmail);
     setInputValue('companyPhone', general.companyPhone);
@@ -344,7 +342,7 @@ function populateGeneralSettings() {
 // Populate appearance settings
 function populateAppearanceSettings() {
     const appearance = settingsData.appearance || {};
-    
+
     // Theme selection
     document.querySelectorAll('.theme-card').forEach(card => {
         card.classList.remove('selected');
@@ -352,19 +350,19 @@ function populateAppearanceSettings() {
             card.classList.add('selected');
         }
     });
-    
+
     // Colors
     setInputValue('primaryColor', appearance.primaryColor);
     setInputValue('primaryColorText', appearance.primaryColor);
     setInputValue('secondaryColor', appearance.secondaryColor);
     setInputValue('secondaryColorText', appearance.secondaryColor);
     updateColorPreviews();
-    
+
     // Fonts
     setSelectValue('headingFont', appearance.headingFont);
     setSelectValue('bodyFont', appearance.bodyFont);
     setSelectValue('fontSize', appearance.fontSize);
-    
+
     // Logo previews
     updateLogoPreview('main', appearance.mainLogoUrl);
     updateLogoPreview('favicon', appearance.faviconUrl);
@@ -373,7 +371,7 @@ function populateAppearanceSettings() {
 // Populate email settings
 function populateEmailSettings() {
     const email = settingsData.email || {};
-    
+
     setInputValue('smtpHost', email.smtpHost);
     setInputValue('smtpPort', email.smtpPort);
     setInputValue('smtpUsername', email.smtpUsername);
@@ -392,7 +390,7 @@ function populateEmailSettings() {
 // Populate notification settings
 function populateNotificationSettings() {
     const notifications = settingsData.notifications || {};
-    
+
     setCheckboxValue('notifyNewBookings', notifications.notifyNewBookings);
     setCheckboxValue('notifyCancellations', notifications.notifyCancellations);
     setCheckboxValue('notifyCheckins', notifications.notifyCheckins);
@@ -408,10 +406,10 @@ function populateNotificationSettings() {
 // Populate properties
 function populateProperties() {
     const properties = settingsData.properties || {};
-    
+
     setSelectValue('defaultProperty', properties.defaultProperty);
     setInputValue('maxRoomsPerProperty', properties.maxRoomsPerProperty);
-    
+
     // Render properties list
     renderPropertiesList(properties.propertyList || []);
 }
@@ -419,7 +417,7 @@ function populateProperties() {
 // Populate security settings
 function populateSecuritySettings() {
     const security = settingsData.security || {};
-    
+
     setInputValue('sessionTimeout', security.sessionTimeout);
     setCheckboxValue('require2FA', security.require2FA);
     setCheckboxValue('lockoutFailedAttempts', security.lockoutFailedAttempts);
@@ -437,7 +435,7 @@ function populateSecuritySettings() {
 // Populate integration settings
 function populateIntegrationSettings() {
     const integrations = settingsData.integrations || {};
-    
+
     setCheckboxValue('enableMpesa', integrations.enableMpesa);
     setInputValue('mpesaConsumerKey', integrations.mpesaConsumerKey);
     setInputValue('mpesaConsumerSecret', integrations.mpesaConsumerSecret);
@@ -456,11 +454,11 @@ function populateIntegrationSettings() {
 // Populate backup settings
 function populateBackupSettings() {
     const backup = settingsData.backup || {};
-    
+
     setCheckboxValue('autoBackup', backup.autoBackup);
     setSelectValue('backupFrequency', backup.backupFrequency);
     setInputValue('backupRetention', backup.backupRetention);
-    
+
     // Load recent backups
     loadRecentBackups();
 }
@@ -469,7 +467,7 @@ function populateBackupSettings() {
 function renderPropertiesList(properties) {
     const propertiesList = document.getElementById('propertiesList');
     if (!propertiesList) return;
-    
+
     if (properties.length === 0) {
         propertiesList.innerHTML = `
             <div style="text-align: center; padding: 30px; color: var(--text-light);">
@@ -479,9 +477,9 @@ function renderPropertiesList(properties) {
         `;
         return;
     }
-    
+
     let html = '<div style="display: grid; gap: 15px;">';
-    
+
     properties.forEach(property => {
         html += `
             <div style="background-color: var(--light-green); border-radius: var(--radius); padding: 20px;">
@@ -513,7 +511,7 @@ function renderPropertiesList(properties) {
             </div>
         `;
     });
-    
+
     html += '</div>';
     propertiesList.innerHTML = html;
 }
@@ -524,15 +522,15 @@ function setupColorPickers() {
     const primaryColor = document.getElementById('primaryColor');
     const primaryColorText = document.getElementById('primaryColorText');
     const primaryColorPreview = document.getElementById('primaryColorPreview');
-    
+
     if (primaryColor && primaryColorText && primaryColorPreview) {
-        primaryColor.addEventListener('input', function() {
+        primaryColor.addEventListener('input', function () {
             primaryColorText.value = this.value;
             primaryColorPreview.style.backgroundColor = this.value;
             trackChange('appearance', 'primaryColor', this.value);
         });
-        
-        primaryColorText.addEventListener('input', function() {
+
+        primaryColorText.addEventListener('input', function () {
             if (this.value.match(/^#[0-9A-F]{6}$/i)) {
                 primaryColor.value = this.value;
                 primaryColorPreview.style.backgroundColor = this.value;
@@ -540,20 +538,20 @@ function setupColorPickers() {
             }
         });
     }
-    
+
     // Secondary color picker
     const secondaryColor = document.getElementById('secondaryColor');
     const secondaryColorText = document.getElementById('secondaryColorText');
     const secondaryColorPreview = document.getElementById('secondaryColorPreview');
-    
+
     if (secondaryColor && secondaryColorText && secondaryColorPreview) {
-        secondaryColor.addEventListener('input', function() {
+        secondaryColor.addEventListener('input', function () {
             secondaryColorText.value = this.value;
             secondaryColorPreview.style.backgroundColor = this.value;
             trackChange('appearance', 'secondaryColor', this.value);
         });
-        
-        secondaryColorText.addEventListener('input', function() {
+
+        secondaryColorText.addEventListener('input', function () {
             if (this.value.match(/^#[0-9A-F]{6}$/i)) {
                 secondaryColor.value = this.value;
                 secondaryColorPreview.style.backgroundColor = this.value;
@@ -567,7 +565,7 @@ function setupColorPickers() {
 function updateColorPreviews() {
     const primaryColor = document.getElementById('primaryColor')?.value || '#22440f';
     const secondaryColor = document.getElementById('secondaryColor')?.value || '#f3a435';
-    
+
     document.getElementById('primaryColorPreview').style.backgroundColor = primaryColor;
     document.getElementById('secondaryColorPreview').style.backgroundColor = secondaryColor;
 }
@@ -577,7 +575,7 @@ function selectTheme(theme) {
     document.querySelectorAll('.theme-card').forEach(card => {
         card.classList.remove('selected');
     });
-    
+
     document.querySelector(`.theme-card[data-theme="${theme}"]`).classList.add('selected');
     trackChange('appearance', 'theme', theme);
 }
@@ -586,9 +584,9 @@ function selectTheme(theme) {
 function updateLogoPreview(type, url) {
     const preview = document.getElementById(type + 'LogoPreview');
     const input = document.getElementById(type + 'LogoUrl');
-    
+
     if (!preview || !input) return;
-    
+
     if (url) {
         preview.innerHTML = `<img src="${url}" alt="${type} logo">`;
         preview.classList.remove('empty');
@@ -600,7 +598,7 @@ function updateLogoPreview(type, url) {
         `;
         preview.classList.add('empty');
     }
-    
+
     input.value = url || '';
 }
 
@@ -609,41 +607,41 @@ function uploadLogo(type) {
     const input = document.createElement('input');
     input.type = 'file';
     input.accept = 'image/*';
-    
-    input.onchange = async function(e) {
+
+    input.onchange = async function (e) {
         const file = e.target.files[0];
         if (!file) return;
-        
+
         try {
             CommonUtils.showLoading(true, 'Uploading logo...');
-            
+
             const { storage } = CommonUtils;
             const storageRef = storage.ref();
             const fileRef = storageRef.child(`logos/${type}_${Date.now()}_${file.name}`);
-            
+
             // Upload file
             await fileRef.put(file);
-            
+
             // Get download URL
             const downloadURL = await fileRef.getDownloadURL();
-            
+
             // Update preview
             updateLogoPreview(type, downloadURL);
-            
+
             // Track change
             const field = type === 'main' ? 'mainLogoUrl' : 'faviconUrl';
             trackChange('appearance', field, downloadURL);
-            
+
             CommonUtils.showNotification('Logo uploaded successfully', 'success');
             CommonUtils.showLoading(false);
-            
+
         } catch (error) {
             console.error('Error uploading logo:', error);
             CommonUtils.showNotification('Failed to upload logo', 'error');
             CommonUtils.showLoading(false);
         }
     };
-    
+
     input.click();
 }
 
@@ -651,26 +649,26 @@ function uploadLogo(type) {
 function setupChangeTracking() {
     // Track all input changes
     document.querySelectorAll('input, select, textarea').forEach(input => {
-        input.addEventListener('change', function() {
+        input.addEventListener('change', function () {
             const formId = this.closest('form')?.id;
             if (!formId) return;
-            
+
             const section = formId.replace('SettingsForm', '').toLowerCase();
             const field = this.id;
             const value = this.type === 'checkbox' ? this.checked : this.value;
-            
+
             trackChange(section, field, value);
         });
-        
+
         // For text inputs, track on input (not just change)
         if (input.type === 'text' || input.type === 'textarea') {
-            input.addEventListener('input', debounce(function() {
+            input.addEventListener('input', debounce(function () {
                 const formId = this.closest('form')?.id;
                 if (!formId) return;
-                
+
                 const section = formId.replace('SettingsForm', '').toLowerCase();
                 const field = this.id;
-                
+
                 trackChange(section, field, this.value);
             }, 500));
         }
@@ -682,16 +680,16 @@ function trackChange(section, field, value) {
     if (!unsavedChanges[section]) {
         unsavedChanges[section] = {};
     }
-    
+
     const currentValue = getSettingValue(section, field);
-    
+
     // Only track if value has changed
     if (JSON.stringify(currentValue) !== JSON.stringify(value)) {
         unsavedChanges[section][field] = value;
-        
+
         // Update nav item indicator
         updateNavItemIndicator(section, true);
-        
+
         // Update unsaved count
         updateUnsavedCount();
     } else {
@@ -732,9 +730,9 @@ function updateUnsavedCount() {
     for (const section in unsavedChanges) {
         totalChanges += Object.keys(unsavedChanges[section]).length;
     }
-    
+
     document.getElementById('unsavedCount').textContent = totalChanges;
-    
+
     // Update save all button state
     const saveAllBtn = document.getElementById('saveAllSettingsBtn');
     if (saveAllBtn) {
@@ -747,7 +745,7 @@ function updateLastSavedTime() {
     const lastUpdated = settingsData.metadata?.lastUpdated;
     if (lastUpdated) {
         const date = new Date(lastUpdated);
-        document.getElementById('lastSavedTime').textContent = 
+        document.getElementById('lastSavedTime').textContent =
             `${date.toLocaleDateString()} ${date.toLocaleTimeString()}`;
     }
 }
@@ -756,7 +754,7 @@ function updateLastSavedTime() {
 async function saveSectionSettings(section) {
     try {
         CommonUtils.showLoading(true, 'Saving settings...');
-        
+
         // Get all changes for this section
         const changes = unsavedChanges[section];
         if (!changes || Object.keys(changes).length === 0) {
@@ -764,35 +762,35 @@ async function saveSectionSettings(section) {
             CommonUtils.showLoading(false);
             return;
         }
-        
+
         // Update settings data
         if (!settingsData[section]) {
             settingsData[section] = {};
         }
-        
+
         for (const field in changes) {
             settingsData[section][field] = changes[field];
         }
-        
+
         // Update metadata
         if (!settingsData.metadata) {
             settingsData.metadata = {};
         }
         settingsData.metadata.lastUpdated = new Date().toISOString();
         settingsData.metadata.updatedBy = CommonUtils.currentUser?.name || 'System';
-        
-        // Save to Firebase
-        await saveSettingsToFirebase();
-        
+
+        // Save to Storage
+        await saveSettingsToStorage();
+
         // Clear unsaved changes for this section
         delete unsavedChanges[section];
         updateNavItemIndicator(section, false);
         updateUnsavedCount();
         updateLastSavedTime();
-        
+
         CommonUtils.showNotification(`${section} settings saved successfully`, 'success');
         CommonUtils.showLoading(false);
-        
+
     } catch (error) {
         console.error(`Error saving ${section} settings:`, error);
         CommonUtils.showNotification(`Failed to save ${section} settings`, 'error');
@@ -806,28 +804,28 @@ async function saveAllSettings() {
         CommonUtils.showNotification('No changes to save', 'info');
         return;
     }
-    
+
     try {
         CommonUtils.showLoading(true, 'Saving all settings...');
-        
+
         // Apply all changes
         for (const section in unsavedChanges) {
             if (!settingsData[section]) {
                 settingsData[section] = {};
             }
-            
+
             for (const field in unsavedChanges[section]) {
                 settingsData[section][field] = unsavedChanges[section][field];
             }
         }
-        
+
         // Update metadata
         settingsData.metadata.lastUpdated = new Date().toISOString();
         settingsData.metadata.updatedBy = CommonUtils.currentUser?.name || 'System';
-        
-        // Save to Firebase
-        await saveSettingsToFirebase();
-        
+
+        // Save to Storage
+        await saveSettingsToStorage();
+
         // Clear all unsaved changes
         unsavedChanges = {};
         document.querySelectorAll('.nav-item').forEach(item => {
@@ -835,10 +833,10 @@ async function saveAllSettings() {
         });
         updateUnsavedCount();
         updateLastSavedTime();
-        
+
         CommonUtils.showNotification('All settings saved successfully', 'success');
         CommonUtils.showLoading(false);
-        
+
     } catch (error) {
         console.error('Error saving all settings:', error);
         CommonUtils.showNotification('Failed to save settings', 'error');
@@ -846,11 +844,9 @@ async function saveAllSettings() {
     }
 }
 
-// Save settings to Firebase
-async function saveSettingsToFirebase() {
-    const { db, COLLECTIONS } = CommonUtils;
-    
-    await db.collection(COLLECTIONS.SETTINGS).doc('system').set(settingsData, { merge: true });
+// Save settings to Storage
+async function saveSettingsToStorage() {
+    localStorage.setItem('jumuia_system_settings', JSON.stringify(settingsData));
 }
 
 // Setup auto-save
@@ -870,9 +866,9 @@ function resetSection(section) {
         () => {
             // Get default settings for this section
             const defaultSettings = getDefaultSettings();
-            
+
             // Reset form values
-            switch(section) {
+            switch (section) {
                 case 'general':
                     populateGeneralSettings();
                     break;
@@ -895,14 +891,14 @@ function resetSection(section) {
                     populateBackupSettings();
                     break;
             }
-            
+
             // Clear unsaved changes for this section
             if (unsavedChanges[section]) {
                 delete unsavedChanges[section];
                 updateNavItemIndicator(section, false);
                 updateUnsavedCount();
             }
-            
+
             CommonUtils.showNotification(`${section} settings reset to defaults`, 'success');
         }
     );
@@ -911,28 +907,40 @@ function resetSection(section) {
 // Load system info
 async function loadSystemInfo() {
     try {
-        const { db, COLLECTIONS } = CommonUtils;
-        
+        // Fetch count via endpoints instead of db.collection, or mock for now since it's just settings dashboard
+        let bookingsSize = 0;
+        let usersSize = 0;
+
+        try {
+            const bRes = await fetch(`${CommonUtils.API_URL}/bookings`);
+            const bData = await bRes.json();
+            bookingsSize = Array.isArray(bData) ? bData.length : 0;
+
+            const uRes = await fetch(`${CommonUtils.API_URL}/users`);
+            const uData = await uRes.json();
+            usersSize = Array.isArray(uData) ? uData.length : 0;
+        } catch (e) {
+            console.error('Error fetching dashboard counts', e);
+        }
+
         // Get booking count
-        const bookingsSnapshot = await db.collection(COLLECTIONS.BOOKINGS).get();
-        document.getElementById('totalBookings').textContent = bookingsSnapshot.size;
-        
+        document.getElementById('totalBookings').textContent = bookingsSize;
+
         // Get user count
-        const usersSnapshot = await db.collection(COLLECTIONS.ADMINS).get();
-        document.getElementById('activeUsers').textContent = usersSnapshot.size;
-        
+        document.getElementById('activeUsers').textContent = usersSize;
+
         // Set Firebase info
-        document.getElementById('firebaseApiKey').textContent = '••••••••' + CommonUtils.firebaseConfig.apiKey.slice(-8);
-        document.getElementById('firebaseProjectId').textContent = CommonUtils.firebaseConfig.projectId;
-        document.getElementById('firebaseProject').textContent = CommonUtils.firebaseConfig.projectId;
-        
+        document.getElementById('firebaseApiKey').textContent = 'N/A';
+        document.getElementById('firebaseProjectId').textContent = 'N/A';
+        document.getElementById('firebaseProject').textContent = 'N/A';
+
         // Set system version
         document.getElementById('systemVersion').textContent = settingsData.metadata?.version || '1.0.0';
-        document.getElementById('lastUpdated').textContent = 
-            settingsData.metadata?.lastUpdated ? 
-            new Date(settingsData.metadata.lastUpdated).toLocaleDateString() : 
-            'Never';
-        
+        document.getElementById('lastUpdated').textContent =
+            settingsData.metadata?.lastUpdated ?
+                new Date(settingsData.metadata.lastUpdated).toLocaleDateString() :
+                'Never';
+
     } catch (error) {
         console.error('Error loading system info:', error);
     }
@@ -998,17 +1006,17 @@ function addNewProperty() {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
 }
 
 // Save new property
 async function saveNewProperty(event) {
     event.preventDefault();
-    
+
     try {
         CommonUtils.showLoading(true, 'Saving property...');
-        
+
         const property = {
             id: generatePropertyId(),
             name: document.getElementById('propertyName').value,
@@ -1018,7 +1026,7 @@ async function saveNewProperty(event) {
             email: document.getElementById('propertyEmail').value,
             active: document.getElementById('propertyStatus').value === 'active'
         };
-        
+
         // Add to properties list
         if (!settingsData.properties) {
             settingsData.properties = {};
@@ -1026,21 +1034,21 @@ async function saveNewProperty(event) {
         if (!settingsData.properties.propertyList) {
             settingsData.properties.propertyList = [];
         }
-        
+
         settingsData.properties.propertyList.push(property);
-        
-        // Save to Firebase
-        await saveSettingsToFirebase();
-        
+
+        // Save to Storage
+        await saveSettingsToStorage();
+
         // Update UI
         renderPropertiesList(settingsData.properties.propertyList);
-        
+
         // Close modal
         document.querySelector('.modal')?.remove();
-        
+
         CommonUtils.showNotification('Property added successfully', 'success');
         CommonUtils.showLoading(false);
-        
+
     } catch (error) {
         console.error('Error saving property:', error);
         CommonUtils.showNotification('Failed to save property', 'error');
@@ -1062,12 +1070,12 @@ function generatePropertyId() {
 function editProperty(propertyId) {
     const properties = settingsData.properties?.propertyList || [];
     const property = properties.find(p => p.id === propertyId);
-    
+
     if (!property) {
         CommonUtils.showNotification('Property not found', 'error');
         return;
     }
-    
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.innerHTML = `
@@ -1130,24 +1138,24 @@ function editProperty(propertyId) {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
 }
 
 // Update property
 async function updateProperty(event, propertyId) {
     event.preventDefault();
-    
+
     try {
         CommonUtils.showLoading(true, 'Updating property...');
-        
+
         const properties = settingsData.properties?.propertyList || [];
         const index = properties.findIndex(p => p.id === propertyId);
-        
+
         if (index === -1) {
             throw new Error('Property not found');
         }
-        
+
         // Update property
         properties[index] = {
             ...properties[index],
@@ -1158,19 +1166,19 @@ async function updateProperty(event, propertyId) {
             email: document.getElementById('editPropertyEmail').value,
             active: document.getElementById('editPropertyStatus').value === 'active'
         };
-        
-        // Save to Firebase
-        await saveSettingsToFirebase();
-        
+
+        // Save to Storage
+        await saveSettingsToStorage();
+
         // Update UI
         renderPropertiesList(properties);
-        
+
         // Close modal
         document.querySelector('.modal')?.remove();
-        
+
         CommonUtils.showNotification('Property updated successfully', 'success');
         CommonUtils.showLoading(false);
-        
+
     } catch (error) {
         console.error('Error updating property:', error);
         CommonUtils.showNotification('Failed to update property', 'error');
@@ -1185,22 +1193,22 @@ async function deleteProperty(propertyId) {
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Deleting property...');
-                
+
                 const properties = settingsData.properties?.propertyList || [];
                 const filteredProperties = properties.filter(p => p.id !== propertyId);
-                
+
                 // Update settings
                 settingsData.properties.propertyList = filteredProperties;
-                
-                // Save to Firebase
-                await saveSettingsToFirebase();
-                
+
+                // Save to Storage
+                await saveSettingsToStorage();
+
                 // Update UI
                 renderPropertiesList(filteredProperties);
-                
+
                 CommonUtils.showNotification('Property deleted successfully', 'success');
                 CommonUtils.showLoading(false);
-                
+
             } catch (error) {
                 console.error('Error deleting property:', error);
                 CommonUtils.showNotification('Failed to delete property', 'error');
@@ -1214,33 +1222,19 @@ async function deleteProperty(propertyId) {
 async function createBackup() {
     try {
         CommonUtils.showLoading(true, 'Creating backup...');
-        
-        // Get all data from Firebase
-        const { db, COLLECTIONS } = CommonUtils;
-        
+
         const backupData = {
             timestamp: new Date().toISOString(),
             createdBy: CommonUtils.currentUser?.name || 'System',
             settings: settingsData,
-            collections: {}
+            collections: {} // Collections backups via Node API not implemented here yet
         };
-        
-        // Backup all collections
-        for (const collectionName in COLLECTIONS) {
-            const collection = COLLECTIONS[collectionName];
-            const snapshot = await db.collection(collection).get();
-            
-            backupData.collections[collection] = {};
-            snapshot.forEach(doc => {
-                backupData.collections[collection][doc.id] = doc.data();
-            });
-        }
-        
+
         // Create download link
         const dataStr = JSON.stringify(backupData, null, 2);
         const dataBlob = new Blob([dataStr], { type: 'application/json' });
         const url = URL.createObjectURL(dataBlob);
-        
+
         const link = document.createElement('a');
         link.href = url;
         link.download = `jumuia_backup_${new Date().toISOString().split('T')[0]}.json`;
@@ -1248,10 +1242,10 @@ async function createBackup() {
         link.click();
         document.body.removeChild(link);
         URL.revokeObjectURL(url);
-        
+
         CommonUtils.showNotification('Backup created successfully', 'success');
         CommonUtils.showLoading(false);
-        
+
     } catch (error) {
         console.error('Error creating backup:', error);
         CommonUtils.showNotification('Failed to create backup', 'error');
@@ -1266,34 +1260,34 @@ async function restoreBackup(file) {
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Restoring backup...');
-                
+
                 const reader = new FileReader();
-                
-                reader.onload = async function(e) {
+
+                reader.onload = async function (e) {
                     try {
                         const backupData = JSON.parse(e.target.result);
-                        
+
                         // Restore settings
                         if (backupData.settings) {
                             settingsData = backupData.settings;
-                            await saveSettingsToFirebase();
+                            await saveSettingsToStorage();
                             populateSettingsForms();
                         }
-                        
+
                         // Restore collections (optional - could be a separate function)
-                        
+
                         CommonUtils.showNotification('Backup restored successfully', 'success');
                         CommonUtils.showLoading(false);
-                        
+
                     } catch (parseError) {
                         console.error('Error parsing backup file:', parseError);
                         CommonUtils.showNotification('Invalid backup file format', 'error');
                         CommonUtils.showLoading(false);
                     }
                 };
-                
+
                 reader.readAsText(file);
-                
+
             } catch (error) {
                 console.error('Error restoring backup:', error);
                 CommonUtils.showNotification('Failed to restore backup', 'error');
@@ -1321,10 +1315,10 @@ async function loadRecentBackups() {
 // Test SMTP connection
 async function testSmtpConnection() {
     CommonUtils.showNotification('Testing SMTP connection...', 'info');
-    
+
     // In a real implementation, this would call a cloud function
     // to test the SMTP connection
-    
+
     setTimeout(() => {
         CommonUtils.showNotification('SMTP connection successful', 'success');
     }, 2000);
@@ -1333,7 +1327,7 @@ async function testSmtpConnection() {
 // Test integrations
 async function testIntegrations() {
     CommonUtils.showNotification('Testing all integrations...', 'info');
-    
+
     // Test each integration
     const tests = [
         { name: 'M-Pesa', enabled: document.getElementById('enableMpesa')?.checked },
@@ -1341,9 +1335,9 @@ async function testIntegrations() {
         { name: 'Google Analytics', enabled: document.getElementById('enableGoogleAnalytics')?.checked },
         { name: 'SMS Gateway', enabled: document.getElementById('enableSMS')?.checked }
     ];
-    
+
     let successfulTests = 0;
-    
+
     for (const test of tests) {
         if (test.enabled) {
             // Simulate API test
@@ -1351,7 +1345,7 @@ async function testIntegrations() {
             successfulTests++;
         }
     }
-    
+
     CommonUtils.showNotification(`${successfulTests} integration(s) tested successfully`, 'success');
 }
 
@@ -1370,7 +1364,7 @@ function previewEmailTemplate(type) {
 // Run system diagnostics
 async function runSystemDiagnostics() {
     CommonUtils.showLoading(true, 'Running diagnostics...');
-    
+
     const healthChecks = [
         { name: 'Firebase Connection', status: 'checking' },
         { name: 'Database Access', status: 'checking' },
@@ -1378,11 +1372,11 @@ async function runSystemDiagnostics() {
         { name: 'Email Configuration', status: 'checking' },
         { name: 'API Endpoints', status: 'checking' }
     ];
-    
+
     const systemHealth = document.getElementById('systemHealth');
     if (systemHealth) {
         let html = '<div style="display: grid; gap: 10px;">';
-        
+
         for (const check of healthChecks) {
             html += `
                 <div style="display: flex; justify-content: space-between; align-items: center; 
@@ -1394,10 +1388,10 @@ async function runSystemDiagnostics() {
                 </div>
             `;
         }
-        
+
         html += '</div>';
         systemHealth.innerHTML = html;
-        
+
         // Simulate checks
         setTimeout(() => {
             systemHealth.innerHTML = `
@@ -1439,7 +1433,7 @@ async function runSystemDiagnostics() {
                     </div>
                 </div>
             `;
-            
+
             CommonUtils.showLoading(false);
             CommonUtils.showNotification('System diagnostics completed', 'success');
         }, 2000);
@@ -1453,15 +1447,15 @@ async function clearTestData() {
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Clearing test data...');
-                
+
                 // In a real implementation, this would delete test data
                 // For now, just show a success message
-                
+
                 setTimeout(() => {
                     CommonUtils.showNotification('Test data cleared successfully', 'success');
                     CommonUtils.showLoading(false);
                 }, 2000);
-                
+
             } catch (error) {
                 console.error('Error clearing test data:', error);
                 CommonUtils.showNotification('Failed to clear test data', 'error');
@@ -1478,19 +1472,19 @@ async function resetSystemSettings() {
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Resetting settings...');
-                
+
                 // Load default settings
                 settingsData = getDefaultSettings();
-                
-                // Save to Firebase
-                await saveSettingsToFirebase();
-                
+
+                // Save to Storage
+                await saveSettingsToStorage();
+
                 // Update UI
                 populateSettingsForms();
-                
+
                 CommonUtils.showNotification('System settings reset to defaults', 'success');
                 CommonUtils.showLoading(false);
-                
+
             } catch (error) {
                 console.error('Error resetting settings:', error);
                 CommonUtils.showNotification('Failed to reset settings', 'error');
@@ -1506,19 +1500,19 @@ async function deleteAllData() {
         '⚠️ WARNING: This will delete ALL data including bookings, messages, users, and settings. This action is IRREVERSIBLE. Are you absolutely sure?',
         async () => {
             const confirmation = prompt('Type "DELETE ALL" to confirm:');
-            
+
             if (confirmation === 'DELETE ALL') {
                 try {
                     CommonUtils.showLoading(true, 'Deleting all data...');
-                    
+
                     // In a real implementation, this would delete all data
                     // For safety, we won't implement this in the demo code
-                    
+
                     setTimeout(() => {
                         CommonUtils.showNotification('All data has been deleted', 'success');
                         CommonUtils.showLoading(false);
                     }, 3000);
-                    
+
                 } catch (error) {
                     console.error('Error deleting data:', error);
                     CommonUtils.showNotification('Failed to delete data', 'error');
@@ -1538,17 +1532,17 @@ async function deactivateSystem() {
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Deactivating system...');
-                
+
                 // First create a backup
                 await createBackup();
-                
+
                 // Then deactivate (in a real implementation)
-                
+
                 setTimeout(() => {
                     CommonUtils.showNotification('System deactivated successfully', 'success');
                     CommonUtils.showLoading(false);
                 }, 2000);
-                
+
             } catch (error) {
                 console.error('Error deactivating system:', error);
                 CommonUtils.showNotification('Failed to deactivate system', 'error');
@@ -1607,7 +1601,7 @@ function debounce(func, wait) {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Check if we're on the settings module
     if (document.querySelector('[data-module="settings"]')) {
         setTimeout(() => {

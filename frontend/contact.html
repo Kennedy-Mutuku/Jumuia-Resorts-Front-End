@@ -1260,25 +1260,32 @@
             });
         }
 
-        // Save contact form to Firebase
+        // Send Contact Form Data to Node API
         async function saveContactForm(formData) {
             try {
-                const { db } = await initializeFirebaseServices();
+                // Determine API URL based on config or default
+                const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
 
-                // Add timestamp and status
-                const contactData = {
-                    ...formData,
-                    timestamp: firebase.firestore.FieldValue.serverTimestamp(),
-                    status: 'new',
-                    read: false,
-                    responded: false
-                };
+                const response = await fetch(`${apiUrl}/messages`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        ...formData,
+                        status: 'new',
+                        read: false,
+                        responded: false
+                    })
+                });
 
-                // Save to Firestore
-                const docRef = await db.collection('contact_submissions').add(contactData);
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
 
-                console.log('Contact form saved with ID:', docRef.id);
-                return { success: true, id: docRef.id };
+                const data = await response.json();
+                console.log('Contact form saved with ID:', data._id);
+                return { success: true, id: data._id };
             } catch (error) {
                 console.error('Error saving contact form:', error);
                 return { success: false, error: error.message };
@@ -1325,15 +1332,12 @@
             }
 
             try {
-                // Save to Firebase
+                // Save to Node API
                 const result = await saveContactForm(formData);
 
                 if (result.success) {
                     // Show success message
                     showSuccess();
-
-                    // Also send email notification (optional)
-                    await sendEmailNotification(formData);
 
                     // Reset form
                     this.reset();
@@ -1426,19 +1430,6 @@
             }
         }
 
-        // Send email notification (optional - could be replaced with cloud function)
-        async function sendEmailNotification(formData) {
-            // This is a placeholder for email functionality
-            // In production, you would use a cloud function or email service
-            console.log('Email notification would be sent for:', formData.email);
-
-            // Example: You could trigger a cloud function here
-            // await fetch('https://your-cloud-function-url', {
-            //     method: 'POST',
-            //     body: JSON.stringify(formData)
-            // });
-        }
-
         // Mobile menu toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function () {
             document.getElementById('mainNav').classList.toggle('active');
@@ -1473,11 +1464,6 @@
 
         // Initialize when page loads
         document.addEventListener('DOMContentLoaded', function () {
-            // Pre-initialize Firebase for faster response
-            initializeFirebaseServices().catch(error => {
-                console.warn('Firebase pre-initialization failed:', error);
-            });
-
             // Auto-hide messages after 10 seconds
             setTimeout(() => {
                 const messages = document.querySelectorAll('.message');

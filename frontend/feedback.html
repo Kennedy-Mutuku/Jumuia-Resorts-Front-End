@@ -1085,20 +1085,8 @@
     </div>
 
     <script>
-        // Firebase Configuration
-        const firebaseConfig = {
-            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
-            authDomain: "jumuia-resort-limited.firebaseapp.com",
-            projectId: "jumuia-resort-limited",
-            storageBucket: "jumuia-resort-limited.firebasestorage.app",
-            messagingSenderId: "152170552230",
-            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
-            measurementId: "G-Q7BWHJ9C3M"
-        };
-
-        // Initialize Firebase
-        firebase.initializeApp(firebaseConfig);
-        const db = firebase.firestore();
+        // Node API Configuration
+        const API_URL = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
 
         // Mobile menu toggle
         document.getElementById('mobileMenuBtn').addEventListener('click', function () {
@@ -1126,23 +1114,30 @@
 
                 // Get form values
                 const feedbackData = {
-                    fullName: document.getElementById('fullName').value,
+                    name: document.getElementById('fullName').value,
                     email: document.getElementById('email').value,
                     phone: document.getElementById('phone').value || '',
-                    property: document.getElementById('property').value,
+                    resort: document.getElementById('property').value,
                     bookingReference: document.getElementById('bookingReference').value || '',
-                    rating: document.querySelector('input[name="rating"]:checked').value,
+                    rating: parseInt(document.querySelector('input[name="rating"]:checked').value),
                     title: document.getElementById('feedbackTitle').value,
-                    details: document.getElementById('feedbackDetails').value,
+                    comment: document.getElementById('feedbackDetails').value,
                     allowPublish: document.getElementById('allowPublish').checked,
                     contactMe: document.getElementById('contactMe').checked,
                     status: 'pending', // For admin review
-                    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+                    date: new Date().toLocaleDateString()
                 };
 
-                // Submit to Firebase
-                await db.collection('feedback').add(feedbackData);
+                // Submit to Node API
+                const response = await fetch(`${API_URL}/feedback`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(feedbackData)
+                });
+
+                if (!response.ok) {
+                    throw new Error('Failed to submit feedback');
+                }
 
                 // Show success message
                 showSuccessModal();
@@ -1168,33 +1163,33 @@
             try {
                 const reviewsGrid = document.getElementById('reviewsGrid');
 
-                // Get published reviews from Firebase
-                const querySnapshot = await db.collection('feedback')
-                    .where('status', '==', 'published')
-                    .where('allowPublish', '==', true)
-                    .orderBy('createdAt', 'desc')
-                    .limit(6)
-                    .get();
+                // Get published reviews from Node API
+                const response = await fetch(`${API_URL}/feedback?status=approved`);
+                if (!response.ok) throw new Error('Failed to fetch reviews');
 
-                if (querySnapshot.empty) {
+                const allReviews = await response.json();
+
+                // Filter where allowPublish might be true if stored, or just limit to 6
+                const reviews = allReviews.slice(0, 6);
+
+                if (reviews.length === 0) {
                     reviewsGrid.innerHTML = '<p style="grid-column: 1/-1; text-align: center; color: var(--text-light);">No reviews available yet. Be the first to share your experience!</p>';
                     return;
                 }
 
                 let reviewsHTML = '';
 
-                querySnapshot.forEach(doc => {
-                    const feedback = doc.data();
-                    const initials = getInitials(feedback.fullName);
-                    const timeAgo = getTimeAgo(feedback.createdAt?.toDate());
-                    const propertyName = getPropertyName(feedback.property);
+                reviews.forEach(feedback => {
+                    const initials = getInitials(feedback.name || 'Guest');
+                    const timeAgo = getTimeAgo(feedback.createdAt ? new Date(feedback.createdAt) : new Date(feedback.date));
+                    const propertyName = getPropertyName(feedback.resort);
 
                     let starsHTML = '';
-                    const rating = parseInt(feedback.rating);
+                    const rating = parseInt(feedback.rating) || 5;
                     for (let i = 0; i < 5; i++) {
                         if (i < rating) {
                             starsHTML += '<i class="fas fa-star"></i>';
-                        } else if (i === rating && feedback.rating % 1 !== 0) {
+                        } else if (i === rating && (feedback.rating % 1 !== 0)) {
                             starsHTML += '<i class="fas fa-star-half-alt"></i>';
                         } else {
                             starsHTML += '<i class="far fa-star"></i>';
@@ -1207,7 +1202,7 @@
                                 <div class="reviewer-info">
                                     <div class="reviewer-avatar">${initials}</div>
                                     <div class="reviewer-details">
-                                        <h4>${feedback.fullName.split(' ')[0]} ${feedback.fullName.split(' ')[1]?.charAt(0) || ''}.</h4>
+                                        <h4>${feedback.name ? feedback.name.split(' ')[0] : 'Guest'} ${feedback.name && feedback.name.split(' ')[1] ? feedback.name.split(' ')[1].charAt(0) + '.' : ''}</h4>
                                         <p>${feedback.bookingReference ? 'Verified Guest' : 'Guest'}</p>
                                     </div>
                                 </div>
@@ -1216,7 +1211,7 @@
                                 </div>
                             </div>
                             <div class="review-content">
-                                "${feedback.details}"
+                                "${feedback.comment || feedback.details || ''}"
                             </div>
                             <div class="review-meta">
                                 <span class="property-badge">${propertyName}</span>
@@ -1236,20 +1231,22 @@
         // Load feedback statistics
         async function loadFeedbackStatistics() {
             try {
-                // Get all feedback
-                const querySnapshot = await db.collection('feedback').get();
+                // Get all feedback from Node API
+                const response = await fetch(`${API_URL}/feedback`);
+                if (!response.ok) throw new Error('Failed to fetch feedback for stats');
+
+                const allFeedback = await response.json();
 
                 let totalRating = 0;
                 let totalReviews = 0;
                 let publishedCount = 0;
                 let recommendCount = 0;
 
-                querySnapshot.forEach(doc => {
-                    const feedback = doc.data();
-                    totalRating += parseInt(feedback.rating);
+                allFeedback.forEach(feedback => {
+                    totalRating += parseInt(feedback.rating) || 5;
                     totalReviews++;
 
-                    if (feedback.status === 'published') {
+                    if (feedback.status === 'approved' || feedback.status === 'published') {
                         publishedCount++;
                     }
 

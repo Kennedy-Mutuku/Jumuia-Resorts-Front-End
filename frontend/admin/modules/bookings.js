@@ -256,17 +256,23 @@ function exportBookings() {
 // View booking details
 async function viewBooking(id) {
     try {
-        await FirebaseService.initialize();
-        const services = FirebaseService.getServices();
+        const sessionRaw = localStorage.getItem('jumuia_resort_session');
+        if (!sessionRaw) throw new Error('Not authenticated');
+        const session = JSON.parse(sessionRaw);
+        const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
 
-        const bookingDoc = await services.db.collection('bookings').doc(id).get();
+        const response = await fetch(`${apiUrl}/bookings/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${session.token}`
+            }
+        });
 
-        if (!bookingDoc.exists) {
+        if (!response.ok) {
             dashboard.showAlert('Booking not found!', 'error');
             return;
         }
 
-        const booking = bookingDoc.data();
+        const booking = await response.json();
         showBookingDetailsModal(booking);
 
     } catch (error) {
@@ -278,17 +284,23 @@ async function viewBooking(id) {
 // Edit booking
 async function editBooking(id) {
     try {
-        await FirebaseService.initialize();
-        const services = FirebaseService.getServices();
+        const sessionRaw = localStorage.getItem('jumuia_resort_session');
+        if (!sessionRaw) throw new Error('Not authenticated');
+        const session = JSON.parse(sessionRaw);
+        const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
 
-        const bookingDoc = await services.db.collection('bookings').doc(id).get();
+        const response = await fetch(`${apiUrl}/bookings/${id}`, {
+            headers: {
+                'Authorization': `Bearer ${session.token}`
+            }
+        });
 
-        if (!bookingDoc.exists) {
+        if (!response.ok) {
             dashboard.showAlert('Booking not found!', 'error');
             return;
         }
 
-        const booking = bookingDoc.data();
+        const booking = await response.json();
         showEditBookingModal(id, booking);
 
     } catch (error) {
@@ -304,13 +316,23 @@ async function confirmBooking(id) {
             return;
         }
 
-        await FirebaseService.initialize();
-        const services = FirebaseService.getServices();
+        const sessionRaw = localStorage.getItem('jumuia_resort_session');
+        if (!sessionRaw) throw new Error('Not authenticated');
+        const session = JSON.parse(sessionRaw);
+        const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
 
-        await services.db.collection('bookings').doc(id).update({
-            status: 'confirmed',
-            updatedAt: new Date().toISOString()
+        const response = await fetch(`${apiUrl}/bookings/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`
+            },
+            body: JSON.stringify({
+                status: 'confirmed'
+            })
         });
+
+        if (!response.ok) throw new Error('Failed to update booking');
 
         dashboard.showAlert('Booking confirmed successfully!', 'success');
         loadBookings(); // Refresh the list
@@ -328,13 +350,23 @@ async function markAsPaid(id) {
             return;
         }
 
-        await FirebaseService.initialize();
-        const services = FirebaseService.getServices();
+        const sessionRaw = localStorage.getItem('jumuia_resort_session');
+        if (!sessionRaw) throw new Error('Not authenticated');
+        const session = JSON.parse(sessionRaw);
+        const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
 
-        await services.db.collection('bookings').doc(id).update({
-            paymentStatus: 'paid',
-            updatedAt: new Date().toISOString()
+        const response = await fetch(`${apiUrl}/bookings/${id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`
+            },
+            body: JSON.stringify({
+                paymentStatus: 'paid'
+            })
         });
+
+        if (!response.ok) throw new Error('Failed to update payment status');
 
         dashboard.showAlert('Booking marked as paid!', 'success');
         loadBookings(); // Refresh the list
@@ -389,10 +421,21 @@ async function createBooking() {
             paymentMethodDisplay: 'Cash'
         };
 
-        await FirebaseService.initialize();
-        const services = FirebaseService.getServices();
+        const sessionRaw = localStorage.getItem('jumuia_resort_session');
+        if (!sessionRaw) throw new Error('Not authenticated');
+        const session = JSON.parse(sessionRaw);
+        const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
 
-        await services.db.collection('bookings').add(newBooking);
+        const response = await fetch(`${apiUrl}/bookings`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${session.token}`
+            },
+            body: JSON.stringify(newBooking)
+        });
+
+        if (!response.ok) throw new Error('Failed to create booking');
 
         dashboard.showAlert('New booking created successfully!', 'success');
         hideNewBookingModal();

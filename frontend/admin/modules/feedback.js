@@ -18,65 +18,62 @@ const FEEDBACK_STATUS = {
 // Initialize feedback module
 function initFeedbackModule() {
     console.log('Initializing Feedback module...');
-    
+
     // Initialize common utilities
     if (!window.CommonUtils || !window.CommonUtils.initCurrentUser()) {
         console.error('Common utilities not available');
         return;
     }
-    
+
     // Load feedback data
     loadFeedback();
-    
+
     // Setup event listeners
     setupEventListeners();
-    
+
     // Setup real-time listener
     setupRealtimeListener();
 }
 
-// Load feedback from Firebase
+// Load feedback from Node API
 async function loadFeedback() {
     try {
         CommonUtils.showLoading(true, 'Loading feedback...');
-        
-        const { db, COLLECTIONS, currentUser, currentProperty } = CommonUtils;
-        
+
+        const { currentUser, currentProperty } = CommonUtils;
+
         // Build query based on user permissions
-        let feedbackQuery;
-        
-        if (currentUser.permissions.properties.includes('all')) {
-            feedbackQuery = firebase.firestore()
-                .collection(COLLECTIONS.FEEDBACK)
-                .orderBy(sortField, sortDirection);
-        } else {
-            feedbackQuery = firebase.firestore()
-                .collection(COLLECTIONS.FEEDBACK)
-                .where('property', '==', currentProperty)
-                .orderBy(sortField, sortDirection);
+        let url = `${CommonUtils.API_URL}/feedback`;
+        if (!currentUser.permissions.properties.includes('all')) {
+            url += `?resort=${currentProperty}`;
         }
-        
-        const snapshot = await feedbackQuery.get();
-        feedbackData = [];
-        
-        snapshot.forEach(doc => {
-            feedbackData.push({
-                id: doc.id,
-                ...doc.data()
-            });
-        });
-        
+
+        const response = await fetch(url);
+        if (!response.ok) throw new Error('Failed to fetch feedback');
+
+        const data = await response.json();
+
+        feedbackData = data.map(doc => ({
+            id: doc._id || doc.id,
+            ...doc,
+            // Normalize mapping properties
+            guestName: doc.name || doc.fullName || doc.guestName || 'Anonymous',
+            property: doc.resort || doc.property,
+            comment: doc.comment || doc.details,
+            timestamp: doc.createdAt || doc.date || new Date().toISOString()
+        }));
+
         // Apply filters
         applyFilters();
-        
+
         // Render feedback
         renderFeedback();
-        
+
         // Update stats
         updateStats();
-        
+
         CommonUtils.showLoading(false);
-        
+
     } catch (error) {
         console.error('Error loading feedback:', error);
         CommonUtils.showNotification('Failed to load feedback', 'error');
@@ -94,7 +91,7 @@ function setupEventListeners() {
             element.addEventListener('input', debounce(applyFilters, 300));
         }
     });
-    
+
     // Date filters
     const dateFilters = ['dateFrom', 'dateTo'];
     dateFilters.forEach(id => {
@@ -103,33 +100,33 @@ function setupEventListeners() {
             element.addEventListener('change', applyFilters);
         }
     });
-    
+
     // Bulk actions
     document.getElementById('publishSelectedBtn')?.addEventListener('click', publishSelected);
     document.getElementById('archiveSelectedBtn')?.addEventListener('click', archiveSelected);
     document.getElementById('deleteSelectedBtn')?.addEventListener('click', deleteSelected);
-    
+
     // Select all checkbox
     const selectAllCheckbox = document.getElementById('selectAllCheckbox');
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', toggleSelectAll);
     }
-    
+
     // Export button
     const exportBtn = document.getElementById('exportFeedbackBtn');
     if (exportBtn) {
         exportBtn.addEventListener('click', exportFeedback);
     }
-    
+
     // Refresh button
     const refreshBtn = document.getElementById('refreshFeedbackBtn');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', refreshFeedback);
     }
-    
+
     // Sort buttons
     document.querySelectorAll('.sort-btn').forEach(btn => {
-        btn.addEventListener('click', function() {
+        btn.addEventListener('click', function () {
             const field = this.dataset.field;
             if (sortField === field) {
                 sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
@@ -137,52 +134,55 @@ function setupEventListeners() {
                 sortField = field;
                 sortDirection = 'desc';
             }
-            
+
             // Update sort indicators
             updateSortIndicators();
-            
+
             // Reload feedback with new sort
             loadFeedback();
         });
     });
 }
 
-// Setup real-time listener
+// Setup polling listener
 function setupRealtimeListener() {
-    const { db, COLLECTIONS, currentUser, currentProperty } = CommonUtils;
-    
-    let feedbackQuery;
-    
-    if (currentUser.permissions.properties.includes('all')) {
-        feedbackQuery = firebase.firestore()
-            .collection(COLLECTIONS.FEEDBACK)
-            .orderBy('timestamp', 'desc');
-    } else {
-        feedbackQuery = firebase.firestore()
-            .collection(COLLECTIONS.FEEDBACK)
-            .where('property', '==', currentProperty)
-            .orderBy('timestamp', 'desc');
-    }
-    
-    feedbackQuery.onSnapshot((snapshot) => {
-        feedbackData = [];
-        snapshot.forEach(doc => {
-            feedbackData.push({
-                id: doc.id,
-                ...doc.data()
-            });
-        });
-        
-        applyFilters();
-        renderFeedback();
-        updateStats();
-        
-        // Update dashboard badge
-        updatePendingFeedbackCount();
-        
-    }, (error) => {
-        console.error('Realtime listener error:', error);
-    });
+    // Poll the Node API every 15 seconds instead of using Firebase WebSockets
+    const pollInterval = setInterval(async () => {
+        try {
+            const { currentUser, currentProperty } = CommonUtils;
+
+            // Build query based on user permissions
+            let url = `${CommonUtils.API_URL}/feedback`;
+            if (!currentUser.permissions.properties.includes('all')) {
+                url += `?resort=${currentProperty}`;
+            }
+
+            const response = await fetch(url);
+            if (!response.ok) return;
+
+            const data = await response.json();
+
+            feedbackData = data.map(doc => ({
+                id: doc._id || doc.id,
+                ...doc,
+                guestName: doc.name || doc.fullName || doc.guestName || 'Anonymous',
+                property: doc.resort || doc.property,
+                comment: doc.comment || doc.details,
+                timestamp: doc.createdAt || doc.date || new Date().toISOString()
+            }));
+
+            applyFilters();
+            renderFeedback();
+            updateStats();
+            updatePendingFeedbackCount();
+
+        } catch (error) {
+            console.error('Polling error:', error);
+        }
+    }, 15000);
+
+    // Store interval ID to clear it later if needed (e.g., when changing tabs)
+    window.feedbackPollingInterval = pollInterval;
 }
 
 // Apply filters
@@ -193,23 +193,23 @@ function applyFilters() {
     const searchInput = document.getElementById('searchInput')?.value.toLowerCase() || '';
     const dateFrom = document.getElementById('dateFrom')?.value;
     const dateTo = document.getElementById('dateTo')?.value;
-    
+
     filteredFeedback = feedbackData.filter(feedback => {
         // Property filter
         if (propertyFilter !== 'all' && feedback.property !== propertyFilter) {
             return false;
         }
-        
+
         // Status filter
         if (statusFilter !== 'all' && feedback.status !== statusFilter) {
             return false;
         }
-        
+
         // Rating filter
         if (ratingFilter !== 'all' && Math.floor(feedback.rating) !== parseInt(ratingFilter)) {
             return false;
         }
-        
+
         // Search filter
         if (searchInput) {
             const searchStr = searchInput.toLowerCase();
@@ -219,42 +219,42 @@ function applyFilters() {
                 feedback.comment,
                 feedback.property
             ].join(' ').toLowerCase();
-            
+
             if (!feedbackText.includes(searchStr)) {
                 return false;
             }
         }
-        
+
         // Date range filter
         if (dateFrom && feedback.timestamp) {
-            const feedbackDate = feedback.timestamp.toDate ? 
+            const feedbackDate = feedback.timestamp.toDate ?
                 feedback.timestamp.toDate() : new Date(feedback.timestamp);
             const filterFrom = new Date(dateFrom);
-            
+
             if (feedbackDate < filterFrom) {
                 return false;
             }
         }
-        
+
         if (dateTo && feedback.timestamp) {
-            const feedbackDate = feedback.timestamp.toDate ? 
+            const feedbackDate = feedback.timestamp.toDate ?
                 feedback.timestamp.toDate() : new Date(feedback.timestamp);
             const filterTo = new Date(dateTo);
-            
+
             if (feedbackDate > filterTo) {
                 return false;
             }
         }
-        
+
         return true;
     });
-    
+
     // Sort filtered feedback
     filteredFeedback = CommonUtils.sortData(filteredFeedback, sortField, sortDirection);
-    
+
     // Reset to first page
     currentPage = 1;
-    
+
     // Update display
     updatePagination();
     renderFeedbackTable();
@@ -270,12 +270,12 @@ function renderFeedback() {
 function renderFeedbackTable() {
     const tableBody = document.getElementById('feedbackTableBody');
     if (!tableBody) return;
-    
+
     // Calculate pagination
     const startIndex = (currentPage - 1) * itemsPerPage;
     const endIndex = startIndex + itemsPerPage;
     const paginatedFeedback = filteredFeedback.slice(startIndex, endIndex);
-    
+
     if (paginatedFeedback.length === 0) {
         tableBody.innerHTML = `
             <tr>
@@ -288,12 +288,12 @@ function renderFeedbackTable() {
         `;
         return;
     }
-    
+
     let html = '';
     paginatedFeedback.forEach((feedback, index) => {
         const ratingStars = generateStarRating(feedback.rating);
         const statusClass = `status-${feedback.status || 'pending'}`;
-        
+
         html += `
             <tr>
                 <td>
@@ -326,9 +326,9 @@ function renderFeedbackTable() {
                     <div class="feedback-comment">
                         ${feedback.comment ? `
                             <div class="comment-text">${truncateText(feedback.comment, 100)}</div>
-                            ${feedback.comment.length > 100 ? 
-                                '<a href="#" onclick="event.preventDefault(); viewFullComment(\'' + feedback.id + '\')" class="read-more">Read more</a>' : ''
-                            }
+                            ${feedback.comment.length > 100 ?
+                    '<a href="#" onclick="event.preventDefault(); viewFullComment(\'' + feedback.id + '\')" class="read-more">Read more</a>' : ''
+                }
                         ` : 'No comment'}
                     </div>
                 </td>
@@ -345,44 +345,44 @@ function renderFeedbackTable() {
                     </div>
                 </td>
                 <td>
-                    ${feedback.replied ? 
-                        '<span class="replied-indicator" title="Replied"><i class="fas fa-reply"></i></span>' : 
-                        '<span class="not-replied" title="Not replied"><i class="fas fa-clock"></i></span>'
-                    }
+                    ${feedback.replied ?
+                '<span class="replied-indicator" title="Replied"><i class="fas fa-reply"></i></span>' :
+                '<span class="not-replied" title="Not replied"><i class="fas fa-clock"></i></span>'
+            }
                 </td>
                 <td>
                     <div class="feedback-actions">
                         <button class="action-btn btn-view" onclick="viewFeedback('${feedback.id}')" title="View">
                             <i class="fas fa-eye"></i>
                         </button>
-                        ${feedback.status !== FEEDBACK_STATUS.PUBLISHED ? 
-                            `<button class="action-btn btn-publish" onclick="updateFeedbackStatus('${feedback.id}', '${FEEDBACK_STATUS.PUBLISHED}')" title="Publish">
+                        ${feedback.status !== FEEDBACK_STATUS.PUBLISHED ?
+                `<button class="action-btn btn-publish" onclick="updateFeedbackStatus('${feedback.id}', '${FEEDBACK_STATUS.PUBLISHED}')" title="Publish">
                                 <i class="fas fa-check"></i>
                             </button>` : ''
-                        }
-                        ${feedback.status !== FEEDBACK_STATUS.ARCHIVED ? 
-                            `<button class="action-btn btn-archive" onclick="updateFeedbackStatus('${feedback.id}', '${FEEDBACK_STATUS.ARCHIVED}')" title="Archive">
+            }
+                        ${feedback.status !== FEEDBACK_STATUS.ARCHIVED ?
+                `<button class="action-btn btn-archive" onclick="updateFeedbackStatus('${feedback.id}', '${FEEDBACK_STATUS.ARCHIVED}')" title="Archive">
                                 <i class="fas fa-archive"></i>
                             </button>` : ''
-                        }
-                        ${!feedback.replied ? 
-                            `<button class="action-btn btn-reply" onclick="replyToFeedback('${feedback.id}')" title="Reply">
+            }
+                        ${!feedback.replied ?
+                `<button class="action-btn btn-reply" onclick="replyToFeedback('${feedback.id}')" title="Reply">
                                 <i class="fas fa-reply"></i>
                             </button>` : ''
-                        }
-                        ${CommonUtils.checkPermission('delete') ? 
-                            `<button class="action-btn btn-delete" onclick="deleteFeedback('${feedback.id}')" title="Delete">
+            }
+                        ${CommonUtils.checkPermission('delete') ?
+                `<button class="action-btn btn-delete" onclick="deleteFeedback('${feedback.id}')" title="Delete">
                                 <i class="fas fa-trash"></i>
                             </button>` : ''
-                        }
+            }
                     </div>
                 </td>
             </tr>
         `;
     });
-    
+
     tableBody.innerHTML = html;
-    
+
     // Update select all checkbox
     updateSelectAllCheckbox();
 }
@@ -392,24 +392,24 @@ function generateStarRating(rating) {
     const fullStars = Math.floor(rating);
     const hasHalfStar = rating % 1 >= 0.5;
     const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
-    
+
     let starsHTML = '';
-    
+
     // Full stars
     for (let i = 0; i < fullStars; i++) {
         starsHTML += '<i class="fas fa-star"></i>';
     }
-    
+
     // Half star
     if (hasHalfStar) {
         starsHTML += '<i class="fas fa-star-half-alt"></i>';
     }
-    
+
     // Empty stars
     for (let i = 0; i < emptyStars; i++) {
         starsHTML += '<i class="far fa-star"></i>';
     }
-    
+
     return `<div class="star-rating">${starsHTML}</div>`;
 }
 
@@ -423,14 +423,14 @@ function truncateText(text, maxLength) {
 function updatePagination() {
     const paginationContainer = document.getElementById('feedbackPagination');
     if (!paginationContainer) return;
-    
+
     const totalPages = Math.ceil(filteredFeedback.length / itemsPerPage);
-    
+
     if (totalPages <= 1) {
         paginationContainer.innerHTML = '';
         return;
     }
-    
+
     paginationContainer.innerHTML = CommonUtils.createPagination(
         filteredFeedback.length,
         itemsPerPage,
@@ -455,43 +455,43 @@ function updateStats() {
         archived: 0,
         today: 0
     };
-    
+
     let totalRating = 0;
     const today = new Date().toISOString().split('T')[0];
-    
+
     feedbackData.forEach(feedback => {
         // Count by status
         if (feedback.status === FEEDBACK_STATUS.PENDING) stats.pending++;
         if (feedback.status === FEEDBACK_STATUS.PUBLISHED) stats.published++;
         if (feedback.status === FEEDBACK_STATUS.ARCHIVED) stats.archived++;
-        
+
         // Calculate average rating (only for published feedback)
         if (feedback.status === FEEDBACK_STATUS.PUBLISHED && feedback.rating) {
             totalRating += feedback.rating;
         }
-        
+
         // Feedback from today
         if (feedback.timestamp) {
-            const feedbackDate = feedback.timestamp.toDate ? 
-                feedback.timestamp.toDate().toISOString().split('T')[0] : 
+            const feedbackDate = feedback.timestamp.toDate ?
+                feedback.timestamp.toDate().toISOString().split('T')[0] :
                 new Date(feedback.timestamp).toISOString().split('T')[0];
-            
+
             if (feedbackDate === today) stats.today++;
         }
     });
-    
+
     // Calculate average rating
     if (stats.published > 0) {
         stats.averageRating = totalRating / stats.published;
     }
-    
+
     // Update DOM elements
     document.getElementById('totalFeedbackCount')?.textContent = stats.total;
     document.getElementById('averageRating')?.textContent = stats.averageRating.toFixed(1);
     document.getElementById('pendingFeedbackCount')?.textContent = stats.pending;
     document.getElementById('publishedFeedbackCount')?.textContent = stats.published;
     document.getElementById('todayFeedbackCount')?.textContent = stats.today;
-    
+
     // Update star rating display
     const avgRatingElement = document.getElementById('averageRatingStars');
     if (avgRatingElement) {
@@ -502,7 +502,7 @@ function updateStats() {
 // Update pending feedback count for dashboard
 function updatePendingFeedbackCount() {
     const pendingCount = feedbackData.filter(f => f.status === FEEDBACK_STATUS.PENDING).length;
-    
+
     // Update dashboard badge
     const badge = document.querySelector('[data-module="feedback"] .badge');
     if (badge) {
@@ -514,7 +514,7 @@ function updatePendingFeedbackCount() {
 function viewFeedback(feedbackId) {
     const feedback = feedbackData.find(f => f.id === feedbackId);
     if (!feedback) return;
-    
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.innerHTML = `
@@ -611,20 +611,20 @@ function viewFeedback(feedbackId) {
             </div>
             <div class="modal-footer">
                 <button class="btn btn-secondary" onclick="this.closest('.modal').remove()">Close</button>
-                ${feedback.status !== FEEDBACK_STATUS.PUBLISHED ? 
-                    `<button class="btn btn-success" onclick="updateFeedbackStatus('${feedback.id}', '${FEEDBACK_STATUS.PUBLISHED}'); this.closest('.modal').remove()">
+                ${feedback.status !== FEEDBACK_STATUS.PUBLISHED ?
+            `<button class="btn btn-success" onclick="updateFeedbackStatus('${feedback.id}', '${FEEDBACK_STATUS.PUBLISHED}'); this.closest('.modal').remove()">
                         <i class="fas fa-check"></i> Publish
                     </button>` : ''
-                }
-                ${!feedback.replied ? 
-                    `<button class="btn btn-primary" onclick="replyToFeedback('${feedback.id}'); this.closest('.modal').remove()">
+        }
+                ${!feedback.replied ?
+            `<button class="btn btn-primary" onclick="replyToFeedback('${feedback.id}'); this.closest('.modal').remove()">
                         <i class="fas fa-reply"></i> Reply
                     </button>` : ''
-                }
+        }
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
 }
 
@@ -638,7 +638,7 @@ function formatFeedbackText(text) {
 function viewFullComment(feedbackId) {
     const feedback = feedbackData.find(f => f.id === feedbackId);
     if (!feedback || !feedback.comment) return;
-    
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.innerHTML = `
@@ -659,7 +659,7 @@ function viewFullComment(feedbackId) {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
 }
 
@@ -667,40 +667,36 @@ function viewFullComment(feedbackId) {
 async function updateFeedbackStatus(feedbackId, newStatus) {
     const feedback = feedbackData.find(f => f.id === feedbackId);
     if (!feedback) return;
-    
+
     const statusMessages = {
         'published': 'Publish this feedback? It will be visible on the website.',
         'archived': 'Archive this feedback? It will be hidden from the website.',
         'pending': 'Mark this feedback as pending?'
     };
-    
+
     const action = statusMessages[newStatus] || 'Update feedback status?';
-    
+
     CommonUtils.showConfirm(
         `Are you sure you want to ${action.toLowerCase()}`,
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Updating feedback...');
-                
-                const { db, COLLECTIONS, currentUser } = CommonUtils;
-                
-                const updateData = {
-                    status: newStatus,
-                    updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                    updatedBy: currentUser.name || 'Admin'
-                };
-                
-                // Add published info if publishing
-                if (newStatus === FEEDBACK_STATUS.PUBLISHED) {
-                    updateData.publishedAt = firebase.firestore.FieldValue.serverTimestamp();
-                    updateData.publishedBy = currentUser.name || 'Admin';
-                }
-                
-                await db.collection(COLLECTIONS.FEEDBACK).doc(feedbackId).update(updateData);
-                
+
+                const response = await fetch(`${CommonUtils.API_URL}/feedback/${feedbackId}`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        status: newStatus,
+                        updatedBy: CommonUtils.currentUser.name || 'Admin',
+                        publishedBy: newStatus === FEEDBACK_STATUS.PUBLISHED ? (CommonUtils.currentUser.name || 'Admin') : undefined
+                    })
+                });
+
+                if (!response.ok) throw new Error('Failed to update status');
+
                 CommonUtils.showNotification(`Feedback ${newStatus} successfully!`, 'success');
-                CommonUtils.showLoading(false);
-                
+                loadFeedback(); // refresh data
+
             } catch (error) {
                 console.error('Error updating feedback status:', error);
                 CommonUtils.showNotification('Failed to update feedback', 'error');
@@ -714,7 +710,7 @@ async function updateFeedbackStatus(feedbackId, newStatus) {
 function replyToFeedback(feedbackId) {
     const feedback = feedbackData.find(f => f.id === feedbackId);
     if (!feedback) return;
-    
+
     const modal = document.createElement('div');
     modal.className = 'modal';
     modal.innerHTML = `
@@ -752,24 +748,24 @@ function replyToFeedback(feedbackId) {
             </div>
         </div>
     `;
-    
+
     document.body.appendChild(modal);
 }
 
 // Send feedback reply
 async function sendFeedbackReply(event, feedbackId) {
     event.preventDefault();
-    
+
     try {
         CommonUtils.showLoading(true, 'Sending reply...');
-        
+
         const { db, COLLECTIONS, currentUser } = CommonUtils;
         const feedback = feedbackData.find(f => f.id === feedbackId);
-        
+
         if (!feedback) {
             throw new Error('Feedback not found');
         }
-        
+
         const replyData = {
             reply: document.getElementById('replyMessage').value,
             replied: true,
@@ -777,20 +773,20 @@ async function sendFeedbackReply(event, feedbackId) {
             repliedBy: currentUser.name || 'Admin',
             updatedAt: firebase.firestore.FieldValue.serverTimestamp()
         };
-        
+
         await db.collection(COLLECTIONS.FEEDBACK).doc(feedbackId).update(replyData);
-        
+
         // Send email notification
         if (feedback.email) {
             await sendFeedbackEmailNotification(feedback, replyData.reply);
         }
-        
+
         // Close modal
         document.querySelector('.modal')?.remove();
-        
+
         CommonUtils.showNotification('Reply sent successfully!', 'success');
         CommonUtils.showLoading(false);
-        
+
     } catch (error) {
         console.error('Error sending reply:', error);
         CommonUtils.showNotification('Failed to send reply', 'error');
@@ -802,13 +798,13 @@ async function sendFeedbackReply(event, feedbackId) {
 async function sendFeedbackEmailNotification(feedback, reply) {
     // In a real application, this would call a cloud function
     // or use an email service like SendGrid, Mailgun, etc.
-    
+
     console.log('Sending feedback reply email:', {
         to: feedback.email,
         subject: `Response to your feedback at ${CommonUtils.PROPERTY_NAMES[feedback.property] || feedback.property}`,
         reply: reply.substring(0, 100) + '...'
     });
-    
+
     // Simulate API call
     return new Promise(resolve => setTimeout(resolve, 1000));
 }
@@ -820,14 +816,14 @@ async function deleteFeedback(feedbackId) {
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Deleting feedback...');
-                
+
                 const { db, COLLECTIONS } = CommonUtils;
-                
+
                 await db.collection(COLLECTIONS.FEEDBACK).doc(feedbackId).delete();
-                
+
                 CommonUtils.showNotification('Feedback deleted successfully!', 'success');
                 CommonUtils.showLoading(false);
-                
+
             } catch (error) {
                 console.error('Error deleting feedback:', error);
                 CommonUtils.showNotification('Failed to delete feedback', 'error');
@@ -841,7 +837,7 @@ async function deleteFeedback(feedbackId) {
 function toggleSelectAll() {
     const checkboxes = document.querySelectorAll('.feedback-checkbox');
     const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-    
+
     checkboxes.forEach(checkbox => {
         checkbox.checked = selectAllCheckbox.checked;
     });
@@ -851,12 +847,12 @@ function toggleSelectAll() {
 function updateSelectAllCheckbox() {
     const checkboxes = document.querySelectorAll('.feedback-checkbox');
     const selectAllCheckbox = document.getElementById('selectAllCheckbox');
-    
+
     if (!selectAllCheckbox || checkboxes.length === 0) return;
-    
+
     const allChecked = Array.from(checkboxes).every(checkbox => checkbox.checked);
     const someChecked = Array.from(checkboxes).some(checkbox => checkbox.checked);
-    
+
     selectAllCheckbox.checked = allChecked;
     selectAllCheckbox.indeterminate = someChecked && !allChecked;
 }
@@ -874,34 +870,32 @@ async function publishSelected() {
         CommonUtils.showNotification('Please select feedback to publish', 'error');
         return;
     }
-    
+
     CommonUtils.showConfirm(
         `Publish ${selectedIds.length} selected feedback items?`,
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Publishing feedback...');
-                
-                const { db, COLLECTIONS, currentUser } = CommonUtils;
-                
-                const batch = db.batch();
-                selectedIds.forEach(feedbackId => {
-                    const feedbackRef = db.collection(COLLECTIONS.FEEDBACK).doc(feedbackId);
-                    batch.update(feedbackRef, {
-                        status: FEEDBACK_STATUS.PUBLISHED,
-                        publishedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        publishedBy: currentUser.name || 'Admin',
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+
+                // Send individual requests for each selected feedback
+                await Promise.all(selectedIds.map(feedbackId => {
+                    return fetch(`${CommonUtils.API_URL}/feedback/${feedbackId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            status: FEEDBACK_STATUS.PUBLISHED,
+                            publishedBy: CommonUtils.currentUser.name || 'Admin',
+                            updatedBy: CommonUtils.currentUser.name || 'Admin'
+                        })
                     });
-                });
-                
-                await batch.commit();
-                
+                }));
+
                 CommonUtils.showNotification(`${selectedIds.length} feedback items published!`, 'success');
-                CommonUtils.showLoading(false);
-                
+                loadFeedback(); // refresh data
+
                 // Clear selection
                 document.getElementById('selectAllCheckbox').checked = false;
-                
+
             } catch (error) {
                 console.error('Error publishing selected feedback:', error);
                 CommonUtils.showNotification('Failed to publish feedback', 'error');
@@ -918,33 +912,30 @@ async function archiveSelected() {
         CommonUtils.showNotification('Please select feedback to archive', 'error');
         return;
     }
-    
+
     CommonUtils.showConfirm(
         `Archive ${selectedIds.length} selected feedback items?`,
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Archiving feedback...');
-                
-                const { db, COLLECTIONS, currentUser } = CommonUtils;
-                
-                const batch = db.batch();
-                selectedIds.forEach(feedbackId => {
-                    const feedbackRef = db.collection(COLLECTIONS.FEEDBACK).doc(feedbackId);
-                    batch.update(feedbackRef, {
-                        status: FEEDBACK_STATUS.ARCHIVED,
-                        updatedAt: firebase.firestore.FieldValue.serverTimestamp(),
-                        updatedBy: currentUser.name || 'Admin'
+
+                await Promise.all(selectedIds.map(feedbackId => {
+                    return fetch(`${CommonUtils.API_URL}/feedback/${feedbackId}`, {
+                        method: 'PUT',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            status: FEEDBACK_STATUS.ARCHIVED,
+                            updatedBy: CommonUtils.currentUser.name || 'Admin'
+                        })
                     });
-                });
-                
-                await batch.commit();
-                
+                }));
+
                 CommonUtils.showNotification(`${selectedIds.length} feedback items archived!`, 'success');
-                CommonUtils.showLoading(false);
-                
+                loadFeedback(); // refresh data
+
                 // Clear selection
                 document.getElementById('selectAllCheckbox').checked = false;
-                
+
             } catch (error) {
                 console.error('Error archiving selected feedback:', error);
                 CommonUtils.showNotification('Failed to archive feedback', 'error');
@@ -961,29 +952,25 @@ async function deleteSelected() {
         CommonUtils.showNotification('Please select feedback to delete', 'error');
         return;
     }
-    
+
     CommonUtils.showConfirm(
         `Delete ${selectedIds.length} selected feedback items? This action cannot be undone.`,
         async () => {
             try {
                 CommonUtils.showLoading(true, 'Deleting feedback...');
-                
-                const { db, COLLECTIONS } = CommonUtils;
-                
-                const batch = db.batch();
-                selectedIds.forEach(feedbackId => {
-                    const feedbackRef = db.collection(COLLECTIONS.FEEDBACK).doc(feedbackId);
-                    batch.delete(feedbackRef);
-                });
-                
-                await batch.commit();
-                
+
+                await Promise.all(selectedIds.map(feedbackId => {
+                    return fetch(`${CommonUtils.API_URL}/feedback/${feedbackId}`, {
+                        method: 'DELETE'
+                    });
+                }));
+
                 CommonUtils.showNotification(`${selectedIds.length} feedback items deleted!`, 'success');
-                CommonUtils.showLoading(false);
-                
+                loadFeedback(); // refresh data
+
                 // Clear selection
                 document.getElementById('selectAllCheckbox').checked = false;
-                
+
             } catch (error) {
                 console.error('Error deleting selected feedback:', error);
                 CommonUtils.showNotification('Failed to delete feedback', 'error');
@@ -1010,7 +997,7 @@ function exportFeedback() {
         'Replied By': feedback.repliedBy || 'N/A',
         'Replied At': feedback.repliedAt ? CommonUtils.formatDate(feedback.repliedAt, true) : 'N/A'
     }));
-    
+
     CommonUtils.exportToCSV(exportData, 'jumuia_feedback');
 }
 
@@ -1025,7 +1012,7 @@ function updateSortIndicators() {
     document.querySelectorAll('.sort-btn').forEach(btn => {
         const field = btn.dataset.field;
         const icon = btn.querySelector('i');
-        
+
         if (field === sortField) {
             icon.className = sortDirection === 'asc' ? 'fas fa-sort-up' : 'fas fa-sort-down';
         } else {
@@ -1048,7 +1035,7 @@ function debounce(func, wait) {
 }
 
 // Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', function() {
+document.addEventListener('DOMContentLoaded', function () {
     // Check if we're on the feedback module
     if (document.querySelector('[data-module="feedback"]')) {
         setTimeout(() => {

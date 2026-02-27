@@ -10,27 +10,6 @@
     <link
         href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap"
         rel="stylesheet">
-    <!-- Firebase SDK -->
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
-        import { getFirestore, collection, getDocs, query, where, orderBy } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyBn1SicsFR40N8-E_sosNjylvIy9Kt1L7I",
-            authDomain: "jumuia-resort-limited.firebaseapp.com",
-            projectId: "jumuia-resort-limited",
-            storageBucket: "jumuia-resort-limited.firebasestorage.app",
-            messagingSenderId: "152170552230",
-            appId: "1:152170552230:web:8b67a5dd6b71f59b044d67",
-            measurementId: "G-Q7BWHJ9C3M"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const db = getFirestore(app);
-
-        // Make Firebase available globally
-        window.firebase = { db, collection, getDocs, query, where, orderBy };
-    </script>
     <style>
         :root {
             --primary-green: #22440f;
@@ -899,7 +878,7 @@
             });
         });
 
-        // Load offers from Firebase
+        // Load offers from API
         async function loadOffers(filter = 'all') {
             const offersContainer = document.getElementById('offersContainer');
             const noOffersMessage = document.getElementById('noOffersMessage');
@@ -913,43 +892,31 @@
             `;
 
             try {
-                const db = window.firebase.db;
-                const { collection, query, where, orderBy, getDocs } = window.firebase;
+                const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+                const listRes = await fetch(`${apiUrl}/offers`);
+                let offers = [];
 
-                // Base query for active offers
-                const today = new Date().toISOString().split('T')[0];
-                const offersRef = collection(db, 'offers');
-
-                let offersQuery;
-                if (filter === 'all') {
-                    offersQuery = query(
-                        offersRef,
-                        where('endDate', '>=', today),
-                        where('status', '==', 'active'),
-                        orderBy('endDate', 'asc')
-                    );
-                } else if (filter === 'active') {
-                    offersQuery = query(
-                        offersRef,
-                        where('startDate', '<=', today),
-                        where('endDate', '>=', today),
-                        where('status', '==', 'active'),
-                        orderBy('endDate', 'asc')
-                    );
+                if (listRes.ok) {
+                    offers = await listRes.json();
                 } else {
-                    // Filter by property
-                    offersQuery = query(
-                        offersRef,
-                        where('properties', 'array-contains', filter),
-                        where('endDate', '>=', today),
-                        where('status', '==', 'active'),
-                        orderBy('endDate', 'asc')
-                    );
+                    throw new Error('Failed to fetch from API');
                 }
 
-                const snapshot = await getDocs(offersQuery);
+                const today = new Date().toISOString().split('T')[0];
 
-                if (snapshot.empty) {
+                // Active filter logic
+                let filteredOffers = offers.filter(o => o.status === 'active' && o.endDate >= today);
+
+                if (filter === 'active') {
+                    filteredOffers = filteredOffers.filter(o => o.startDate <= today);
+                } else if (filter !== 'all') {
+                    filteredOffers = filteredOffers.filter(o => o.properties && o.properties.includes(filter));
+                }
+
+                // Sort by end date
+                filteredOffers.sort((a, b) => new Date(a.endDate) - new Date(b.endDate));
+
+                if (filteredOffers.length === 0) {
                     offersContainer.style.display = 'none';
                     noOffersMessage.style.display = 'block';
                     return;
@@ -962,9 +929,8 @@
                 offersContainer.innerHTML = '';
 
                 // Process offers
-                snapshot.forEach(doc => {
-                    const offer = doc.data();
-                    const offerId = doc.id;
+                filteredOffers.forEach(offer => {
+                    const offerId = offer._id || offer.id;
 
                     // Format dates
                     const startDate = formatDate(offer.startDate);
