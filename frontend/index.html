@@ -1482,23 +1482,31 @@
             loading.style.display = 'block';
 
             try {
+                const rKey = resortSelect.value;
+                const fname = document.getElementById('firstName').value;
+                const lname = document.getElementById('lastName').value;
+
                 const data = {
-                    firstName: document.getElementById('firstName').value,
-                    lastName: document.getElementById('lastName').value,
+                    bookingId: 'BOOK-' + Math.floor(Math.random() * 1000000),
+                    fullName: fname + ' ' + lname,
+                    firstName: fname,
+                    lastName: lname,
                     email: document.getElementById('email').value,
                     phone: document.getElementById('phone').value,
                     resort: rKey,
                     resortName: resortRates[rKey].name,
                     checkIn: document.getElementById('checkIn').value,
                     checkOut: document.getElementById('checkOut').value,
-                    totalAmount: document.getElementById('totalAmount').textContent.replace(/[^0-9.]/g, ''),
-                    paymentMethod: 'cash', // Default to cash/pay later
+                    totalAmount: Number(document.getElementById('totalAmount').textContent.replace(/[^0-9.]/g, '')),
+                    paymentMethod: document.getElementById('paymentMethod').value || 'cash',
                     paymentStatus: 'pending',
                     status: 'pending',
-                    packageType: 'bnb', // Default
-                    roomType: 'standard_single', // Default or grab from form if added
-                    adults: document.getElementById('adults').value,
-                    children: document.getElementById('children').value
+                    packageType: document.getElementById('packageType').value || 'bnb',
+                    roomType: document.getElementById('roomType').value || 'standard_single',
+                    guests: {
+                        adults: parseInt(document.getElementById('adults').value) || 1,
+                        children: parseInt(document.getElementById('children').value) || 0
+                    }
                 };
 
                 // POST to Node API using api-config URL
