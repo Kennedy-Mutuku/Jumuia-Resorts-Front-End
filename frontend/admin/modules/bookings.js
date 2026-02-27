@@ -26,13 +26,13 @@ const RESORTS = {
 // Initialize bookings module
 function initBookingsModule(dashboard) {
     console.log('Initializing Bookings Module...');
-    
+
     // Store dashboard reference
     window.dashboard = dashboard;
-    
+
     // Load bookings from Firestore
     loadBookings();
-    
+
     // Setup event listeners
     setupBookingListeners();
 }
@@ -43,39 +43,52 @@ async function loadBookings() {
         // Show loading
         document.getElementById('loadingBookings').style.display = 'block';
         document.getElementById('noBookings').style.display = 'none';
-        
-        // Initialize Firebase
-        await FirebaseService.initialize();
-        const services = FirebaseService.getServices();
-        
-        if (!services || !services.db) {
-            throw new Error('Firebase services not available');
-        }
-        
-        // Get all bookings from Firestore, ordered by creation date (newest first)
-        const bookingsRef = services.db.collection('bookings');
-        const snapshot = await bookingsRef.orderBy('createdAt', 'desc').get();
-        
-        const bookings = [];
-        snapshot.forEach(doc => {
-            const data = doc.data();
-            bookings.push({
-                id: doc.id,
-                bookingId: data.bookingId || `BOOK-${doc.id.substring(0, 8).toUpperCase()}`,
-                ...data,
-                // Convert string dates to Date objects
-                createdAt: data.createdAt ? new Date(data.createdAt) : null,
-                checkIn: data.checkIn ? new Date(data.checkIn) : null,
-                checkOut: data.checkOut ? new Date(data.checkOut) : null
-            });
+
+        const sessionRaw = localStorage.getItem('jumuia_resort_session');
+        if (!sessionRaw) throw new Error('Not authenticated');
+        const session = JSON.parse(sessionRaw);
+
+        const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+
+        const response = await fetch(`${apiUrl}/bookings`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': session.token ? `Bearer ${session.token}` : ''
+            }
         });
-        
-        console.log(`Loaded ${bookings.length} bookings from Firestore`);
+
+        if (!response.ok) {
+            throw new Error(`Failed to load bookings: ${response.statusText}`);
+        }
+
+        let fetchedBookings = await response.json();
+
+        // Apply scoping: If manager, only see their resort. If GM, see all or current filter.
+        const currentProperty = dashboard.currentProperty;
+        if (currentProperty && currentProperty !== 'all') {
+            fetchedBookings = fetchedBookings.filter(b => b.resort === currentProperty);
+        }
+
+        // Backend might already sort, but ensure newest first
+        fetchedBookings.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+        const bookings = fetchedBookings.map(data => ({
+            id: data._id || data.id,
+            bookingId: data.bookingId || `BOOK-${String(data._id || data.id || Math.random()).substring(0, 8).toUpperCase()}`,
+            ...data,
+            // Convert string dates to Date objects
+            createdAt: data.createdAt ? new Date(data.createdAt) : null,
+            checkIn: data.checkIn ? new Date(data.checkIn) : null,
+            checkOut: data.checkOut ? new Date(data.checkOut) : null
+        }));
+
+        console.log(`Loaded ${bookings.length} bookings from API`);
         displayBookings(bookings);
-        
+
     } catch (error) {
         console.error('Error loading bookings:', error);
-        
+
         // Show error message
         document.getElementById('loadingBookings').style.display = 'none';
         document.getElementById('noBookings').style.display = 'block';
@@ -87,7 +100,7 @@ async function loadBookings() {
                 <i class="fas fa-redo"></i> Try Again
             </button>
         `;
-        
+
         dashboard.showAlert('Error loading bookings. Please try again.', 'error');
     }
 }
@@ -97,34 +110,34 @@ function displayBookings(bookings) {
     const bookingsList = document.getElementById('bookingsList');
     const loadingBookings = document.getElementById('loadingBookings');
     const noBookings = document.getElementById('noBookings');
-    
+
     if (bookings.length === 0) {
         bookingsList.innerHTML = '';
         loadingBookings.style.display = 'none';
         noBookings.style.display = 'block';
         return;
     }
-    
+
     // Generate HTML for each booking
     bookingsList.innerHTML = bookings.map(booking => {
         const status = BOOKING_STATUSES[booking.status] || BOOKING_STATUSES.pending;
         const paymentStatus = PAYMENT_STATUSES[booking.paymentStatus] || PAYMENT_STATUSES.pending;
         const resort = RESORTS[booking.resort] || { label: booking.resort, short: booking.resort, color: '#6b7280', badge: 'secondary' };
-        
+
         // Format dates
         const checkInDate = booking.checkIn ? formatDate(booking.checkIn) : 'N/A';
         const checkOutDate = booking.checkOut ? formatDate(booking.checkOut) : 'N/A';
         const createdAt = booking.createdAt ? formatDateTime(booking.createdAt) : 'N/A';
-        
+
         // Calculate nights if not provided
-        const nights = booking.nights || 
-            (booking.checkIn && booking.checkOut ? 
+        const nights = booking.nights ||
+            (booking.checkIn && booking.checkOut ?
                 Math.ceil((booking.checkOut - booking.checkIn) / (1000 * 60 * 60 * 24)) : 1);
-        
+
         // Format amount
-        const totalAmount = booking.totalAmount ? 
+        const totalAmount = booking.totalAmount ?
             `KES ${booking.totalAmount.toLocaleString('en-KE')}` : 'Not set';
-        
+
         return `
             <div class="booking-card ${booking.status}">
                 <div class="booking-header">
@@ -216,7 +229,7 @@ function displayBookings(bookings) {
             </div>
         `;
     }).join('');
-    
+
     loadingBookings.style.display = 'none';
     noBookings.style.display = 'none';
 }
@@ -225,9 +238,9 @@ function displayBookings(bookings) {
 function filterBookings() {
     const statusFilter = document.getElementById('bookingStatus').value;
     const dateRangeFilter = document.getElementById('bookingDateRange').value;
-    
+
     dashboard.showAlert(`Filtering bookings: Status=${statusFilter}, Date=${dateRangeFilter}`, 'info');
-    
+
     // For now, just reload all bookings - we'll implement actual filtering later
     loadBookings();
 }
@@ -235,7 +248,7 @@ function filterBookings() {
 // Export bookings to CSV
 function exportBookings() {
     dashboard.showAlert('Export feature coming soon!', 'info');
-    
+
     // TODO: Implement CSV export functionality
     // This would involve fetching all bookings and converting to CSV format
 }
@@ -245,17 +258,17 @@ async function viewBooking(id) {
     try {
         await FirebaseService.initialize();
         const services = FirebaseService.getServices();
-        
+
         const bookingDoc = await services.db.collection('bookings').doc(id).get();
-        
+
         if (!bookingDoc.exists) {
             dashboard.showAlert('Booking not found!', 'error');
             return;
         }
-        
+
         const booking = bookingDoc.data();
         showBookingDetailsModal(booking);
-        
+
     } catch (error) {
         console.error('Error viewing booking:', error);
         dashboard.showAlert('Error loading booking details', 'error');
@@ -267,17 +280,17 @@ async function editBooking(id) {
     try {
         await FirebaseService.initialize();
         const services = FirebaseService.getServices();
-        
+
         const bookingDoc = await services.db.collection('bookings').doc(id).get();
-        
+
         if (!bookingDoc.exists) {
             dashboard.showAlert('Booking not found!', 'error');
             return;
         }
-        
+
         const booking = bookingDoc.data();
         showEditBookingModal(id, booking);
-        
+
     } catch (error) {
         console.error('Error editing booking:', error);
         dashboard.showAlert('Error loading booking for editing', 'error');
@@ -290,18 +303,18 @@ async function confirmBooking(id) {
         if (!confirm('Are you sure you want to confirm this booking?')) {
             return;
         }
-        
+
         await FirebaseService.initialize();
         const services = FirebaseService.getServices();
-        
+
         await services.db.collection('bookings').doc(id).update({
             status: 'confirmed',
             updatedAt: new Date().toISOString()
         });
-        
+
         dashboard.showAlert('Booking confirmed successfully!', 'success');
         loadBookings(); // Refresh the list
-        
+
     } catch (error) {
         console.error('Error confirming booking:', error);
         dashboard.showAlert('Error confirming booking', 'error');
@@ -314,18 +327,18 @@ async function markAsPaid(id) {
         if (!confirm('Mark this booking as paid?')) {
             return;
         }
-        
+
         await FirebaseService.initialize();
         const services = FirebaseService.getServices();
-        
+
         await services.db.collection('bookings').doc(id).update({
             paymentStatus: 'paid',
             updatedAt: new Date().toISOString()
         });
-        
+
         dashboard.showAlert('Booking marked as paid!', 'success');
         loadBookings(); // Refresh the list
-        
+
     } catch (error) {
         console.error('Error updating payment status:', error);
         dashboard.showAlert('Error updating payment status', 'error');
@@ -339,7 +352,7 @@ async function createBooking() {
         form.reportValidity();
         return;
     }
-    
+
     try {
         const guestName = document.getElementById('guestName').value;
         const guestEmail = document.getElementById('guestEmail').value;
@@ -348,10 +361,10 @@ async function createBooking() {
         const roomType = document.getElementById('roomType').value;
         const guestsCount = document.getElementById('guestsCount').value;
         const specialRequests = document.getElementById('specialRequests').value;
-        
+
         // Generate booking ID
         const bookingId = 'JUM-' + generateBookingId();
-        
+
         const newBooking = {
             bookingId: bookingId,
             firstName: guestName.split(' ')[0] || '',
@@ -375,19 +388,19 @@ async function createBooking() {
             paymentMethod: 'cash',
             paymentMethodDisplay: 'Cash'
         };
-        
+
         await FirebaseService.initialize();
         const services = FirebaseService.getServices();
-        
+
         await services.db.collection('bookings').add(newBooking);
-        
+
         dashboard.showAlert('New booking created successfully!', 'success');
         hideNewBookingModal();
         loadBookings();
-        
+
         // Reset form
         form.reset();
-        
+
     } catch (error) {
         console.error('Error creating booking:', error);
         dashboard.showAlert('Error creating booking', 'error');
@@ -456,7 +469,7 @@ function showBookingDetailsModal(booking) {
             </div>
         </div>
     `;
-    
+
     // Add modal to body
     document.body.insertAdjacentHTML('beforeend', modalHtml);
 }
@@ -480,7 +493,7 @@ function setupBookingListeners() {
     // Set default dates for new booking form
     const today = new Date().toISOString().split('T')[0];
     const tomorrow = new Date(Date.now() + 86400000).toISOString().split('T')[0];
-    
+
     document.getElementById('checkInDate').value = today;
     document.getElementById('checkOutDate').value = tomorrow;
     document.getElementById('checkInDate').min = today;

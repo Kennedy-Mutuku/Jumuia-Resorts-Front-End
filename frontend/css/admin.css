@@ -20,10 +20,10 @@
     --shadow-xl: 0 12px 48px rgba(0, 0, 0, 0.15);
 
     /* Border Radius */
-    --radius-sm: 4px;
-    --radius-md: 8px;
-    --radius-lg: 12px;
-    --radius-xl: 16px;
+    --radius-sm: 0px;
+    --radius-md: 0px;
+    --radius-lg: 0px;
+    --radius-xl: 0px;
 
     /* Transitions */
     --transition-fast: 0.15s ease;
@@ -783,13 +783,13 @@ button {
 }
 
 .btn-primary {
-    background: linear-gradient(135deg, var(--primary-orange), #ff9d00);
+    background: var(--primary-green);
     color: var(--primary-white);
 }
 
 .btn-primary:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(243, 164, 53, 0.3);
+    background: var(--secondary-green);
+    box-shadow: none;
 }
 
 .btn-secondary {
@@ -832,7 +832,6 @@ button {
 }
 
 .widget:hover {
-    transform: translateY(-4px);
     box-shadow: var(--shadow-lg);
 }
 
@@ -928,7 +927,6 @@ button {
 }
 
 .quick-action-card:hover {
-    transform: translateY(-5px);
     border-color: var(--primary-green);
     box-shadow: var(--shadow-lg);
 }
@@ -982,13 +980,13 @@ button {
 }
 
 .summary-card.primary {
-    background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+    background: var(--primary-green);
     color: var(--primary-white);
 }
 
 .summary-card.secondary {
-    background: linear-gradient(135deg, var(--primary-orange), #ff9d00);
-    color: var(--primary-white);
+    background: var(--primary-orange);
+    color: var(--primary-dark);
 }
 
 .summary-card i {
@@ -1249,17 +1247,17 @@ button {
 }
 
 .badge-general-manager {
-    background: linear-gradient(135deg, #ffd700, #ff9900);
+    background: #ffd700;
     color: #000;
 }
 
 .badge-manager {
-    background: linear-gradient(135deg, #4CAF50, #2E7D32);
+    background: #4CAF50;
     color: white;
 }
 
 .badge-staff {
-    background: linear-gradient(135deg, #2196F3, #0D47A1);
+    background: #2196F3;
     color: white;
 }
 

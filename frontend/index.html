@@ -1537,11 +1537,6 @@
             loading.style.display = 'block';
 
             try {
-                // Initialize Firebase if needed (assumes main.js or firebase-config.js did it)
-                const db = window.FirebaseServices ? window.FirebaseServices.db : null;
-                if (!db) throw new Error('Firebase not loaded');
-
-                const rKey = resortSelect.value;
                 const data = {
                     firstName: document.getElementById('firstName').value,
                     lastName: document.getElementById('lastName').value,
@@ -1551,12 +1546,27 @@
                     resortName: resortRates[rKey].name,
                     checkIn: document.getElementById('checkIn').value,
                     checkOut: document.getElementById('checkOut').value,
-                    totalAmount: document.getElementById('totalAmount').textContent,
+                    totalAmount: document.getElementById('totalAmount').textContent.replace(/[^0-9.]/g, ''),
+                    paymentMethod: 'cash', // Default to cash/pay later
+                    paymentStatus: 'pending',
                     status: 'pending',
-                    createdAt: new Date().toISOString()
+                    packageType: 'bnb', // Default
+                    roomType: 'standard_single', // Default or grab from form if added
+                    adults: document.getElementById('adults').value,
+                    children: document.getElementById('children').value
                 };
 
-                await db.collection('bookings').add(data);
+                // POST to Node API using api-config URL
+                const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+                const response = await fetch(`${apiUrl}/bookings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(data)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
 
                 // Transition to success state
                 modalConfirmationState.style.display = 'none';
@@ -1603,6 +1613,7 @@
             measurementId: "G-Q7BWHJ9C3M"
         };
     </script>
+    <script src="js/api-config.js"></script>
     <!-- Load main.js -->
     <script src="js/main.js"></script>
 </body>

@@ -1,4 +1,4 @@
-<!-- admin/modules/feedback.html -->
+﻿<!-- admin/modules/feedback.html -->
 <div id="feedbackModule" class="module-content">
     <div class="content-header">
         <div class="breadcrumb">
@@ -879,7 +879,7 @@
                     </td>
                     <td>
                         <div class="rating-stars">
-                            ${'★'.repeat(parseInt(feedback.rating))}${'☆'.repeat(5 - parseInt(feedback.rating))}
+                            ${'â˜…'.repeat(parseInt(feedback.rating))}${'â˜†'.repeat(5 - parseInt(feedback.rating))}
                         </div>
                         <div class="rating-value">${feedback.rating}/5</div>
                     </td>
@@ -1182,7 +1182,7 @@
                     </div>
                     <div class="modal-header-right">
                         <div class="modal-rating">
-                            ${'★'.repeat(parseInt(feedback.rating))}${'☆'.repeat(5 - parseInt(feedback.rating))}
+                            ${'â˜…'.repeat(parseInt(feedback.rating))}${'â˜†'.repeat(5 - parseInt(feedback.rating))}
                         </div>
                         <div class="modal-date">${date}</div>
                     </div>
@@ -1220,7 +1220,7 @@
                                 <div class="category-item">
                                     <div class="category-name">${category.charAt(0).toUpperCase() + category.slice(1)}</div>
                                     <div class="category-rating">
-                                        ${'★'.repeat(rating)}${'☆'.repeat(5 - rating)}
+                                        ${'â˜…'.repeat(rating)}${'â˜†'.repeat(5 - rating)}
                                     </div>
                                 </div>
                             `).join('')}

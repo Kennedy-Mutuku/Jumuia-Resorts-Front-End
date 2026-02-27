@@ -1,4 +1,4 @@
-<!-- Branch Managers Module -->
+﻿<!-- Branch Managers Module -->
 <div class="content-header">
     <div class="breadcrumb">
         <a href="#dashboard" onclick="window.dashboard.loadModule('dashboard')">
@@ -11,13 +11,15 @@
 
 <style>
     .bm-container {
-        max-width: 1000px;
+        width: 100%;
+        max-width: 100%;
+        box-sizing: border-box;
     }
 
     /* Create Manager Card */
     .bm-create-card {
         background: white;
-        border-radius: 12px;
+        border-radius: 4px;
         padding: 32px;
         margin-bottom: 32px;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
@@ -72,7 +74,7 @@
     .bm-field select {
         padding: 12px 16px;
         border: 2px solid #e0e0e0;
-        border-radius: 8px;
+        border-radius: 4px;
         font-size: 0.95rem;
         font-family: 'Montserrat', sans-serif;
         transition: all 0.3s ease;
@@ -130,7 +132,7 @@
 
     .bm-btn {
         padding: 12px 28px;
-        border-radius: 8px;
+        border-radius: 4px;
         font-weight: 600;
         font-size: 0.95rem;
         cursor: pointer;
@@ -173,7 +175,7 @@
     /* Alert Messages */
     .bm-alert {
         padding: 14px 18px;
-        border-radius: 8px;
+        border-radius: 4px;
         font-size: 0.9rem;
         font-weight: 500;
         display: none;
@@ -213,7 +215,7 @@
     /* Existing Managers Table */
     .bm-list-card {
         background: white;
-        border-radius: 12px;
+        border-radius: 4px;
         overflow: hidden;
         box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
     }
@@ -239,7 +241,7 @@
         background: #22440f;
         color: white;
         padding: 4px 12px;
-        border-radius: 20px;
+        border-radius: 4px;
         font-size: 0.8rem;
         font-weight: 600;
         font-family: 'Montserrat', sans-serif;
@@ -286,7 +288,7 @@
         width: 44px;
         height: 44px;
         background: linear-gradient(135deg, #22440f, #1a5c1a);
-        border-radius: 50%;
+        border-radius: 4px;
         display: flex;
         align-items: center;
         justify-content: center;
@@ -317,7 +319,7 @@
         align-items: center;
         gap: 6px;
         padding: 6px 14px;
-        border-radius: 20px;
+        border-radius: 4px;
         font-size: 0.8rem;
         font-weight: 600;
         color: white;
@@ -338,7 +340,7 @@
     .bm-delete-btn {
         width: 36px;
         height: 36px;
-        border-radius: 8px;
+        border-radius: 4px;
         border: none;
         background: #fff5f5;
         color: #dc3545;
@@ -418,7 +420,7 @@
 
     .bm-modal {
         background: white;
-        border-radius: 12px;
+        border-radius: 4px;
         padding: 32px;
         max-width: 420px;
         width: 90%;
@@ -477,7 +479,7 @@
         height: 28px;
         border: none;
         background: #f0f0f0;
-        border-radius: 6px;
+        border-radius: 4px;
         color: #666;
         cursor: pointer;
         display: flex;
@@ -507,7 +509,7 @@
     .bm-reset-btn {
         width: 36px;
         height: 36px;
-        border-radius: 8px;
+        border-radius: 4px;
         border: none;
         background: #fff8e1;
         color: #f3a435;
@@ -529,7 +531,7 @@
     /* Credentials Modal */
     .bm-creds-modal {
         background: white;
-        border-radius: 12px;
+        border-radius: 4px;
         padding: 32px;
         max-width: 480px;
         width: 90%;
@@ -556,7 +558,7 @@
     .bm-creds-box {
         background: #f8f9fa;
         border: 1px solid #e0e0e0;
-        border-radius: 10px;
+        border-radius: 4px;
         padding: 18px;
         margin-bottom: 20px;
     }
@@ -593,7 +595,7 @@
     .bm-copy-all-btn {
         width: 100%;
         padding: 12px;
-        border-radius: 8px;
+        border-radius: 4px;
         border: 2px solid #22440f;
         background: transparent;
         color: #22440f;
@@ -672,10 +674,10 @@
                 <div class="bm-field">
                     <label for="bmProperty">Assigned Branch</label>
                     <select id="bmProperty" required>
-                        <option value="">— Select a branch —</option>
-                        <option value="limuru">🏔️ Limuru Country Home</option>
-                        <option value="kanamai">🏖️ Kanamai Beach Resort</option>
-                        <option value="kisumu">🏨 Kisumu Hotel</option>
+                        <option value="">â€” Select a branch â€”</option>
+                        <option value="limuru">Limuru Country Home</option>
+                        <option value="kanamai">Kanamai Beach Resort</option>
+                        <option value="kisumu">Kisumu Hotel</option>
                     </select>
                 </div>
             </div>
@@ -733,12 +735,12 @@
         <div class="bm-creds-box">
             <div class="cred-line">
                 <span class="cred-label">Email</span>
-                <span class="cred-value" id="bmCredsEmail">—</span>
+                <span class="cred-value" id="bmCredsEmail">â€”</span>
                 <button class="bm-copy-btn" id="bmCopyEmail" title="Copy email"><i class="fas fa-copy"></i></button>
             </div>
             <div class="cred-line">
                 <span class="cred-label">Password</span>
-                <span class="cred-value" id="bmCredsPassword">—</span>
+                <span class="cred-value" id="bmCredsPassword">â€”</span>
                 <button class="bm-copy-btn" id="bmCopyPassword" title="Copy password"><i
                         class="fas fa-copy"></i></button>
             </div>

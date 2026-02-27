@@ -1300,7 +1300,7 @@ class AdminDashboard {
 
             // Get bookings for this property
             const bookingsQuery = this.db.collection('bookings')
-                .where('property', '==', property)
+                .where('resort', '==', property)
                 .where('checkInDate', '>=', monthStart)
                 .limit(100);
 
@@ -1341,49 +1341,24 @@ class AdminDashboard {
         // This would aggregate data from all properties
         // For now, use demo data
 
-        document.getElementById('totalRevenue').textContent = 'KES 3,680,000';
-        document.getElementById('totalTransactions').textContent = '135';
-        document.getElementById('successRate').textContent = '95%';
-        document.getElementById('pendingPayments').textContent = '3';
-        document.getElementById('totalOccupancy').textContent = '75%';
-        document.getElementById('totalBookings').textContent = '135';
-        document.getElementById('pendingActions').textContent = '7';
-        document.getElementById('avgRating').textContent = '4.5';
+        document.getElementById('totalRevenue').textContent = 'KES 0';
+        document.getElementById('totalTransactions').textContent = '0';
+        document.getElementById('successRate').textContent = '0%';
+        document.getElementById('pendingPayments').textContent = '0';
+        document.getElementById('totalOccupancy').textContent = '0%';
+        document.getElementById('totalBookings').textContent = '0';
+        document.getElementById('pendingActions').textContent = '0';
+        document.getElementById('avgRating').textContent = '0.0';
     }
 
     async loadRecentActivity() {
         const activityList = document.getElementById('recentActivity');
         if (!activityList) return;
 
-        // Demo activity data
-        const activities = [
-            {
-                icon: 'fa-credit-card',
-                color: '#012b02',
-                title: 'New booking payment received - Kisumu Hotel',
-                user: 'John Doe',
-                time: '15 minutes ago',
-                badge: 'KES 25,000'
-            },
-            {
-                icon: 'fa-check-in',
-                color: '#f39521',
-                title: 'Guest checked in - Kanamai Beach Resort',
-                user: 'Sarah Johnson',
-                time: '1 hour ago',
-                badge: 'Room 205'
-            },
-            {
-                icon: 'fa-comment',
-                color: '#184203',
-                title: 'New feedback submitted - Limuru Country Home',
-                user: 'Robert Chen',
-                time: '2 hours ago',
-                badge: '4.8 ★'
-            }
-        ];
+        // Clear dashboard activity list
+        const activities = [];
 
-        activityList.innerHTML = activities.map(activity => `
+        activityList.innerHTML = activities.length > 0 ? activities.map(activity => `
             <li class="activity-item">
                 <div class="activity-icon" style="background: ${activity.color};">
                     <i class="fas ${activity.icon}"></i>
@@ -1397,7 +1372,7 @@ class AdminDashboard {
                 </div>
                 <span class="badge">${activity.badge}</span>
             </li>
-        `).join('');
+        `).join('') : '<li class="activity-item"><div class="activity-details"><div class="activity-title">No recent activity</div></div></li>';
     }
 
     initializeCharts() {
@@ -1412,7 +1387,7 @@ class AdminDashboard {
                         datasets: [
                             {
                                 label: 'Limuru',
-                                data: [120000, 190000, 150000, 180000, 220000, 250000, 200000],
+                                data: [0, 0, 0, 0, 0, 0, 0],
                                 borderColor: '#4CAF50',
                                 backgroundColor: 'rgba(76, 175, 80, 0.1)',
                                 tension: 0.4,
@@ -1420,7 +1395,7 @@ class AdminDashboard {
                             },
                             {
                                 label: 'Kanamai',
-                                data: [90000, 120000, 110000, 140000, 180000, 210000, 190000],
+                                data: [0, 0, 0, 0, 0, 0, 0],
                                 borderColor: '#2196F3',
                                 backgroundColor: 'rgba(33, 150, 243, 0.1)',
                                 tension: 0.4,
@@ -1428,7 +1403,7 @@ class AdminDashboard {
                             },
                             {
                                 label: 'Kisumu',
-                                data: [150000, 220000, 180000, 210000, 250000, 280000, 240000],
+                                data: [0, 0, 0, 0, 0, 0, 0],
                                 borderColor: '#9C27B0',
                                 backgroundColor: 'rgba(156, 39, 176, 0.1)',
                                 tension: 0.4,

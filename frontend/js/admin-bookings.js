@@ -4,65 +4,74 @@ class AdminBookingManager {
         this.currentResort = this.getUserResort();
         this.init();
     }
-    
+
     init() {
         this.loadBookings();
         this.setupFilters();
         this.setupSearch();
         this.setupListeners();
     }
-    
+
     getUserResort() {
-        // Get from user session or URL
-        const user = firebase.auth().currentUser;
-        if (user && user.resort) {
-            return user.resort;
+        // Get from user session 
+        const sessionRaw = localStorage.getItem('jumuia_resort_session');
+        if (sessionRaw) {
+            const user = JSON.parse(sessionRaw);
+            if (user.assignedProperty) return user.assignedProperty;
+            if (user.properties && user.properties.length > 0) return user.properties[0];
         }
-        
+
         // Check URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         return urlParams.get('resort') || 'all';
     }
-    
+
     async loadBookings(filters = {}) {
         try {
-            let query = db.collection('bookings')
-                .orderBy('createdAt', 'desc')
-                .limit(50);
-            
-            // Apply resort filter if not viewing all
+            const sessionRaw = localStorage.getItem('jumuia_resort_session');
+            if (!sessionRaw) throw new Error('Not authenticated');
+            const session = JSON.parse(sessionRaw);
+            const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+
+            const response = await fetch(`${apiUrl}/bookings`, {
+                headers: { 'Authorization': session.token ? `Bearer ${session.token}` : '' }
+            });
+            if (!response.ok) throw new Error('Failed to fetch API data');
+            let data = await response.json();
+
+            // Backend might filter by role automatically, but ensure frontend filtering matches
             if (this.currentResort !== 'all') {
-                query = query.where('resort', '==', this.currentResort);
+                data = data.filter(b => b.resort === this.currentResort);
             }
-            
-            // Apply additional filters
-            if (filters.status) {
-                query = query.where('status', '==', filters.status);
-            }
-            
-            if (filters.paymentStatus) {
-                query = query.where('paymentStatus', '==', filters.paymentStatus);
-            }
-            
+            if (filters.status) data = data.filter(b => b.status === filters.status);
+            if (filters.paymentStatus) data = data.filter(b => b.paymentStatus === filters.paymentStatus);
             if (filters.dateFrom && filters.dateTo) {
-                query = query.where('checkIn', '>=', filters.dateFrom)
-                           .where('checkIn', '<=', filters.dateTo);
+                data = data.filter(b => b.checkIn >= filters.dateFrom && b.checkIn <= filters.dateTo);
             }
-            
-            const snapshot = await query.get();
-            this.displayBookings(snapshot);
-            
+
+            data.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+            // limit to 50
+            data = data.slice(0, 50);
+
+            // standardise _id to id mapping
+            data = data.map(doc => ({ id: doc._id || doc.id, ...doc }));
+
+            // Update latest booking ID for polling logic
+            if (data.length > 0) this.latestBookingId = data[0].id;
+
+            this.displayBookings(data);
+
         } catch (error) {
             console.error('Error loading bookings:', error);
             this.showError('Failed to load bookings');
         }
     }
-    
-    displayBookings(snapshot) {
+
+    displayBookings(bookings) {
         const tbody = document.getElementById('bookingsTableBody');
         tbody.innerHTML = '';
-        
-        if (snapshot.empty) {
+
+        if (!bookings || bookings.length === 0 || bookings.empty) {
             tbody.innerHTML = `
                 <tr>
                     <td colspan="9" class="text-center">
@@ -73,26 +82,27 @@ class AdminBookingManager {
             `;
             return;
         }
-        
-        snapshot.forEach(doc => {
-            const booking = doc.data();
-            const row = this.createBookingRow(booking, doc.id);
-            tbody.appendChild(row);
-        });
+
+        if (Array.isArray(bookings)) {
+            bookings.forEach(booking => {
+                const row = this.createBookingRow(booking, booking.id);
+                tbody.appendChild(row);
+            });
+        }
     }
-    
+
     createBookingRow(booking, docId) {
         const row = document.createElement('tr');
-        
+
         // Format dates
         const checkIn = new Date(booking.checkIn).toLocaleDateString('en-KE');
         const checkOut = new Date(booking.checkOut).toLocaleDateString('en-KE');
         const created = new Date(booking.createdAt).toLocaleDateString('en-KE');
-        
+
         // Status badge
         const statusBadge = this.getStatusBadge(booking.status);
         const paymentBadge = this.getPaymentBadge(booking.paymentStatus);
-        
+
         row.innerHTML = `
             <td>
                 <strong>${booking.bookingId}</strong><br>
@@ -122,10 +132,10 @@ class AdminBookingManager {
                 </div>
             </td>
         `;
-        
+
         return row;
     }
-    
+
     getStatusBadge(status) {
         const badges = {
             'pending': '<span class="badge badge-warning">Pending</span>',
@@ -137,7 +147,7 @@ class AdminBookingManager {
         };
         return badges[status] || '<span class="badge">Unknown</span>';
     }
-    
+
     getPaymentBadge(status) {
         const badges = {
             'pending': '<span class="badge badge-warning">Pending</span>',
@@ -148,7 +158,7 @@ class AdminBookingManager {
         };
         return badges[status] || '<span class="badge">Unknown</span>';
     }
-    
+
     getResortName(resortCode) {
         const resorts = {
             'limuru': 'Limuru',
@@ -157,21 +167,21 @@ class AdminBookingManager {
         };
         return resorts[resortCode] || resortCode;
     }
-    
+
     setupFilters() {
         document.getElementById('filterStatus').addEventListener('change', (e) => {
             this.applyFilters();
         });
-        
+
         document.getElementById('filterPayment').addEventListener('change', (e) => {
             this.applyFilters();
         });
-        
+
         document.getElementById('filterDate').addEventListener('change', (e) => {
             this.applyFilters();
         });
     }
-    
+
     applyFilters() {
         const filters = {
             status: document.getElementById('filterStatus').value,
@@ -179,14 +189,14 @@ class AdminBookingManager {
             dateFrom: document.getElementById('dateFrom').value,
             dateTo: document.getElementById('dateTo').value
         };
-        
+
         this.loadBookings(filters);
     }
-    
+
     setupSearch() {
         const searchInput = document.getElementById('searchBookings');
         let searchTimeout;
-        
+
         searchInput.addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
@@ -194,63 +204,68 @@ class AdminBookingManager {
             }, 500);
         });
     }
-    
+
     async searchBookings(searchTerm) {
         if (!searchTerm.trim()) {
             this.loadBookings();
             return;
         }
-        
+
         try {
-            let query = db.collection('bookings');
-            
-            // Search by booking ID
-            const idQuery = await query.where('bookingId', '==', searchTerm).get();
-            if (!idQuery.empty) {
-                this.displayBookings(idQuery);
-                return;
+            const sessionRaw = localStorage.getItem('jumuia_resort_session');
+            const session = JSON.parse(sessionRaw);
+            const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+
+            const response = await fetch(`${apiUrl}/bookings`, {
+                headers: { 'Authorization': session.token ? `Bearer ${session.token}` : '' }
+            });
+            if (!response.ok) return;
+            let data = await response.json();
+
+            const lowerSearch = searchTerm.toLowerCase();
+            const results = data.filter(b =>
+                (b.bookingId && b.bookingId.toLowerCase().includes(lowerSearch)) ||
+                (b.firstName && b.firstName.toLowerCase().includes(lowerSearch)) ||
+                (b.lastName && b.lastName.toLowerCase().includes(lowerSearch)) ||
+                (b.phone && b.phone.includes(searchTerm))
+            );
+
+            if (results.length > 0) {
+                const mapped = results.map(doc => ({ id: doc._id || doc.id, ...doc }));
+                this.displayBookings(mapped);
+            } else {
+                this.displayBookings({ empty: true });
             }
-            
-            // Search by guest name (case insensitive)
-            const nameQuery = await query.where('firstName', '>=', searchTerm)
-                                         .where('firstName', '<=', searchTerm + '\uf8ff')
-                                         .get();
-            
-            if (!nameQuery.empty) {
-                this.displayBookings(nameQuery);
-                return;
-            }
-            
-            // Search by phone
-            const phoneQuery = await query.where('phone', '==', searchTerm).get();
-            if (!phoneQuery.empty) {
-                this.displayBookings(phoneQuery);
-                return;
-            }
-            
-            // If nothing found
-            this.displayBookings({ empty: true });
-            
         } catch (error) {
             console.error('Search error:', error);
         }
     }
-    
+
     setupListeners() {
-        // Real-time updates
-        db.collection('bookings')
-            .orderBy('createdAt', 'desc')
-            .limit(1)
-            .onSnapshot((snapshot) => {
-                // Show notification for new bookings
-                snapshot.docChanges().forEach(change => {
-                    if (change.type === 'added') {
-                        this.showNewBookingNotification(change.doc.data());
-                    }
+        // Polling for new bookings every 30s as a Firebase real-time alternative
+        setInterval(async () => {
+            try {
+                const sessionRaw = localStorage.getItem('jumuia_resort_session');
+                if (!sessionRaw) return;
+                const session = JSON.parse(sessionRaw);
+                const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+
+                const response = await fetch(`${apiUrl}/bookings`, {
+                    headers: { 'Authorization': session.token ? `Bearer ${session.token}` : '' }
                 });
-            });
+                if (!response.ok) return;
+                let data = await response.json();
+                data.sort((a, b) => new Date(b.createdAt || 0) - new Date(a.createdAt || 0));
+
+                if (data.length > 0 && this.latestBookingId && (data[0]._id || data[0].id) !== this.latestBookingId) {
+                    this.latestBookingId = data[0]._id || data[0].id;
+                    this.showNewBookingNotification(data[0]);
+                    this.applyFilters();
+                }
+            } catch (err) { }
+        }, 30000);
     }
-    
+
     showNewBookingNotification(booking) {
         // Only show if viewing all resorts or the specific resort
         if (this.currentResort === 'all' || this.currentResort === booking.resort) {
@@ -264,9 +279,9 @@ class AdminBookingManager {
                 </div>
                 <button onclick="this.parentElement.remove()">&times;</button>
             `;
-            
+
             document.body.appendChild(notification);
-            
+
             // Auto remove after 10 seconds
             setTimeout(() => {
                 if (notification.parentElement) {
@@ -275,7 +290,7 @@ class AdminBookingManager {
             }, 10000);
         }
     }
-    
+
     showError(message) {
         const errorDiv = document.createElement('div');
         errorDiv.className = 'alert alert-danger';
@@ -284,7 +299,7 @@ class AdminBookingManager {
             ${message}
             <button onclick="this.parentElement.remove()">&times;</button>
         `;
-        
+
         document.querySelector('.dashboard-content').prepend(errorDiv);
     }
 }
@@ -292,7 +307,7 @@ class AdminBookingManager {
 // Initialize when page loads
 document.addEventListener('DOMContentLoaded', () => {
     const bookingManager = new AdminBookingManager();
-    
+
     // Make available globally
     window.bookingManager = bookingManager;
 });
