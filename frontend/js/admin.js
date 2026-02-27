@@ -1945,55 +1945,52 @@ class AdminDashboard {
     }
 
     setupRealtimeListeners() {
-        if (!this.db) return;
+        // Use fetch polling instead of Firebase snapshots
+        setInterval(async () => {
+            try {
+                const sessionRaw = localStorage.getItem('jumuia_resort_session');
+                if (!sessionRaw) return;
+                const session = JSON.parse(sessionRaw);
+                const apiUrl = (window.API_CONFIG && window.API_CONFIG.API_URL) ? window.API_CONFIG.API_URL : 'http://localhost:5000/api';
+                const headers = { 'Authorization': session.token ? `Bearer ${session.token}` : '' };
 
-        // Listen for new bookings
-        const bookingsQuery = this.currentUser.role === 'general-manager'
-            ? this.db.collection('bookings').where('status', '==', 'pending')
-            : this.db.collection('bookings')
-                .where('property', '==', this.currentProperty)
-                .where('status', '==', 'pending');
+                // 1. Fetch Bookings count
+                const bRes = await fetch(`${apiUrl}/bookings`, { headers });
+                if (bRes.ok) {
+                    let bookings = await bRes.json();
+                    if (this.currentProperty !== 'all') {
+                        bookings = bookings.filter(b => b.resort === this.currentProperty);
+                    }
+                    bookings = bookings.filter(b => b.status === 'pending');
 
-        bookingsQuery.onSnapshot((snapshot) => {
-            const pendingCount = snapshot.size;
-            const badge = document.getElementById('pendingBookingsBadge');
-            if (badge) {
-                badge.textContent = pendingCount;
-                badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+                    const pendingCount = bookings.length;
+                    const badge = document.getElementById('pendingBookingsBadge');
+                    if (badge) {
+                        badge.textContent = pendingCount;
+                        badge.style.display = pendingCount > 0 ? 'inline-block' : 'none';
+                    }
+                }
+
+                // 2. Mock Feedback Count (API not yet built, leave at 0 or query later)
+                const newCount = 0;
+                const fbBadge = document.getElementById('newFeedbackBadge');
+                if (fbBadge) {
+                    fbBadge.textContent = newCount;
+                    fbBadge.style.display = newCount > 0 ? 'inline-block' : 'none';
+                }
+
+                // 3. Mock Messages Count (API not yet built, leave at 0 or query later)
+                const unreadCount = 0;
+                const msgBadge = document.getElementById('unreadMessagesBadge');
+                if (msgBadge) {
+                    msgBadge.textContent = unreadCount;
+                    msgBadge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
+                }
+
+            } catch (error) {
+                console.error('Error polling dashboard counters:', error);
             }
-        });
-
-        // Listen for new feedback
-        const feedbackQuery = this.currentUser.role === 'general-manager'
-            ? this.db.collection('feedback').where('status', '==', 'new')
-            : this.db.collection('feedback')
-                .where('property', '==', this.currentProperty)
-                .where('status', '==', 'new');
-
-        feedbackQuery.onSnapshot((snapshot) => {
-            const newCount = snapshot.size;
-            const badge = document.getElementById('newFeedbackBadge');
-            if (badge) {
-                badge.textContent = newCount;
-                badge.style.display = newCount > 0 ? 'inline-block' : 'none';
-            }
-        });
-
-        // Listen for new messages
-        const messagesQuery = this.currentUser.role === 'general-manager'
-            ? this.db.collection('messages').where('read', '==', false)
-            : this.db.collection('messages')
-                .where('property', '==', this.currentProperty)
-                .where('read', '==', false);
-
-        messagesQuery.onSnapshot((snapshot) => {
-            const unreadCount = snapshot.size;
-            const badge = document.getElementById('unreadMessagesBadge');
-            if (badge) {
-                badge.textContent = unreadCount;
-                badge.style.display = unreadCount > 0 ? 'inline-block' : 'none';
-            }
-        });
+        }, 15000); // Poll every 15 seconds
     }
 
     switchProperty(property) {
