@@ -57,6 +57,12 @@ export default function AdminSidebar() {
         })).filter(section => section.items.length > 0);
     };
 
+    const BRANCH_NAMES = {
+        limuru: 'Limuru Branch',
+        kanamai: 'Kanamai Branch',
+        kisumu: 'Kisumu Branch',
+    };
+
     return (
         <aside className="admin-sidebar">
             <div className="sidebar-header">
@@ -67,8 +73,23 @@ export default function AdminSidebar() {
 
             <div className="sidebar-user">
                 <div className="user-name">{user?.name || 'Admin'}</div>
-                <div className="user-role">{user?.role?.replace('-', ' ') || 'User'}</div>
+                <div className="user-role" style={{ textTransform: 'capitalize' }}>
+                    {user?.role?.replace('-', ' ') || 'User'}
+                </div>
+                {user?.role === 'manager' && user?.properties?.[0] && (
+                    <div style={{
+                        marginTop: '8px', background: 'rgba(255,255,255,0.15)',
+                        borderRadius: '12px', padding: '4px 10px',
+                        fontSize: '0.75rem', fontWeight: '600',
+                        color: 'white', display: 'inline-flex',
+                        alignItems: 'center', gap: '5px'
+                    }}>
+                        <i className="fas fa-building" style={{ fontSize: '0.7rem' }}></i>
+                        {BRANCH_NAMES[user.properties[0]] || user.properties[0]} Portal
+                    </div>
+                )}
             </div>
+
 
             <nav className="sidebar-nav">
                 {getAccessibleItems().map((section) => (

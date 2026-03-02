@@ -2,15 +2,23 @@ import { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import api from '../../services/api';
 
+const PROPERTY_NAMES = {
+    limuru: 'Jumuia Limuru Country Home',
+    kanamai: 'Jumuia Kanamai Beach Resort',
+    kisumu: 'Jumuia Hotel Kisumu',
+    all: 'All Properties',
+};
+
 export default function AdminDashboard() {
     const { user } = useAuth();
+    const isManager = user?.role === 'manager';
+    const assignedBranch = isManager ? (user?.properties?.[0] || 'all') : 'all';
+
     const [stats, setStats] = useState(null);
-    const [currentProperty, setCurrentProperty] = useState('all');
+    const [currentProperty, setCurrentProperty] = useState(assignedBranch);
     const [loading, setLoading] = useState(true);
 
-    useEffect(() => {
-        loadStats();
-    }, [currentProperty]);
+    useEffect(() => { loadStats(); }, [currentProperty]);
 
     const loadStats = async () => {
         setLoading(true);
@@ -24,27 +32,48 @@ export default function AdminDashboard() {
     };
 
     const getGreeting = () => {
-        const hour = new Date().getHours();
-        if (hour < 12) return 'Good Morning';
-        if (hour < 17) return 'Good Afternoon';
+        const h = new Date().getHours();
+        if (h < 12) return 'Good Morning';
+        if (h < 17) return 'Good Afternoon';
         return 'Good Evening';
     };
 
-    const properties = user?.role === 'general-manager'
-        ? ['all', 'limuru', 'kanamai', 'kisumu']
-        : user?.properties || ['all'];
+    // GM sees all properties; manager sees only their single branch
+    const properties = isManager
+        ? [assignedBranch]
+        : ['all', 'limuru', 'kanamai', 'kisumu'];
+
+    // For the performance table, show only the manager's branch or all 3 for GM
+    const performanceProperties = isManager
+        ? [assignedBranch]
+        : ['limuru', 'kanamai', 'kisumu'];
 
     return (
         <div>
+            {/* Header */}
             <div className="admin-page-header">
-                <h1>{getGreeting()}, {user?.name?.split(' ')[0] || 'Admin'}</h1>
-                <p style={{ color: 'var(--text-light)' }}>
-                    {new Date().toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
-                </p>
+                <div>
+                    <h1>{getGreeting()}, {user?.name?.split(' ')[0] || 'Admin'}</h1>
+                    <p style={{ color: 'var(--text-light)', marginBottom: '4px' }}>
+                        {new Date().toLocaleDateString('en-KE', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })}
+                    </p>
+                    {isManager && (
+                        <div style={{
+                            display: 'inline-flex', alignItems: 'center', gap: '8px',
+                            background: 'var(--light-green)', borderRadius: '20px',
+                            padding: '5px 14px', marginTop: '6px'
+                        }}>
+                            <i className="fas fa-building" style={{ color: 'var(--primary-green)', fontSize: '0.85rem' }}></i>
+                            <span style={{ color: 'var(--primary-green)', fontWeight: '600', fontSize: '0.9rem' }}>
+                                {PROPERTY_NAMES[assignedBranch]} — Branch Admin Portal
+                            </span>
+                        </div>
+                    )}
+                </div>
             </div>
 
-            {/* Property Filter */}
-            {properties.length > 1 && (
+            {/* Property Filter — only for General Manager */}
+            {!isManager && (
                 <div className="property-selector">
                     {properties.map(prop => (
                         <button key={prop} className={`property-btn ${currentProperty === prop ? 'active' : ''}`}
@@ -91,9 +120,13 @@ export default function AdminDashboard() {
                         </div>
                     </div>
 
-                    {/* Property Performance */}
+                    {/* Performance Table */}
                     <div className="admin-card">
-                        <h3>Property Performance</h3>
+                        <h3 style={{ marginBottom: '16px', color: 'var(--primary-green)' }}>
+                            {isManager
+                                ? `${PROPERTY_NAMES[assignedBranch]} — Performance Overview`
+                                : 'Property Performance Comparison'}
+                        </h3>
                         <div className="admin-table-wrapper">
                             <table className="admin-table">
                                 <thead>
@@ -106,17 +139,20 @@ export default function AdminDashboard() {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {['limuru', 'kanamai', 'kisumu'].map(prop => {
-                                        const propStats = stats?.properties?.[prop] || {};
+                                    {performanceProperties.map(prop => {
+                                        const ps = stats?.properties?.[prop] || {};
                                         return (
                                             <tr key={prop}>
-                                                <td style={{ fontWeight: '600', textTransform: 'capitalize' }}>{prop}</td>
-                                                <td>KES {(propStats.revenue || 0).toLocaleString()}</td>
-                                                <td>{propStats.bookings || 0}</td>
-                                                <td>{propStats.occupancy || 0}%</td>
+                                                <td style={{ fontWeight: '600' }}>
+                                                    <i className="fas fa-map-marker-alt" style={{ marginRight: '8px', color: 'var(--primary-green)', fontSize: '0.8rem' }}></i>
+                                                    {PROPERTY_NAMES[prop]}
+                                                </td>
+                                                <td>KES {(ps.revenue || 0).toLocaleString()}</td>
+                                                <td>{ps.bookings || 0}</td>
+                                                <td>{ps.occupancy || 0}%</td>
                                                 <td>
-                                                    <span style={{ color: 'var(--primary-orange)' }}>{'★'.repeat(Math.round(propStats.rating || 0))}</span>
-                                                    {' '}{propStats.rating || 0}
+                                                    <span style={{ color: 'var(--primary-orange)' }}>{'★'.repeat(Math.round(ps.rating || 0))}</span>
+                                                    {' '}{ps.rating || 0}
                                                 </td>
                                             </tr>
                                         );
