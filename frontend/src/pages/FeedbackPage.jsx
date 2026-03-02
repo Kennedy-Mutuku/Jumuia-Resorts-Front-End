@@ -3,7 +3,7 @@ import api from '../services/api';
 import './PageStyles.css';
 
 export default function FeedbackPage() {
-    const [formData, setFormData] = useState({ name: '', email: '', resort: '', rating: 5, message: '' });
+    const [formData, setFormData] = useState({ name: '', email: '', resort: '', rating: 5, comment: '' });
     const [status, setStatus] = useState(null);
     const [loading, setLoading] = useState(false);
 
@@ -13,7 +13,7 @@ export default function FeedbackPage() {
         try {
             await api.post('/feedback', formData);
             setStatus({ type: 'success', text: 'Thank you for your feedback!' });
-            setFormData({ name: '', email: '', resort: '', rating: 5, message: '' });
+            setFormData({ name: '', email: '', resort: '', rating: 5, comment: '' });
         } catch (err) {
             setStatus({ type: 'error', text: err.response?.data?.message || 'Failed to submit feedback.' });
         }
@@ -31,9 +31,9 @@ export default function FeedbackPage() {
                 <div style={{ background: 'white', padding: '30px', borderRadius: 'var(--radius)', boxShadow: 'var(--shadow)' }}>
                     <form onSubmit={handleSubmit}>
                         <div style={{ display: 'grid', gap: '15px' }}>
-                            <input className="form-control" placeholder="Your Name *" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
-                            <input type="email" className="form-control" placeholder="Email Address *" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required />
-                            <select className="form-control" value={formData.resort} onChange={e => setFormData({ ...formData, resort: e.target.value })} required>
+                            <input name="guestName" className="form-control" placeholder="Your Name *" value={formData.name} onChange={e => setFormData({ ...formData, name: e.target.value })} required />
+                            <input name="guestEmail" type="email" className="form-control" placeholder="Email Address *" value={formData.email} onChange={e => setFormData({ ...formData, email: e.target.value })} required />
+                            <select name="resortSelection" className="form-control" value={formData.resort} onChange={e => setFormData({ ...formData, resort: e.target.value })} required>
                                 <option value="">Select Resort *</option>
                                 <option value="limuru">Jumuia Limuru</option>
                                 <option value="kanamai">Jumuia Kanamai</option>
@@ -51,7 +51,7 @@ export default function FeedbackPage() {
                                     ))}
                                 </div>
                             </div>
-                            <textarea className="form-control" placeholder="Your Feedback *" rows="5" value={formData.message} onChange={e => setFormData({ ...formData, message: e.target.value })} required></textarea>
+                            <textarea name="guestComment" className="form-control" placeholder="Your Feedback *" rows="5" value={formData.comment} onChange={e => setFormData({ ...formData, comment: e.target.value })} required></textarea>
                             {status && <div className={`alert alert-${status.type}`}>{status.text}</div>}
                             <button type="submit" className="btn btn-primary" style={{ padding: '12px', fontSize: '1rem' }} disabled={loading}>
                                 {loading ? 'Submitting...' : 'Submit Feedback'}

@@ -23,7 +23,8 @@ import AdminFeedback from './pages/admin/AdminFeedback';
 import AdminMessages from './pages/admin/AdminMessages';
 import AdminOffers from './pages/admin/AdminOffers';
 import AdminUsers from './pages/admin/AdminUsers';
-import { AdminCalendar, AdminContent, AdminReports, AdminSettings, AdminBranchManagers } from './pages/admin/AdminModuleStubs';
+import { AdminCalendar, AdminContent, AdminReports, AdminSettings } from './pages/admin/AdminModuleStubs';
+import AdminBranchManagers from './pages/admin/AdminBranchManagers';
 
 export default function App() {
   return (

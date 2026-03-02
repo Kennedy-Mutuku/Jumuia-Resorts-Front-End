@@ -34,12 +34,3 @@ export function AdminSettings() {
         </div>
     );
 }
-
-export function AdminBranchManagers() {
-    return (
-        <div>
-            <div className="admin-page-header"><h1>Branch Managers</h1><p>Manage branch manager assignments</p></div>
-            <div className="admin-card"><p style={{ textAlign: 'center', padding: '40px', color: 'var(--text-light)' }}>Branch manager management available here.</p></div>
-        </div>
-    );
-}
