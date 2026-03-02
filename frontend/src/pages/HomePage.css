@@ -1,0 +1,283 @@
+/* ===== Hero Section ===== */
+.hero {
+    position: relative;
+    height: 100vh;
+    color: var(--primary-white);
+    padding: 180px 0 100px;
+    text-align: center;
+    overflow: hidden;
+    background: linear-gradient(rgba(10, 26, 1, 0.6), rgba(12, 31, 1, 0.6));
+}
+
+.hero::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-size: cover;
+    background-position: center;
+    z-index: -1;
+    animation: slideShow 18s infinite;
+    filter: brightness(0.6);
+}
+
+@keyframes slideShow {
+    0% {
+        background-image: url('/images/resorts/limuru/limuru-front.jpeg');
+    }
+
+    33% {
+        background-image: url('/images/resorts/kanamai/front kanamai.jpg');
+    }
+
+    66% {
+        background-image: url('/images/resorts/kisumu/resort1.jpg');
+    }
+
+    100% {
+        background-image: url('/images/resorts/limuru/limuru-front.jpeg');
+    }
+}
+
+.hero h1 {
+    font-size: 3.5rem;
+    margin-bottom: 20px;
+    color: var(--primary-white);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    max-width: 800px;
+    margin: 0 auto 40px;
+    opacity: 0.9;
+}
+
+/* ===== Vision & Mission ===== */
+.vision-mission {
+    background-color: var(--light-green);
+    padding: 80px 0;
+}
+
+.vm-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 40px;
+    margin-bottom: 50px;
+}
+
+.vision-card,
+.mission-card {
+    background: var(--primary-white);
+    padding: 30px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.vm-icon {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.vision-card h3,
+.mission-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 15px;
+    color: var(--primary-green);
+}
+
+.vision-card p,
+.mission-card p {
+    color: var(--text-light);
+    line-height: 1.7;
+}
+
+.core-values-card {
+    background: var(--primary-white);
+    padding: 40px;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+}
+
+.core-values-card h3 {
+    font-size: 1.8rem;
+    margin-bottom: 25px;
+    color: var(--primary-green);
+}
+
+.values-tags {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 15px;
+    margin-bottom: 30px;
+}
+
+.value-tag {
+    background-color: var(--light-green);
+    color: var(--primary-green);
+    padding: 8px 18px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.motto-banner {
+    padding: 20px;
+    background: linear-gradient(135deg, var(--primary-green) 0%, var(--secondary-green) 100%);
+    border-radius: var(--radius);
+}
+
+.motto-banner p {
+    font-size: 1.5rem;
+    color: var(--primary-white);
+    font-weight: 600;
+    font-style: italic;
+    margin: 0;
+}
+
+/* ===== Resorts Grid ===== */
+.resorts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+    gap: 30px;
+    margin-top: 50px;
+}
+
+.resort-card {
+    background-color: var(--primary-white);
+    border-radius: var(--radius);
+    overflow: hidden;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s;
+}
+
+.resort-card:hover {
+    transform: translateY(-10px);
+}
+
+.resort-img {
+    height: 250px;
+    background-size: cover;
+    background-position: center;
+}
+
+.resort-content {
+    padding: 30px;
+}
+
+.resort-content h3 {
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.resort-location {
+    color: var(--primary-orange);
+    margin-bottom: 15px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.resort-content p {
+    color: var(--text-light);
+    margin-bottom: 25px;
+}
+
+.resort-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.feature-tag {
+    background-color: var(--light-green);
+    color: var(--primary-green);
+    padding: 5px 12px;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 500;
+}
+
+/* ===== Services Section ===== */
+.services-section {
+    padding: 80px 0;
+    background-color: var(--gray-bg);
+}
+
+.services-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+}
+
+.service-card {
+    background-color: var(--primary-white);
+    border-radius: var(--radius);
+    padding: 30px;
+    box-shadow: var(--shadow);
+    transition: transform 0.3s;
+    text-align: center;
+}
+
+.service-card:hover {
+    transform: translateY(-5px);
+}
+
+.service-icon {
+    width: 70px;
+    height: 70px;
+    background-color: var(--primary-orange);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 0 auto 20px;
+}
+
+.service-icon i {
+    font-size: 1.8rem;
+    color: var(--primary-white);
+}
+
+.service-card h3 {
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+}
+
+/* ===== Booking Section ===== */
+.booking-section {
+    padding: 60px 0;
+    background-color: var(--gray-bg);
+}
+
+/* ===== Responsive ===== */
+@media (max-width: 768px) {
+    .hero h1 {
+        font-size: 2.2rem;
+    }
+
+    .hero p {
+        font-size: 1rem;
+    }
+
+    .resorts-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 576px) {
+    .hero {
+        padding: 150px 0 80px;
+    }
+
+    .hero h1 {
+        font-size: 1.8rem;
+    }
+}
