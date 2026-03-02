@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API_URL = import.meta.env.PROD
-    ? 'https://your-production-api.com/api'
+    ? (import.meta.env.VITE_API_URL || 'https://your-backend.onrender.com/api')
     : '/api';
 
 const api = axios.create({
